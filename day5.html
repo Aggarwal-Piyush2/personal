@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Day V | My Word, My Bond</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,700&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --navy: #02050a; --silver: #b8bfc2; --glow: rgba(255, 255, 255, 0.15); }
+        
+        body, html { 
+            margin: 0; padding: 0; background: var(--navy); color: var(--silver); 
+            font-family: 'Montserrat', sans-serif; overflow-x: hidden;
+            scroll-behavior: smooth; -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 1. ELEVATED PINKY PROMISE HERO */
+        .hero-section {
+            height: 100vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; position: relative;
+            background: radial-gradient(circle at center, #0a101f 0%, var(--navy) 100%);
+        }
+
+        .pinky-graphic { width: 200px; height: 200px; position: relative; margin-bottom: 20px; }
+        
+        .hand-line {
+            position: absolute; width: 100px; height: 100px;
+            border: 2px solid var(--silver); border-radius: 50%;
+            transition: 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 15px var(--glow);
+        }
+        #line-left { 
+            top: 50%; left: 0; border-right: none; border-bottom: none;
+            transform: translate(-50px, -20px) rotate(-45deg); opacity: 0.3;
+        }
+        #line-right { 
+            top: 50%; right: 0; border-left: none; border-top: none;
+            transform: translate(50px, 20px) rotate(-45deg); opacity: 0.3;
+        }
+
+        .locked #line-left { transform: translate(40px, -10px) rotate(135deg); opacity: 1; }
+        .locked #line-right { transform: translate(-40px, 10px) rotate(135deg); opacity: 1; }
+
+        .hero-text { text-align: center; z-index: 10; pointer-events: none; }
+        h1 { font-family: 'Playfair Display', serif; font-size: 2.2rem; letter-spacing: 2px; margin: 0; }
+        .instruction { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; margin-top: 15px; opacity: 0.4; }
+
+        /* 2. THE SCRATCH CARDS (Multi-Shade) */
+        .promise-container { padding: 40px 20px; }
+        .scratch-box {
+            position: relative; width: 100%; max-width: 340px; 
+            background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08);
+            margin: 30px auto; border-radius: 4px; overflow: hidden;
+            min-height: 130px; display: flex; align-items: center; justify-content: center;
+        }
+        canvas { position: absolute; top: 0; left: 0; z-index: 5; touch-action: none; }
+        .promise-text {
+            padding: 30px; text-align: center; z-index: 1;
+            font-family: 'Playfair Display', serif; font-style: italic;
+            font-size: 1.1rem; line-height: 1.7; color: #fff;
+        }
+
+        /* 3. THE DRAMATIC SEAL */
+        .seal-section {
+            padding: 100px 20px; text-align: center;
+            background: linear-gradient(to bottom, var(--navy), #000);
+        }
+
+        #wax-seal {
+            width: 90px; height: 90px; background: #4a0404;
+            border-radius: 50%; margin: 0 auto; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            border: 3px solid #2a0202;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.6), inset 0 0 15px rgba(255,255,255,0.1);
+            transition: transform 0.2s, box-shadow 0.5s; position: relative;
+        }
+        
+        #wax-seal:active { transform: scale(0.95); }
+
+        .pulse {
+            position: absolute; width: 100%; height: 100%;
+            border: 2px solid #630505; border-radius: 50%;
+            animation: ripple 2s infinite; pointer-events: none;
+        }
+        @keyframes ripple { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(2); opacity: 0; } }
+
+        /* 4. FOOTER / SIGNATURE */
+        .footer { padding: 80px 20px; text-align: center; opacity: 0; transition: 3s opacity; }
+        .sig { font-family: 'Playfair Display', serif; font-size: 2rem; margin-top: 10px; color: #fff; letter-spacing: 2px; }
+    </style>
+</head>
+<body onclick="document.querySelector('.hero-section').classList.add('locked')">
+
+    <div class="hero-section">
+        <div class="pinky-graphic">
+            <div class="hand-line" id="line-left"></div>
+            <div class="hand-line" id="line-right"></div>
+        </div>
+        <div class="hero-text">
+            <h1>The Eternal Oaths</h1>
+            <p class="instruction">Tap to seal the bond</p>
+        </div>
+    </div>
+
+    <div class="promise-container">
+        <div class="scratch-box"><div class="promise-text">I promise to be the man who protects your peace as fiercely as I protect you.</div><canvas class="scratch-canvas" data-color="#2a2e35"></canvas></div>
+        <div class="scratch-box"><div class="promise-text">I promise to never let the fire between us fade; I’ll keep you wanting more.</div><canvas class="scratch-canvas" data-color="#1c1f24"></canvas></div>
+        <div class="scratch-box"><div class="promise-text">I promise that no matter the distance, you will always be my only destination.</div><canvas class="scratch-canvas" data-color="#3d424a"></canvas></div>
+        <div class="scratch-box"><div class="promise-text">I promise to listen to the words you don't say, and love the parts you think are flaws.</div><canvas class="scratch-canvas" data-color="#14161a"></canvas></div>
+        <div class="scratch-box"><div class="promise-text">I promise to crave you, honor you, and dominate your heart forever.</div><canvas class="scratch-canvas" data-color="#4e545c"></canvas></div>
+        <div class="scratch-box"><div class="promise-text">I promise to be your safe haven when the world gets too loud.</div><canvas class="scratch-canvas" data-color="#252a30"></canvas></div>
+        <div class="scratch-box"><div class="promise-text">I promise to stay when it’s hard, not just when it’s easy.</div><canvas class="scratch-canvas" data-color="#1c1f24"></canvas></div>
+        <div class="scratch-box"><div class="promise-text">I promise to make you feel seen, heard, and intensely wanted every single day.</div><canvas class="scratch-canvas" data-color="#333842"></canvas></div>
+    </div>
+
+    <div class="seal-section">
+        <p style="font-size: 0.7rem; letter-spacing: 4px; margin-bottom: 30px; opacity: 0.6;">HOLD TO SEAL THE VOW</p>
+        <div id="wax-seal" onmousedown="startSeal()" ontouchstart="startSeal()" onmouseup="stopSeal()" ontouchend="stopSeal()">
+            <div class="pulse"></div>
+            <div style="color: rgba(0,0,0,0.4); font-size: 1.5rem;">⚜️</div>
+        </div>
+    </div>
+
+    <div class="footer" id="footer">
+        <p style="font-size: 0.6rem; letter-spacing: 6px; opacity: 0.5;">SIGNED IN THE STARS</p>
+        <div class="sig">DIYA ❤️ PIYUSH</div>
+    </div>
+
+    <script>
+        // SCRATCH LOGIC
+        const canvases = document.querySelectorAll('.scratch-canvas');
+        canvases.forEach(canvas => {
+            const ctx = canvas.getContext('2d');
+            const parent = canvas.parentElement;
+            const shade = canvas.getAttribute('data-color');
+            canvas.width = parent.offsetWidth;
+            canvas.height = parent.offsetHeight;
+
+            // Apply specific shade
+            ctx.fillStyle = shade;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Texture
+            ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+            ctx.lineWidth = 1;
+            for(let i=0; i<canvas.width; i+=4) {
+                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i+10, canvas.height); ctx.stroke();
+            }
+
+            let drawing = false;
+            function scratch(e) {
+                if(!drawing) return;
+                const rect = canvas.getBoundingClientRect();
+                const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+                const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.beginPath(); ctx.arc(x, y, 30, 0, Math.PI*2); ctx.fill();
+            }
+
+            canvas.addEventListener('mousedown', () => drawing = true);
+            canvas.addEventListener('touchstart', (e) => { drawing = true; e.preventDefault(); });
+            window.addEventListener('mouseup', () => drawing = false);
+            window.addEventListener('touchend', () => drawing = false);
+            canvas.addEventListener('mousemove', scratch);
+            canvas.addEventListener('touchmove', scratch);
+        });
+
+        // WAX SEAL HOLD LOGIC
+        let sealTimer;
+        const seal = document.getElementById('wax-seal');
+        const footer = document.getElementById('footer');
+
+        function startSeal() {
+            sealTimer = setTimeout(() => {
+                seal.style.boxShadow = "0 0 40px #630505";
+                seal.style.transform = "scale(0.9) rotate(5deg)";
+                footer.style.opacity = '1';
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            }, 1500);
+        }
+
+        function stopSeal() {
+            clearTimeout(sealTimer);
+        }
+    </script>
+</body>
+</html>

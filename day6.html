@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Day VI | The Sanctuary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --bg: #020202; --accent: #d1d1d1; --warm-glow: rgba(255, 60, 0, 0); }
+        
+        body, html { 
+            margin: 0; padding: 0; background: var(--bg); color: var(--accent); 
+            font-family: 'Montserrat', sans-serif; overflow-x: hidden;
+            transition: background 1s ease;
+        }
+
+        /* 1. THE FLOATING ATMOSPHERE */
+        #particles-js {
+            position: fixed; width: 100%; height: 100%; z-index: 1; pointer-events: none;
+        }
+
+        /* 2. THE HERO (Parallax Shadow) */
+        .hero {
+            height: 100vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; position: relative;
+            z-index: 2;
+        }
+        .shadow-couple {
+            width: 260px; height: 420px;
+            background: linear-gradient(to bottom, #1a1a1a, #000);
+            border-radius: 130px 130px 40px 40px;
+            filter: blur(45px); opacity: 0.2;
+            transform: scale(0.85); transition: 0.8s cubic-bezier(0.2, 0, 0.2, 1);
+        }
+
+        /* 3. SCROLL REVEAL SECTIONS */
+        .section { 
+            padding: 100px 30px; text-align: center; position: relative; z-index: 2;
+            opacity: 0; transform: translateY(30px); transition: all 1s ease-out;
+        }
+        .section.visible { opacity: 1; transform: translateY(0); }
+
+        /* 4. THE LUXURY HUG METER */
+        .meter-ui {
+            background: rgba(255,255,255,0.03); padding: 40px;
+            border-radius: 2px; border: 1px solid rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px); max-width: 350px; margin: 0 auto;
+        }
+        input[type=range] { 
+            width: 100%; -webkit-appearance: none; background: transparent; 
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            background: rgba(255,255,255,0.1); height: 1px;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 20px; width: 20px;
+            border: 1px solid #fff; border-radius: 50%; background: #000;
+            margin-top: -10px; box-shadow: 0 0 15px rgba(255,255,255,0.2);
+        }
+
+        /* 5. TYPOGRAPHY JAZZ */
+        h2 { 
+            font-family: 'Playfair Display', serif; font-weight: 400; 
+            font-size: 2rem; letter-spacing: -1px; margin-bottom: 40px; 
+        }
+        .list-item { 
+            font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase;
+            margin: 20px 0; opacity: 0.5; transition: 0.4s;
+        }
+        .list-item:hover { opacity: 1; color: #fff; transform: translateX(5px); }
+
+        .final-note {
+            font-family: 'Playfair Display', serif; font-style: italic;
+            font-size: 1.4rem; line-height: 1.8; color: #fff;
+            max-width: 400px; margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="particles-js"></div>
+
+    <div class="hero">
+        <div class="shadow-couple" id="mainShadow"></div>
+        <div style="position:absolute; bottom:10%; text-align:center;">
+            <p style="font-family:'Playfair Display'; font-style:italic; font-size:1.2rem;">My favorite place is your arms.</p>
+            <div style="width:1px; height:50px; background:white; margin:20px auto; opacity:0.3;"></div>
+        </div>
+    </div>
+
+    <div class="section" id="meterSection">
+        <h2>The Pressure</h2>
+        <div class="meter-ui">
+            <input type="range" min="1" max="100" value="10" id="hugSlider">
+            <p id="meterLabel" style="margin-top:30px; font-size:0.7rem; letter-spacing:4px; text-transform:uppercase;">Gentle Presence</p>
+            <p id="meterDesc" style="font-size:0.8rem; opacity:0.4; font-style:italic; margin-top:10px;">A reminder that I'm here.</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>You deserve this because...</h2>
+        <div class="list-item">You carry the world gracefully</div>
+        <div class="list-item">Your smile is my favorite view</div>
+        <div class="list-item">You've been so strong lately</div>
+        <div class="list-item">Being you is more than enough</div>
+    </div>
+
+    <div class="section">
+        <h2 style="font-size:1.2rem; opacity:0.5;">The Hugs I Owe You</h2>
+        <p style="line-height:2.5; font-weight:200;">
+            <span style="border-bottom: 1px solid rgba(255,255,255,0.1)">The Long-Time-No-See Hug</span><br>
+            <span style="border-bottom: 1px solid rgba(255,255,255,0.1)">The Safe-Haven Hug</span><br>
+            <span style="border-bottom: 1px solid rgba(255,255,255,0.1)">The Quiet-Morning Hug</span>
+        </p>
+    </div>
+
+    <div class="section" style="padding-bottom:200px;">
+        <div class="final-note">
+            💌 “If I could right now, I’d pull you close and remind you: you never have to face anything alone.”
+        </div>
+    </div>
+
+    <script>
+        // 1. Scroll Reveal Logic
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.section').forEach(section => observer.observe(section));
+
+        // 2. Parallax Shadow Logic
+        window.addEventListener('scroll', () => {
+            const s = window.scrollY;
+            const shadow = document.getElementById('mainShadow');
+            shadow.style.transform = `scale(${0.85 + s/2000}) translateY(${s/5}px)`;
+            shadow.style.filter = `blur(${Math.max(45 - s/10, 10)}px)`;
+            shadow.style.opacity = Math.min(0.2 + s/500, 0.7);
+        });
+
+        // 3. Hug Meter "Supreme" Interaction
+        const slider = document.getElementById('hugSlider');
+        const label = document.getElementById('meterLabel');
+        const desc = document.getElementById('meterDesc');
+
+        slider.oninput = function() {
+            const val = this.value;
+            // Shift body background warmth based on hug intensity
+            const r = Math.min(val * 0.8, 40);
+            document.body.style.background = `radial-gradient(circle at center, rgb(${r}, ${r/4}, 0) 0%, #020202 100%)`;
+            
+            if(val < 33) {
+                label.innerText = "Gentle Presence";
+                desc.innerText = "A reminder that I'm here.";
+            } else if(val < 66) {
+                label.innerText = "The Tight Hold";
+                desc.innerText = "The kind where you can finally let go.";
+            } else {
+                label.innerText = "Can't Breathe";
+                desc.innerText = "I'm never letting you go. Ever.";
+                label.style.color = "#ff4d00";
+                label.style.textShadow = "0 0 10px #ff4d00";
+            }
+        };
+    </script>
+</body>
+</html>

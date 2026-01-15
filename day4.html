@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Day IV | Hold Me Close</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,700&family=Montserrat:wght@300;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --soft-pink: #fce4ec; --rose: #ff80ab; --warm-shadow: #2d1b1b; }
+        
+        body, html { 
+            margin: 0; padding: 0; background: var(--soft-pink); 
+            font-family: 'Montserrat', sans-serif; height: 100vh;
+            overflow: hidden; -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 1. ATMOSPHERE */
+        #bg-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, transparent 20%, var(--warm-shadow) 100%);
+            opacity: 0; transition: opacity 1s; z-index: 1;
+        }
+
+        /* 2. THE TEDDY AREA */
+        .container {
+            position: relative; z-index: 10; height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+
+        .instruction {
+            font-family: 'Playfair Display', serif; font-size: 1.2rem;
+            color: #880e4f; margin-bottom: 20px; font-style: italic;
+            transition: opacity 0.5s;
+        }
+
+        #teddy {
+            width: 280px; cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
+        }
+
+        /* 3. THE WHISPER (MESSAGES) */
+        #whisper-box {
+            margin-top: 30px; min-height: 60px; text-align: center;
+            padding: 0 40px; color: #ad1457; font-weight: 500;
+            opacity: 0; transition: 0.8s all; transform: translateY(10px);
+        }
+
+        /* 4. HUG METER */
+        .meter-container {
+            position: absolute; bottom: 50px; width: 200px; height: 4px;
+            background: rgba(0,0,0,0.05); border-radius: 2px;
+        }
+        #meter-fill {
+            width: 0%; height: 100%; background: var(--rose);
+            border-radius: 2px; box-shadow: 0 0 10px var(--rose);
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+        .hugging { animation: pulse 1.5s infinite ease-in-out; }
+    </style>
+</head>
+<body>
+
+    <div id="bg-overlay"></div>
+
+    <div class="container">
+        <div class="instruction" id="hint">Hold me to hear a secret...</div>
+        
+        <img id="teddy" src="https://i.postimg.cc/RVVKLD36/download.png" alt="Teddy">
+
+        <div id="whisper-box"></div>
+
+        <div class="meter-container">
+            <div id="meter-fill"></div>
+        </div>
+    </div>
+
+    <script>
+        const teddy = document.getElementById('teddy');
+        const fill = document.getElementById('meter-fill');
+        const whisper = document.getElementById('whisper-box');
+        const overlay = document.getElementById('bg-overlay');
+        const hint = document.getElementById('hint');
+
+        let holdTimer;
+        let progress = 0;
+
+        // The "Whispers" - Mix of Sweet and Suggestive
+        const messages = [
+            "You're the only one I want to wake up to... and stay in bed with. 😏",
+            "This teddy is soft, but you know I’m not always this gentle.",
+            "I'm sending this bear to guard you... because I'm not there to hold those curves myself tonight.",
+            "Every time you squeeze this, imagine it's me. And imagine what I'd be doing to you.",
+            "I love your heart, but I'm also really, really craving your body right now.",
+            "You look so beautiful when you blush. I can't wait to make it happen in person.",
+            "Counting down the days until I don't need a virtual hug to feel you against me."
+        ];
+
+        function startHold() {
+            teddy.classList.add('hugging');
+            overlay.style.opacity = "0.7";
+            hint.style.opacity = "0";
+            whisper.style.opacity = "0";
+
+            holdTimer = setInterval(() => {
+                progress += 2;
+                fill.style.width = progress + "%";
+
+                if (progress >= 100) {
+                    clearInterval(holdTimer);
+                    showWhisper();
+                }
+            }, 30);
+        }
+
+        function endHold() {
+            teddy.classList.remove('hugging');
+            overlay.style.opacity = "0";
+            clearInterval(holdTimer);
+            if (progress < 100) {
+                progress = 0;
+                fill.style.width = "0%";
+                hint.style.opacity = "1";
+            }
+        }
+
+        function showWhisper() {
+            const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+            whisper.innerHTML = randomMsg;
+            whisper.style.opacity = "1";
+            whisper.style.transform = "translateY(0)";
+            
+            // Reset for next hug
+            setTimeout(() => {
+                progress = 0;
+                fill.style.width = "0%";
+            }, 1000);
+        }
+
+        // iPhone Touch Events
+        teddy.addEventListener('touchstart', (e) => { e.preventDefault(); startHold(); });
+        teddy.addEventListener('touchend', endHold);
+        
+        // Mouse Events for testing
+        teddy.addEventListener('mousedown', startHold);
+        teddy.addEventListener('mouseup', endHold);
+    </script>
+</body>
+</html>

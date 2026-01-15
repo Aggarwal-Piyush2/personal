@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day I | The Eternal Rose</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400&family=Montserrat:wght@200;400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --gold: #c5a059; --bg: #050505; --rose-glow: #ff2d2d; }
+        
+        body, html { 
+            margin: 0; padding: 0; background: var(--bg); color: white; 
+            font-family: 'Montserrat', sans-serif; height: 1400vh;
+            scrollbar-width: none; overflow-x: hidden;
+        }
+
+        /* 1. MAP BACKGROUND */
+        #map-wrapper {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            z-index: 1; transition: opacity 1s;
+        }
+        #map { height: 100%; width: 100%; background: #000; }
+
+        /* 2. THE ROSE */
+        #rose-traveler {
+            position: fixed; top: 50%; left: 50%;
+            z-index: 100; pointer-events: none;
+            width: 80px; height: 80px;
+            transform: translate(-50%, -50%);
+            filter: drop-shadow(0 0 10px var(--rose-glow));
+        }
+
+        /* 3. CITY MARKERS */
+        .city-label {
+            position: relative; z-index: 20; height: 350vh;
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; pointer-events: none;
+        }
+        .label-text {
+            background: rgba(0, 0, 0, 0.7); border-bottom: 2px solid var(--gold);
+            padding: 15px 35px; text-align: center; backdrop-filter: blur(10px);
+        }
+        h1 { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--gold); margin: 0; }
+        p { letter-spacing: 5px; font-size: 0.7rem; text-transform: uppercase; margin-top: 5px; }
+
+        /* 4. THE FINALE SPACE */
+        .finale-trigger { height: 250vh; }
+
+        /* 5. FINAL REVEAL CARD */
+        .reveal-zone {
+            position: relative; z-index: 200; background: var(--bg);
+            padding: 150px 20px; text-align: center;
+        }
+        .luxury-card {
+            max-width: 750px; margin: 0 auto; padding: 60px 40px;
+            border: 1px solid rgba(197, 160, 89, 0.2);
+            background: #0a0a0a; box-shadow: 0 0 50px rgba(197, 160, 89, 0.1);
+        }
+
+        /* 6. CANVAS FOR SPARKLES & PETALS */
+        #fx-canvas { position: fixed; top: 0; left: 0; z-index: 150; pointer-events: none; }
+    </style>
+</head>
+<body>
+
+    <canvas id="fx-canvas"></canvas>
+
+    <div id="map-wrapper"><div id="map"></div></div>
+
+    <img id="rose-traveler" src="https://pngimg.com/uploads/rose/rose_PNG639.png" alt="Rose">
+
+    <div class="city-label"><div class="label-text"><h1>Miamisburg</h1><p>Beginning</p></div></div>
+    <div class="city-label"><div class="label-text"><h1>Ludhiana</h1><p>The Connection</p></div></div>
+    <div class="city-label"><div class="label-text"><h1>Mt Druitt</h1><p>destination</p></div></div>
+
+    <div class="finale-trigger"></div>
+
+    <div class="reveal-zone">
+        <div class="luxury-card">
+            <h2 style="font-family: 'Playfair Display'; font-size: 2.8rem; color: var(--gold); font-style: italic;">"Just like this rose..."</h2>
+            <p style="text-transform: none; font-size: 1.1rem; line-height: 2.2; color: #ccc; margin: 40px 0;">
+                Across 15,000 kilometers, from my heart to yours. No matter the distance, you are always the destination.
+            </p>
+            <div style="width:100%; aspect-ratio:16/9; background:#000; border: 1px solid var(--gold);">
+                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // 1. MAP
+        const map = L.map('map', { zoomControl: false, scrollWheelZoom: false, dragging: false, attributionControl: false }).setView([39, -84], 3);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+
+        const ohio = [39.64, -84.28], punjab = [31.14, 75.34], sydney = [-33.77, 150.82];
+        L.polyline([ohio, [45, 0], punjab, [0, 90], sydney], { color: '#c5a059', weight: 1.5, dashArray: '10, 15', opacity: 0.4 }).addTo(map);
+
+        // Particle System variables
+        let sparkleActive = false;
+        let sparkleStrength = 0;
+
+        // 2. SCROLL ENGINE
+        window.addEventListener('scroll', () => {
+            const scrollTotal = document.body.offsetHeight - window.innerHeight;
+            const scroll = window.scrollY / scrollTotal;
+            const rose = document.getElementById('rose-traveler');
+            const mapWrap = document.getElementById('map-wrapper');
+
+            // PHASE 1: THE JOURNEY (0% to 80%)
+            if (scroll <= 0.8) {
+                const p = scroll / 0.8;
+                let lat, lng;
+                if (p < 0.5) {
+                    let p1 = p * 2;
+                    lat = ohio[0] + (punjab[0] - ohio[0]) * p1;
+                    lng = ohio[1] + (punjab[1] - ohio[1]) * p1;
+                } else {
+                    let p2 = (p - 0.5) * 2;
+                    lat = punjab[0] + (sydney[0] - punjab[0]) * p2;
+                    lng = punjab[1] + (sydney[1] - punjab[1]) * p2;
+                }
+                map.setView([lat, lng], 3 + (p * 2));
+                mapWrap.style.opacity = 1;
+                rose.style.width = "80px";
+                rose.style.height = "80px";
+                rose.style.transform = `translate(-50%, -50%) rotate(${scroll * 720}deg)`;
+                sparkleActive = false;
+                sparkleStrength = 0;
+            } 
+            
+            // PHASE 2: THE GOLDEN FINALE (80% to 95%)
+            else if (scroll > 0.8 && scroll <= 0.95) {
+                const pBloom = (scroll - 0.8) / 0.15;
+                mapWrap.style.opacity = 1 - pBloom;
+                rose.style.width = (80 + (pBloom * 220)) + "px"; // Big rose in center
+                rose.style.height = (80 + (pBloom * 220)) + "px";
+                rose.style.filter = `drop-shadow(0 0 ${20 + (pBloom * 40)}px var(--rose-glow))`;
+                rose.style.transform = `translate(-50%, -50%) rotate(${pBloom * 10}deg)`;
+                sparkleActive = true;
+                sparkleStrength = pBloom;
+            }
+
+            // PHASE 3: FINAL FADE
+            else {
+                const pFinal = (scroll - 0.95) / 0.05;
+                rose.style.opacity = 1 - pFinal;
+                mapWrap.style.opacity = 0;
+            }
+        });
+
+        // 3. FX CANVAS (Golden Sparkles & Petals)
+        const canvas = document.getElementById('fx-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        
+        const fxObjects = [];
+        // Init 30 petals
+        for(let i=0; i<30; i++) fxObjects.push({ type: 'petal', x: Math.random()*canvas.width, y: Math.random()*canvas.height, s: Math.random()*2+1, r: Math.random()*360 });
+        // Init 50 sparkles
+        const sparkles = [];
+        for(let i=0; i<60; i++) sparkles.push({ x: 0, y: 0, ang: Math.random()*Math.PI*2, dist: Math.random()*150, s: Math.random()*2 });
+
+        function animate() {
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            
+            // Draw Red Petals
+            ctx.fillStyle = "#ff4d4d";
+            fxObjects.forEach(p => {
+                ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r*Math.PI/180);
+                ctx.beginPath(); ctx.ellipse(0,0, p.s*3, p.s*6, 0, 0, Math.PI*2); ctx.fill(); ctx.restore();
+                p.y += p.s * 0.5; p.r += 0.5; if(p.y > canvas.height) p.y = -20;
+            });
+
+            // Draw Golden Sparkles (only active at the end)
+            if (sparkleActive) {
+                sparkles.forEach(s => {
+                    s.ang += 0.02;
+                    const curX = window.innerWidth/2 + Math.cos(s.ang) * (s.dist * sparkleStrength);
+                    const curY = window.innerHeight/2 + Math.sin(s.ang) * (s.dist * sparkleStrength);
+                    ctx.fillStyle = `rgba(197, 160, 89, ${sparkleStrength})`;
+                    ctx.beginPath();
+                    ctx.arc(curX, curY, s.s, 0, Math.PI*2);
+                    ctx.fill();
+                    // Shine effect
+                    if(Math.random() > 0.9) {
+                        ctx.fillStyle = "white";
+                        ctx.arc(curX, curY, s.s*1.5, 0, Math.PI*2);
+                        ctx.fill();
+                    }
+                });
+            }
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>

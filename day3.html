@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Day III | Bittersweet & Gold</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --cocoa: #1a0a02; --gold: #c5a059; --cream: #f7e7ce; --melt: #3d1c02; }
+        
+        body, html { 
+            margin: 0; padding: 0; background: var(--cocoa); color: var(--cream); 
+            font-family: 'Montserrat', sans-serif; overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 1. LIQUID MELT EFFECT */
+        .melt-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            pointer-events: none; z-index: 100;
+        }
+        .drip {
+            position: absolute; top: -10px; width: 20%; height: 0;
+            background: var(--melt); border-radius: 0 0 50px 50px;
+            transition: height 1.5s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+            box-shadow: inset 0 -10px 20px rgba(0,0,0,0.5);
+        }
+
+        /* 2. HEADER */
+        header {
+            height: 50vh; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; text-align: center;
+        }
+        h1 { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--gold); margin: 0; }
+        .subtitle { font-size: 0.8rem; letter-spacing: 4px; text-transform: uppercase; margin-top: 10px; opacity: 0.8; }
+
+        /* 3. THE BOX GRID */
+        .box-container {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+            padding: 20px; max-width: 380px; margin: 0 auto;
+            perspective: 1000px;
+        }
+
+        .truffle {
+            aspect-ratio: 1/1; position: relative; cursor: pointer;
+            transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .wrapper {
+            position: absolute; width: 100%; height: 100%;
+            background: radial-gradient(circle, #e6be7a 0%, #c5a059 100%);
+            border-radius: 12px; display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            z-index: 2; backface-visibility: hidden;
+        }
+        .wrapper::after { content: '⚜️'; opacity: 0.6; }
+
+        .content {
+            position: absolute; width: 100%; height: 100%;
+            background: #2a1408; border-radius: 12px;
+            display: flex; justify-content: center; align-items: center;
+            padding: 8px; box-sizing: border-box; text-align: center;
+            transform: rotateY(180deg); backface-visibility: hidden;
+            font-size: 0.7rem; font-weight: 600; color: var(--gold);
+            border: 2px solid var(--gold); overflow: hidden;
+        }
+
+        .truffle.flipped { transform: rotateY(180deg); }
+
+        /* 4. THE GOLDEN TICKET SURPRISE */
+        #ticket-reveal {
+            display: none; padding: 40px 20px; margin: 40px auto;
+            max-width: 320px; background: #fff; color: #000;
+            border: 2px solid var(--gold); position: relative;
+            transform: rotate(-2deg); box-shadow: 0 0 30px var(--gold);
+            animation: ticketPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes ticketPop { from { transform: scale(0) rotate(10deg); opacity: 0; } to { transform: scale(1) rotate(-2deg); opacity: 1; } }
+
+        .ticket-header { border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 10px; font-weight: 900; letter-spacing: 2px; }
+
+        canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1; }
+    </style>
+</head>
+<body onload="initMelt()">
+
+    <div class="melt-container" id="meltLayer">
+        <div class="drip" style="left:0;"></div>
+        <div class="drip" style="left:20%;"></div>
+        <div class="drip" style="left:40%;"></div>
+        <div class="drip" style="left:60%;"></div>
+        <div class="drip" style="left:80%;"></div>
+    </div>
+
+    <canvas id="dust"></canvas>
+
+    <header>
+        <p class="subtitle">Artisan Collection</p>
+        <h1>Sweetest Indulgence</h1>
+        <p style="font-size: 0.8rem; margin-top: 20px; opacity: 0.6;">Tap to unwrap all 9 truffles...Maybe after that I'll let you unwrap me.</p>
+    </header>
+
+    <div class="box-container">
+       
+        <div class="truffle" onclick="unwrapped(this)"><div class="wrapper"></div><div class="content">Sweeter than a hazelnut dream.</div></div>
+        <div class="truffle" onclick="unwrapped(this)"><div class="wrapper"></div><div class="content">Kinder than any heart of caramel.</div></div>
+        <div class="truffle" onclick="unwrapped(this)"><div class="wrapper"></div><div class="content">Your sweet smile is my favorite flavor.</div></div>
+        
+        <div class="truffle" onclick="unwrapped(this)"><div class="wrapper"></div><div class="content">Our love is 100% pure gold.</div></div>
+        <div class="truffle" onclick="unwrapped(this)">
+            <div class="wrapper"></div>
+            <div class="content"><img src="https://i.postimg.cc/JhKpPkrC/us.jpg" style="width:100%; height:100%; object-fit:cover;"></div>
+        </div>
+        <div class="truffle" onclick="unwrapped(this)"><div class="wrapper"></div><div class="content">Dark, rich, and intensely beautiful.</div></div>
+
+        <div class="truffle" onclick="unwrapped(this)"><div class="wrapper"></div><div class="content">A velvet touch in a rough world.</div></div>
+        <div class="truffle" onclick="unwrapped(this)"><div class="wrapper"></div><div class="content">I'm "cocoa-nuts" about you.</div></div>
+        <div class="truffle" onclick="unwrapped(this)"><div class="wrapper"></div><div class="content">One more to go...</div></div>
+    </div>
+
+    <div id="ticket-reveal">
+        <div class="ticket-header">GOLDEN TICKET</div>
+        <p style="font-family: 'Playfair Display'; font-size: 1.2rem; font-style: italic;">"Redeem this for a taste of me."</p>
+        <p style="font-size: 0.7rem; color: #666; margin-top: 20px;">VALID: UNTIL THE END OF TIME<br>Serial No: 25-07-FOREVER</p>
+    </div>
+
+    <div style="height: 20vh;"></div>
+
+    <script>
+        let opened = 0;
+
+        function initMelt() {
+            const drips = document.querySelectorAll('.drip');
+            drips.forEach((d, i) => {
+                setTimeout(() => {
+                    d.style.height = (40 + Math.random() * 40) + "vh";
+                }, i * 200);
+            });
+            // Retract melt after 3 seconds
+            setTimeout(() => {
+                drips.forEach(d => d.style.height = "0");
+            }, 2000);
+        }
+
+        function unwrapped(el) {
+            if(!el.classList.contains('flipped')) {
+                el.classList.add('flipped');
+                opened++;
+                if(opened === 9) {
+                    setTimeout(() => {
+                        document.getElementById('ticket-reveal').style.display = 'block';
+                        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                    }, 800);
+                }
+            }
+        }
+
+        // Particle System
+        const canvas = document.getElementById('dust');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        const pts = [];
+        for(let i=0; i<60; i++) pts.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, s: Math.random()*2, v: Math.random()*0.5 + 0.2 });
+
+        function draw() {
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            ctx.fillStyle = "rgba(197, 160, 89, 0.4)";
+            pts.forEach(p => {
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, Math.PI*2); ctx.fill();
+                p.y += p.v; if(p.y > canvas.height) p.y = -5;
+            });
+            requestAnimationFrame(draw);
+        }
+        draw();
+    </script>
+</body>
+</html>
