@@ -122,10 +122,16 @@
                     'showinfo': 0,
                     'modestbranding': 1
                 },
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
+               events: {
+                 'onReady': onPlayerReady,
+                 'onStateChange': function(event) {
+                     // If the video ends (0), seek back to your start time and play
+                   if (event.data === YT.PlayerState.ENDED) {
+                      player.seekTo(18); 
+                       player.playVideo();
+                  }
+              }
+        }
             });
         }
 
