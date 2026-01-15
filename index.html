@@ -125,35 +125,36 @@
                 },
                events: {
                  'onReady': onPlayerReady,
-                 'onStateChange': function(event) {
-                     // If the video ends (0), seek back to your start time and play
-                   if (event.data === YT.PlayerState.ENDED) {
-                       player.seekTo(18); 
-                       player.playVideo();
+                 'onStateChange': onPlayerStateChange
                   }
-              }
-        }
             });
         }
 
         function onPlayerReady(event) {
             // Attempt autoplay (might be blocked)
-            event.target.playVideo();
+           event.target.mute(); // Mute first to bypass some autoplay blocks
+           event.target.seekTo(START_SECOND);
+           event.target.playVideo();
         }
 
         function onPlayerStateChange(event) {
         // Ensures if it stops for some reason, we know
+            if (event.data === YT.PlayerState.ENDED) {
+                player.seekTo(START_SECOND);
+                player.playVideo();
+    }
         }
 
         // FORCE START ON FIRST CLICK
         document.body.addEventListener('click', function() {
-            if (!musicStarted && player) {
+           if (!musicStarted && player) {
+                player.unMute(); // Unmute when she interacts
+                player.seekTo(START_SECOND); // Force seek again on click to be sure
                 player.playVideo();
                 musicStarted = true;
-                console.log("Music Started via Interaction");
+                document.getElementById('musicControl').innerText = "🔊 MUSIC ON";
             }
-        }, { once: true }); // Only runs on the very first click
-
+        }, { once: true });
 
         function toggleMusic() {
             const btn = document.getElementById('musicControl');
