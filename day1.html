@@ -14,7 +14,7 @@
         body, html { 
             margin: 0; padding: 0; background: var(--bg); color: white; 
             font-family: 'Montserrat', sans-serif; 
-            height: 1600vh; /* Increased height to give map more "breathing room" */
+            height: 1600vh;
             overflow-x: hidden; scrollbar-width: none;
         }
 
@@ -29,14 +29,13 @@
         .rose-petal {
             position: fixed; top: -50px; font-size: 28px; z-index: 100;
             user-select: none; pointer-events: none; animation: fall linear forwards;
-            filter: drop-shadow(0 0 5px rgba(255,0,0,0.5));
         }
         @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
 
-        /* --- THE MAP (STAYS FIXED) --- */
+        /* --- THE MAP --- */
         #map-wrapper { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh; 
-            z-index: 1; display: none; transition: opacity 0.8s;
+            z-index: 1; display: none;
         }
         #map { height: 100%; width: 100%; background: #000; }
 
@@ -44,10 +43,9 @@
             position: fixed; top: 50%; left: 50%; z-index: 100; pointer-events: none;
             width: 80px; height: 80px; transform: translate(-50%, -50%);
             filter: drop-shadow(0 0 15px var(--rose-glow)); display: none;
-            transition: opacity 0.5s;
+            transition: width 0.3s ease-out, height 0.3s ease-out, opacity 0.5s;
         }
 
-        /* --- SCROLL SECTIONS --- */
         .city-label { 
             position: relative; z-index: 20; height: 400vh; 
             display: flex; align-items: center; justify-content: center; 
@@ -60,10 +58,9 @@
         
         h1 { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--gold); margin: 0; font-style: italic; }
 
-        /* --- THE FINALE (ONLY COMES AFTER MAP) --- */
         .reveal-zone { 
             position: relative; z-index: 200; background: var(--bg); 
-            padding: 150px 20px; text-align: center; margin-top: 100vh;
+            padding: 150px 20px; text-align: center;
         }
         .luxury-card { 
             max-width: 500px; margin: 0 auto; padding: 40px 20px; 
@@ -73,7 +70,7 @@
         .video-container {
             width: 100%; max-width: 320px; aspect-ratio: 9 / 16; 
             margin: 30px auto; border: 1px solid var(--gold); 
-            background: #000; overflow: hidden; box-shadow: 0 0 30px rgba(197, 160, 89, 0.2);
+            background: #000; overflow: hidden;
         }
         video { width: 100%; height: 100%; object-fit: cover; }
 
@@ -108,11 +105,14 @@
         <div class="city-label"><div class="label-text"><h1>Ludhiana</h1><p>The Connection</p></div></div>
         <div class="city-label"><div class="label-text"><h1>Mt Druitt</h1><p>The Destination</p></div></div>
 
-        <div style="height: 150vh;"></div>
-
         <div class="reveal-zone">
             <div class="luxury-card">
-                <h2 style="font-family: 'Playfair Display'; color: var(--gold); font-style: italic;">"Just like this rose..."</h2>
+                <h2 style="font-family: 'Playfair Display'; color: var(--gold); font-style: italic; font-size: 2.2rem;">"Just like this rose..."</h2>
+                
+                <p style="text-transform: none; font-size: 1rem; line-height: 1.8; color: #bbb; margin: 20px 0;">
+                    Across 15,000 kilometers, from my heart to yours. No matter the distance, you are always the destination.
+                </p>
+
                 <div class="video-container">
                     <video id="vault-video" controls playsinline>
                         <source src="video.mp4" type="video/mp4">
@@ -156,19 +156,10 @@
         }
 
         function initMap() {
-            map = L.map('map', { 
-                zoomControl: false, scrollWheelZoom: false, 
-                dragging: false, attributionControl: false 
-            }).setView([39.64, -84.28], 3);
-            
+            map = L.map('map', { zoomControl: false, scrollWheelZoom: false, dragging: false, attributionControl: false }).setView([39.64, -84.28], 3);
             L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
-            
             const ohio = [39.64, -84.28], punjab = [30.9, 75.8], sydney = [-33.77, 150.82];
-            
-            // Draw a more accurate path
-            L.polyline([ohio, [40, -20], [20, 40], punjab, [5, 100], sydney], { 
-                color: '#c5a059', weight: 2, dashArray: '10, 15', opacity: 0.5 
-            }).addTo(map);
+            L.polyline([ohio, [40, -20], [20, 40], punjab, [5, 100], sydney], { color: '#c5a059', weight: 2, dashArray: '10, 15', opacity: 0.5 }).addTo(map);
         }
 
         window.addEventListener('scroll', () => {
@@ -179,40 +170,46 @@
             const rose = document.getElementById('rose-traveler');
             const mapWrap = document.getElementById('map-wrapper');
 
-            // Coordinates
             const ohio = [39.64, -84.28], punjab = [30.9, 75.8], sydney = [-33.77, 150.82];
 
-            // PHASE 1: JOURNEY (0% to 85% of scroll)
-            if (scroll <= 0.85) {
+            // PHASE 1: TRAVELING (0% to 75%)
+            if (scroll <= 0.75) {
                 mapWrap.style.opacity = "1";
                 rose.style.opacity = "1";
-                
-                const p = scroll / 0.85; // Local percentage for map journey
-                let lat, lng;
+                rose.style.width = "80px"; 
+                rose.style.height = "80px";
 
-                if (p < 0.5) { // Ohio to Punjab
+                const p = scroll / 0.75;
+                let lat, lng;
+                if (p < 0.5) {
                     let p1 = p * 2;
                     lat = ohio[0] + (punjab[0] - ohio[0]) * p1;
                     lng = ohio[1] + (punjab[1] - ohio[1]) * p1;
-                } else { // Punjab to Sydney
+                } else {
                     let p2 = (p - 0.5) * 2;
                     lat = punjab[0] + (sydney[0] - punjab[0]) * p2;
                     lng = punjab[1] + (sydney[1] - punjab[1]) * p2;
                 }
-
-                map.setView([lat, lng], 3 + (p * 1.5)); // Slight zoom in as we travel
+                map.setView([lat, lng], 3 + (p * 1.5));
                 rose.style.transform = `translate(-50%, -50%) rotate(${scroll * 1000}deg)`;
             } 
-            // PHASE 2: FADE OUT MAP (85% to 92%)
-            else if (scroll > 0.85 && scroll < 0.92) {
-                const fadeP = (scroll - 0.85) / 0.07;
-                mapWrap.style.opacity = 1 - fadeP;
-                rose.style.opacity = 1 - fadeP;
+            // PHASE 2: BLOOMING (75% to 90%)
+            else if (scroll > 0.75 && scroll <= 0.90) {
+                const pBloom = (scroll - 0.75) / 0.15;
+                mapWrap.style.opacity = 1 - pBloom;
+                
+                // MAKE ROSE BIG
+                const size = 80 + (pBloom * 250); 
+                rose.style.width = size + "px";
+                rose.style.height = size + "px";
+                rose.style.opacity = 1;
+                rose.style.transform = `translate(-50%, -50%) rotate(${pBloom * 20}deg)`;
             }
-            // PHASE 3: TOTAL HIDE
+            // PHASE 3: FADE AWAY
             else {
+                const pFinal = (scroll - 0.90) / 0.10;
+                rose.style.opacity = 1 - pFinal;
                 mapWrap.style.opacity = "0";
-                rose.style.opacity = "0";
             }
         });
 
