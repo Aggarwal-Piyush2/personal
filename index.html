@@ -101,45 +101,42 @@
         <p id="challenge-hint" style="margin-top: 40px; font-size: 0.7rem; color: var(--gold); italic; height: 20px;"></p>
     </div>
 
-<div id="music-container" style="position:absolute; top:-999px; left:-999px;">
-    <iframe id="yt-iframe" width="100" height="100" 
-        src="https://www.youtube.com/embed/2eliQ_KR8yA?enablejsapi=1&start=18&autoplay=1&mute=1&loop=1&playlist=2eliQ_KR8yA" 
-        frameborder="0" allow="autoplay">
-    </iframe>
-</div>
+<audio id="bg-music" loop>
+    <source src="khaab.mp3" type="audio/mpeg">
+</audio>
+
+<button id="musicControl" class="music-toggle" onclick="toggleMusic()">🔊 MUSIC ON</button>
 
 <script>
-   
-    const START_TIME = 18;
+    const audio = document.getElementById('bg-music');
+    const START_TIME = 18; 
     let musicStarted = false;
 
-    // The Interaction Trigger: This unmutes the hidden iframe
-    function handleInteraction() {
+    // This function starts the music at exactly 18 seconds on the first click
+    function startMusic() {
         if (!musicStarted) {
-            const iframe = document.getElementById('yt-iframe');
-            // This command tells the YouTube iframe to unmute and play
-            iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
-            iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-            
-            musicStarted = true;
-            const btn = document.getElementById('musicControl');
-            if(btn) btn.innerText = "🔊 MUSIC ON";
-            console.log("Music Unmuted");
+            audio.currentTime = START_TIME;
+            audio.play().then(() => {
+                musicStarted = true;
+                document.getElementById('musicControl').style.display = 'block';
+                document.getElementById('musicControl').innerText = "🔊 MUSIC ON";
+            }).catch(error => {
+                console.log("Playback failed. Waiting for another click.");
+            });
         }
     }
 
-    // Listen for both clicks and touches (for mobile)
-    document.body.addEventListener('click', handleInteraction);
-    document.body.addEventListener('touchstart', handleInteraction);
+    // Listen for click OR touch anywhere on the page
+    document.body.addEventListener('click', startMusic);
+    document.body.addEventListener('touchstart', startMusic);
 
     function toggleMusic() {
         const btn = document.getElementById('musicControl');
-        const iframe = document.getElementById('yt-iframe');
-        if (btn.innerText.includes("OFF")) {
-            iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
+        if (audio.paused) {
+            audio.play();
             btn.innerText = "🔊 MUSIC ON";
         } else {
-            iframe.contentWindow.postMessage('{"event":"command","func":"mute","args":""}', '*');
+            audio.pause();
             btn.innerText = "🔇 MUSIC OFF";
         }
     }
