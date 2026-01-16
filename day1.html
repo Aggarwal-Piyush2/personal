@@ -72,7 +72,7 @@
     <div id="quiz-overlay">
         <div class="quiz-card">
             <h2 style="font-family:'Playfair Display'; color:var(--gold);">Day I Unlock</h2>
-            <p style="font-size: 0.8rem; letter-spacing: 1px;">Where was our very first journey?</p>
+            <p style="font-size: 0.8rem; letter-spacing: 1px;">What was the date when we first met as Boyfriend-Girlfriend? (DD/MM)</p>
             <input type="text" id="quiz-answer" placeholder="Your Answer...">
             <br>
             <button onclick="checkQuiz()">UNLOCK JOURNEY</button>
@@ -108,13 +108,18 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        // --- EXTRA SAFETY: REDIRECT IF ACCESSED EARLY ---
+        const DAY_1_UNLOCK = new Date("2026-02-07T00:00:00+11:00"); 
+        if (new Date() < DAY_1_UNLOCK) {
+            window.location.href = "index.html"; // Kicks them back to the countdown
+}
         const audio = document.getElementById('bg-music');
-        const START_TIME = 18; // Start at 18 seconds
+        const START_TIME = 30; // Start at 18 seconds
         
         // --- QUIZ LOGIC ---
         function checkQuiz() {
             const val = document.getElementById('quiz-answer').value.toLowerCase().trim();
-            const correct = "miamisburg"; // <--- CHANGE THIS TO YOUR ANSWER
+            const correct = "11/07"; // <--- CHANGE THIS TO YOUR ANSWER
 
             if (val === correct) {
                 // Unlock
