@@ -23,21 +23,14 @@
             background: #050505; z-index: 9999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-        .quiz-card {
-            text-align: center; padding: 40px; border: 1px solid var(--gold);
-            background: #0a0a0a; max-width: 350px; width: 90%;
-            box-shadow: 0 0 30px rgba(197, 160, 89, 0.1);
+
+        /* --- ROSE SHOWER --- */
+        .rose-petal {
+            position: fixed; top: -50px; font-size: 28px; z-index: 100;
+            user-select: none; pointer-events: none; animation: fall linear forwards;
+            filter: drop-shadow(0 0 5px rgba(255,0,0,0.5));
         }
-        .quiz-card input {
-            background: transparent; border: none; border-bottom: 1px solid var(--gold);
-            color: white; text-align: center; padding: 15px; width: 80%;
-            margin-top: 20px; font-family: 'Montserrat'; outline: none;
-        }
-        .quiz-card button {
-            margin-top: 30px; background: var(--gold); border: none;
-            padding: 12px 30px; color: black; font-weight: bold; cursor: pointer;
-            letter-spacing: 2px; text-transform: uppercase;
-        }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
 
         /* --- THE JOURNEY ELEMENTS --- */
         #map-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 1; display: none; }
@@ -46,87 +39,70 @@
         #rose-traveler {
             position: fixed; top: 50%; left: 50%; z-index: 100; pointer-events: none;
             width: 80px; height: 80px; transform: translate(-50%, -50%);
-            filter: drop-shadow(0 0 15px var(--rose-glow));
-            display: none;
+            filter: drop-shadow(0 0 15px var(--rose-glow)); display: none;
         }
 
-        .city-label { position: relative; z-index: 20; height: 350vh; display: flex; align-items: center; justify-content: center; pointer-events: none; opacity: 0; transition: opacity 1s; }
+        .city-label { position: relative; z-index: 20; height: 350vh; display: flex; align-items: center; justify-content: center; pointer-events: none; opacity: 1; }
         .label-text { background: rgba(0, 0, 0, 0.8); border-bottom: 2px solid var(--gold); padding: 20px 40px; text-align: center; backdrop-filter: blur(10px); }
         
         h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; color: var(--gold); margin: 0; font-style: italic; }
-        .city-label p { letter-spacing: 5px; font-size: 0.7rem; text-transform: uppercase; margin-top: 10px; color: #ccc; }
 
-        .finale-trigger { height: 250vh; }
-        .reveal-zone { position: relative; z-index: 200; background: var(--bg); padding: 150px 20px; text-align: center; }
+        .reveal-zone { position: relative; z-index: 200; background: var(--bg); padding: 100px 20px; text-align: center; }
         .luxury-card { 
-            max-width: 750px; margin: 0 auto; padding: 60px 40px; 
+            max-width: 500px; margin: 0 auto; padding: 40px 20px; 
             border: 1px solid rgba(197, 160, 89, 0.2); background: #0a0a0a; 
-            box-shadow: 0 0 50px rgba(0,0,0,1);
         }
 
-        /* Local Video Container */
+        /* VERTICAL IPHONE RATIO VIDEO (9:16) */
         .video-container {
-            width: 100%; max-width: 600px; margin: 40px auto 0;
-            border: 1px solid var(--gold); background: #000;
-            overflow: hidden;
+            width: 100%; max-width: 320px; aspect-ratio: 9 / 16; 
+            margin: 30px auto; border: 1px solid var(--gold); 
+            background: #000; overflow: hidden; box-shadow: 0 0 30px rgba(197, 160, 89, 0.2);
         }
-        video { width: 100%; display: block; }
-
-        #fx-canvas { position: fixed; top: 0; left: 0; z-index: 150; pointer-events: none; }
+        video { width: 100%; height: 100%; object-fit: cover; }
 
         .music-btn {
             position: fixed; bottom: 20px; right: 20px; z-index: 2000;
             background: rgba(0,0,0,0.8); border: 1px solid var(--gold);
             color: var(--gold); padding: 10px 18px; border-radius: 30px;
-            display: none; cursor: pointer; font-size: 0.7rem; font-family: 'Montserrat';
+            display: none; cursor: pointer; font-size: 0.7rem;
         }
     </style>
 </head>
 <body style="overflow: hidden;"> 
 
     <div id="quiz-overlay">
-        <div class="quiz-card">
-            <h2 style="font-family:'Playfair Display'; color:var(--gold); font-style: italic; font-size: 2rem;">Day I</h2>
-            <p style="font-size: 0.65rem; letter-spacing: 2px; opacity: 0.7; margin-bottom: 20px;">DATE OF OUR FIRST DAY AS BOYFRIEND-GIRLFRIEND (DD/MM)?</p>
-            <input type="text" id="quiz-answer" placeholder="Type here...">
+        <div style="text-align:center; padding: 40px; border: 1px solid var(--gold); background: #0a0a0a; max-width: 350px;">
+            <h2 style="font-family:'Playfair Display'; color:var(--gold); font-style: italic;">Day I</h2>
+            <p style="font-size: 0.7rem; letter-spacing: 2px;">DATE WE FIRST MET AS BOYFRIEND-GIRLFRIEND (DD/MM)?</p>
+            <input type="text" id="quiz-answer" style="background:transparent; border:none; border-bottom:1px solid var(--gold); color:white; text-align:center; padding:10px; margin-top:20px; outline:none;">
             <br>
-            <button onclick="unlockDayOne()">Unlock Secret</button>
+            <button onclick="unlockDayOne()" style="margin-top:30px; background:var(--gold); border:none; padding:10px 20px; font-weight:bold; cursor:pointer;">UNLOCK</button>
         </div>
     </div>
 
-    <audio id="bg-music" loop><source src="music.mp3" type="audio/mpeg"></audio>
+    <audio id="bg-music" loop><source src="loveyou.mp3" type="audio/mpeg"></audio>
     <button id="musicToggle" class="music-btn" onclick="toggleMusic()">🔊 MUSIC ON</button>
 
-    <canvas id="fx-canvas"></canvas>
-    
     <div id="map-wrapper"><div id="map"></div></div>
-    
     <img id="rose-traveler" src="https://pngimg.com/uploads/rose/rose_PNG639.png" alt="Rose">
 
     <div id="scroll-content" style="display:none;">
-        <div class="city-label" style="opacity:1;"><div class="label-text"><h1>Miamisburg</h1><p>The Beginning</p></div></div>
-        <div class="city-label" style="opacity:1;"><div class="label-text"><h1>Ludhiana</h1><p>The Connection</p></div></div>
-        <div class="city-label" style="opacity:1;"><div class="label-text"><h1>Mt Druitt</h1><p>The Destination</p></div></div>
-
-        <div class="finale-trigger"></div>
+        <div class="city-label"><div class="label-text"><h1>Miamisburg</h1><p>Beginning</p></div></div>
+        <div class="city-label"><div class="label-text"><h1>Ludhiana</h1><p>The Connection</p></div></div>
+        <div class="city-label"><div class="label-text"><h1>Mt Druitt</h1><p>Destination</p></div></div>
 
         <div class="reveal-zone">
             <div class="luxury-card">
-                <h2 style="font-family: 'Playfair Display'; font-size: 2.8rem; color: var(--gold); font-style: italic;">"Just like this rose..."</h2>
-                <p style="text-transform: none; font-size: 1.1rem; line-height: 2.2; color: #bbb; margin: 40px 0;">
-                    Across 15,000 kilometers, from my heart to yours. No matter the distance, you are always the destination.
-                </p>
+                <h2 style="font-family: 'Playfair Display'; color: var(--gold); font-style: italic;">"Just like this rose..."</h2>
                 
                 <div class="video-container">
-                    <video id="vault-video" controls poster="thumb.jpg">
+                    <video id="vault-video" controls playsinline>
                         <source src="video.mp4" type="video/mp4">
-                        Your browser does not support the video tag.
                     </video>
                 </div>
 
-                <div style="margin-top: 60px;">
-                    <a href="index.html" style="color:var(--gold); text-decoration:none; font-size:0.7rem; letter-spacing:3px; border: 1px solid var(--gold); padding: 12px 25px;">RETURN TO VAULT</a>
-                </div>
+                <a href="index.html" style="color:var(--gold); text-decoration:none; font-size:0.7rem; letter-spacing:3px; border: 1px solid var(--gold); padding: 10px 20px; display:inline-block; margin-top:20px;">RETURN TO VAULT</a>
             </div>
         </div>
     </div>
@@ -135,6 +111,19 @@
     <script>
         let map, audio;
         let isRevealed = false;
+
+        // RED ROSE SHOWER LOGIC
+        function createRose() {
+            const r = document.createElement('div');
+            r.className = 'rose-petal';
+            r.innerText = '🌹';
+            r.style.left = Math.random() * 100 + 'vw';
+            const dur = Math.random() * 3 + 5;
+            r.style.animationDuration = dur + 's';
+            r.style.opacity = Math.random() * 0.5 + 0.5;
+            document.body.appendChild(r);
+            setTimeout(() => r.remove(), dur * 1000);
+        }
 
         function unlockDayOne() {
             const val = document.getElementById('quiz-answer').value.toLowerCase().trim();
@@ -151,10 +140,10 @@
                 audio.currentTime = 30;
                 audio.play();
 
+                // Start rose shower
+                setInterval(createRose, 500);
                 initMap();
-            } else {
-                alert("That's not it, my love. Try again? ❤️");
-            }
+            } else { alert("Try again, my love..."); }
         }
 
         function initMap() {
@@ -162,7 +151,6 @@
             L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
             const ohio = [39.64, -84.28], punjab = [31.14, 75.34], sydney = [-33.77, 150.82];
             L.polyline([ohio, [45, 0], punjab, [0, 90], sydney], { color: '#c5a059', weight: 1.5, dashArray: '10, 15', opacity: 0.4 }).addTo(map);
-            animate();
         }
 
         function toggleMusic() {
@@ -172,8 +160,7 @@
 
         window.addEventListener('scroll', () => {
             if (!isRevealed) return;
-            const scrollTotal = document.body.offsetHeight - window.innerHeight;
-            const scroll = window.scrollY / scrollTotal;
+            const scroll = window.scrollY / (document.body.offsetHeight - window.innerHeight);
             const rose = document.getElementById('rose-traveler');
             const mapWrap = document.getElementById('map-wrapper');
             const ohio = [39.64, -84.28], punjab = [31.14, 75.34], sydney = [-33.77, 150.82];
@@ -195,51 +182,12 @@
                 rose.style.opacity = 1;
                 rose.style.width = "80px";
                 rose.style.transform = `translate(-50%, -50%) rotate(${scroll * 720}deg)`;
-                sparkleActive = false;
-            } 
-            else if (scroll > 0.8 && scroll <= 0.95) {
-                const pBloom = (scroll - 0.8) / 0.15;
+            } else {
+                const pBloom = (scroll - 0.8) / 0.2;
                 mapWrap.style.opacity = 1 - pBloom;
-                rose.style.width = (80 + (pBloom * 220)) + "px";
-                rose.style.height = (80 + (pBloom * 220)) + "px";
-                rose.style.transform = `translate(-50%, -50%) rotate(${pBloom * 10}deg)`;
-                sparkleActive = true; sparkleStrength = pBloom;
-            }
-            else {
-                const pFinal = (scroll - 0.95) / 0.05;
-                rose.style.opacity = 1 - pFinal;
-                mapWrap.style.opacity = 0;
+                rose.style.opacity = 1 - pBloom;
             }
         });
-
-        const canvas = document.getElementById('fx-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        let sparkleActive = false; let sparkleStrength = 0;
-        const fxObjects = [];
-        for(let i=0; i<30; i++) fxObjects.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, s: Math.random()*2+1, r: Math.random()*360 });
-        const sparkles = [];
-        for(let i=0; i<60; i++) sparkles.push({ ang: Math.random()*Math.PI*2, dist: Math.random()*150, s: Math.random()*2 });
-
-        function animate() {
-            ctx.clearRect(0,0,canvas.width, canvas.height);
-            ctx.fillStyle = "#ff4d4d";
-            fxObjects.forEach(p => {
-                ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r*Math.PI/180);
-                ctx.beginPath(); ctx.ellipse(0,0, p.s*3, p.s*6, 0, 0, Math.PI*2); ctx.fill(); ctx.restore();
-                p.y += p.s * 0.5; p.r += 0.5; if(p.y > canvas.height) p.y = -20;
-            });
-            if (sparkleActive) {
-                sparkles.forEach(s => {
-                    s.ang += 0.02;
-                    const curX = window.innerWidth/2 + Math.cos(s.ang) * (s.dist * sparkleStrength);
-                    const curY = window.innerHeight/2 + Math.sin(s.ang) * (s.dist * sparkleStrength);
-                    ctx.fillStyle = `rgba(197, 160, 89, ${sparkleStrength})`;
-                    ctx.beginPath(); ctx.arc(curX, curY, s.s, 0, Math.PI*2); ctx.fill();
-                });
-            }
-            requestAnimationFrame(animate);
-        }
     </script>
 </body>
 </html>
