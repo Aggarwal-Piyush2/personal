@@ -2,196 +2,134 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>The Valentine Vault | Sydney Entry</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Vault</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,700&family=Montserrat:wght@200;400&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #eeba30; --crimson: #740001; --deep-red: #2c0b0e; }
-        
-        body, html { 
-            margin: 0; padding: 0; background: #000; color: white;
-            font-family: 'Montserrat', sans-serif; height: 100vh;
-            overflow: hidden; display: flex; align-items: center; justify-content: center;
+        :root { --gold: #c5a059; }
+
+        body {
+            margin: 0; padding: 0;
+            /* Full screen romantic gradient */
+            background: radial-gradient(circle at center, #1a0505 0%, #050505 100%);
+            color: white; font-family: 'Montserrat', sans-serif;
+            min-height: 100vh; width: 100vw;
+            overflow-x: hidden;
+            display: flex; flex-direction: column; align-items: center;
         }
 
-        .bg-glow {
-            position: absolute; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 50%, var(--deep-red) 0%, #0a0a0a 100%);
-            z-index: -1; animation: pulse 8s infinite alternate;
+        /* --- EMOJI SHOWER --- */
+        .emoji {
+            position: fixed; top: -50px;
+            font-size: 24px; z-index: 1;
+            user-select: none; pointer-events: none;
+            animation: fall linear forwards;
         }
-        @keyframes pulse { 0% { opacity: 0.6; } 100% { opacity: 1; } }
-
-        /* Hidden YouTube Player */
-        #yt-player { position: absolute; top: -9999px; left: -9999px; visibility: hidden; pointer-events: none; }
-
-        /* Lockdown Screen */
-        #lockdown-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 9999; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; text-align: center;
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
         }
 
-        .lock-icon { font-size: 5rem; color: var(--gold); margin-bottom: 20px; filter: drop-shadow(0 0 10px var(--gold)); }
-
-        /* Music Toggle Button */
-        .music-toggle {
-            position: fixed; bottom: 20px; right: 20px; z-index: 10000;
-            background: rgba(0,0,0,0.6); border: 1px solid var(--gold);
-            color: var(--gold); border-radius: 50px; padding: 10px 15px;
-            font-size: 0.7rem; cursor: pointer; display: none;
+        .header {
+            text-align: center; margin: 80px 0 40px 0; z-index: 10;
         }
-
-        /* Main Content */
-        .main-content { text-align: center; z-index: 10; display: none; }
-        
-        h1 {
-            font-family: 'Playfair Display', serif; font-size: 3rem;
-            letter-spacing: 8px; margin-bottom: 5px; font-style: italic;
-            color: var(--gold); text-shadow: 0 0 20px rgba(238, 186, 48, 0.4);
+        h1 { 
+            font-family: 'Playfair Display', serif; font-size: 3.5rem; 
+            color: var(--gold); margin: 0; font-style: italic;
+            text-shadow: 0 0 20px rgba(197, 160, 89, 0.3);
         }
+        .subtitle { letter-spacing: 6px; font-size: 0.7rem; opacity: 0.6; margin-top: 10px; }
 
-        .subtitle { opacity: 0.7; font-size: 0.7rem; letter-spacing: 4px; margin-bottom: 40px; text-transform: uppercase; }
-
-        .vault-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;
-            max-width: 400px; margin: 0 auto; perspective: 1000px;
-            justify-items: center; justify-content: center; 
+        /* --- THE GRID --- */
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 15px; padding: 20px;
+            max-width: 800px; width: 90%; z-index: 10;
+            margin-bottom: 100px;
         }
+        @media (min-width: 600px) { #grid { grid-template-columns: repeat(4, 1fr); } }
 
         .day-card {
-            width: 75px; height: 100px; background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(238, 186, 48, 0.2); border-radius: 8px;
+            aspect-ratio: 1/1; border: 1px solid rgba(197, 160, 89, 0.2);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-decoration: none; color: white; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative; overflow: hidden;
+            text-decoration: none; color: white; transition: 0.4s ease;
+            background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(8px);
+            border-radius: 4px;
         }
-
-        .day-card span { font-family: 'Playfair Display', serif; font-size: 1.5rem; }
-        .day-card small { font-size: 0.5rem; letter-spacing: 1px; margin-top: 5px; opacity: 0.5; }
-
-        .unlocked:hover {
-            background: rgba(238, 186, 48, 0.1); border-color: var(--gold);
-            transform: translateY(-10px) scale(1.05); box-shadow: 0 10px 30px rgba(238, 186, 48, 0.2);
+        .day-card.unlocked:hover { 
+            border-color: var(--gold); 
+            background: rgba(197, 160, 89, 0.1);
+            transform: translateY(-5px);
         }
+        .day-card.locked { opacity: 0.25; cursor: not-allowed; }
+        
+        .day-card span { font-family: 'Playfair Display'; font-size: 1.8rem; color: var(--gold); }
+        .day-card small { font-size: 0.55rem; margin-top: 8px; letter-spacing: 2px; opacity: 0.8; }
 
-        .locked { opacity: 0.3; cursor: not-allowed; border-color: #333; }
-        .locked::after { content: '🔒'; position: absolute; font-size: 0.8rem; bottom: 10px; opacity: 0.5; }
-
-        @media (max-width: 400px) { .vault-grid { grid-template-columns: repeat(3, 1fr); } }
+        .music-toggle {
+            position: fixed; bottom: 20px; right: 20px;
+            background: rgba(0,0,0,0.6); border: 1px solid var(--gold); color: var(--gold);
+            padding: 8px 15px; border-radius: 20px; cursor: pointer; z-index: 100;
+            font-family: 'Montserrat'; font-size: 0.7rem; letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="bg-glow"></div>
+    <audio id="bg-music" loop preload="auto">
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+    <button id="musicControl" class="music-toggle" onclick="toggleMusic()">🔊 MUSIC OFF</button>
 
-    <div id="yt-player"></div>
-    <button id="musicControl" class="music-toggle" onclick="toggleMusic()">🔊 MUSIC ON</button>
-
-    <div id="lockdown-screen">
-        <div class="lock-icon">🔒</div>
-        <h2 style="font-family: 'Playfair Display'; italic;">The Vault is Sealed</h2>
-        <p id="countdown-text" style="letter-spacing: 2px; font-size: 0.8rem; color: var(--gold);"></p>
-        <p style="font-size: 0.6rem; opacity: 0.5; letter-spacing: 2px;">TRUST ME, IT'S WORTH THE WAIT!!!</p>
-    </div>
-
-    <div class="main-content" id="vault-content">
+    <div class="header">
         <h1>The Vault</h1>
         <p class="subtitle">EIGHT DAYS • EIGHT SECRETS</p>
-        <div class="vault-grid" id="grid"></div>
-        <p id="challenge-hint" style="margin-top: 40px; font-size: 0.7rem; color: var(--gold); italic; height: 20px;"></p>
     </div>
 
-<audio id="bg-music" loop>
-    <source src="khaab.mp3" type="audio/mpeg">
-</audio>
+    <div id="grid"></div>
 
-<button id="musicControl" class="music-toggle" onclick="toggleMusic()">🔊 MUSIC ON</button>
+    <script>
+        // --- CONFIGURATION ---
+        const TARGET_ISO = "2026-02-06T00:00:00+11:00"; // Sydney Time
+        const audio = document.getElementById('bg-music');
+        let musicStarted = false;
 
-<script>
-    const audio = document.getElementById('bg-music');
-    const START_TIME = 18; 
-    let musicStarted = false;
-
-    // This function starts the music at exactly 18 seconds on the first click
-    function startMusic() {
-        if (!musicStarted) {
-            audio.currentTime = START_TIME;
-            audio.play().then(() => {
-                musicStarted = true;
-                document.getElementById('musicControl').style.display = 'block';
-                document.getElementById('musicControl').innerText = "🔊 MUSIC ON";
-            }).catch(error => {
-                console.log("Playback failed. Waiting for another click.");
-            });
+        // --- EMOJI SHOWER ---
+        const emojis = ['❤️', '💖', '✨', '🌹', '💌', '🌸'];
+        function createEmoji() {
+            const e = document.createElement('div');
+            e.className = 'emoji';
+            e.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            e.style.left = Math.random() * 100 + 'vw';
+            const duration = Math.random() * 3 + 4; // 4-7 seconds
+            e.style.animationDuration = duration + 's';
+            e.style.opacity = Math.random() * 0.7 + 0.3;
+            document.body.appendChild(e);
+            setTimeout(() => e.remove(), duration * 1000);
         }
-    }
+        setInterval(createEmoji, 400);
 
-    // Listen for click OR touch anywhere on the page
-    document.body.addEventListener('click', startMusic);
-    document.body.addEventListener('touchstart', startMusic);
-
-    function toggleMusic() {
-        const btn = document.getElementById('musicControl');
-        if (audio.paused) {
-            audio.play();
-            btn.innerText = "🔊 MUSIC ON";
-        } else {
-            audio.pause();
-            btn.innerText = "🔇 MUSIC OFF";
-        }
-    }
-
-        // --- SYDNEY TIME CONFIGURATION ---
-        const TARGET_ISO = "2026-01-06T00:00:00+11:00"; 
-        const EVENT_START_DATE = new Date(TARGET_ISO);  
-
-        function checkLockdown() {
-            const now = new Date();
-            const lockdownScreen = document.getElementById('lockdown-screen');
-            const vaultContent = document.getElementById('vault-content');
-            const countdownText = document.getElementById('countdown-text');
-
-            if (now >= EVENT_START_DATE) {
-                lockdownScreen.style.display = 'none';
-                vaultContent.style.display = 'block';
-                document.getElementById('musicControl').style.display = 'block';
-                
-                // Try to start music on first vault view interaction
-                if (player && player.getPlayerState() !== 1) {
-                    player.playVideo();
-                }
-
-                renderVault();
-            } else {
-                const diff = EVENT_START_DATE - now;
-                const days = Math.floor(diff / 86400000);
-                const hours = Math.floor((diff / 3600000) % 24);
-                const mins = Math.floor((diff / 60000) % 60);
-                const secs = Math.floor((diff / 1000) % 60);
-                countdownText.innerText = `${days}D : ${hours}H : ${mins}M : ${secs}S`;
-            }
-        }
-
+        // --- GRID RENDERING ---
         const challenges = [
-            { id: 1, title: "I", hint: "Unlocks Feb 7", link: "day1.html" },
-            { id: 2, title: "II", hint: "Unlocks Feb 8", link: "day2.html" },
-            { id: 3, title: "III", hint: "Unlocks Feb 9", link: "day3.html" },
-            { id: 4, title: "IV", hint: "Unlocks Feb 10", link: "day4.html" },
-            { id: 5, title: "V", hint: "Unlocks Feb 11", link: "day5.html" },
-            { id: 6, title: "VI", hint: "Unlocks Feb 12", link: "day6.html" },
-            { id: 7, title: "VII", hint: "Unlocks Feb 13", link: "day7.html" },
-            { id: 8, title: "VIII", hint: "Unlocks Feb 14", link: "day8.html" }
+            { title: "I", link: "day1.html" },
+            { title: "II", link: "day2.html" },
+            { title: "III", link: "day3.html" },
+            { title: "IV", link: "day4.html" },
+            { title: "V", link: "day5.html" },
+            { title: "VI", link: "day6.html" },
+            { title: "VII", link: "day7.html" },
+            { title: "VIII", link: "day8.html" }
         ];
 
         function renderVault() {
             const grid = document.getElementById('grid');
-            if(grid.children.length > 0) return; 
-            
+            grid.innerHTML = ''; // Clear previous
             const now = new Date();
+            const startDate = new Date(TARGET_ISO);
 
             challenges.forEach((day, index) => {
-                const unlockDate = new Date(EVENT_START_DATE);
-                unlockDate.setDate(EVENT_START_DATE.getDate() + (index + 1));
+                const unlockDate = new Date(startDate);
+                unlockDate.setDate(startDate.getDate() + index);
 
                 const card = document.createElement('a');
                 const isUnlocked = now >= unlockDate;
@@ -199,23 +137,42 @@
                 if (isUnlocked) {
                     card.className = 'day-card unlocked';
                     card.href = day.link;
-                    card.onmouseover = () => { document.getElementById('challenge-hint').innerText = "Click to enter secret " + day.id; };
-                    card.onmouseleave = () => { document.getElementById('challenge-hint').innerText = ""; };
                 } else {
                     card.className = 'day-card locked';
+                    card.href = "#";
                     card.onclick = (e) => { 
                         e.preventDefault(); 
-                        alert(`This secret unlocks Sydney midnight on ${unlockDate.toLocaleDateString('en-AU')}`); 
+                        alert(`This secret unlocks on Feb ${6 + index} at Midnight.`); 
                     };
                 }
-
-                card.innerHTML = `<span>${day.title}</span><small>DAY ${day.id}</small>`;
+                card.innerHTML = `<span>${day.title}</span><small>DAY ${index + 1}</small>`;
                 grid.appendChild(card);
             });
         }
 
-        setInterval(checkLockdown, 1000);
-        checkLockdown();
+        // --- MUSIC CONTROL ---
+        // Music unblocks on the very first click anywhere
+        window.addEventListener('click', () => {
+            if (!musicStarted) {
+                audio.currentTime = 18;
+                audio.play().catch(e => console.log("Playback blocked"));
+                musicStarted = true;
+                document.getElementById('musicControl').innerText = "🔊 MUSIC ON";
+            }
+        }, { once: true });
+
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play();
+                document.getElementById('musicControl').innerText = "🔊 MUSIC ON";
+            } else {
+                audio.pause();
+                document.getElementById('musicControl').innerText = "🔇 MUSIC OFF";
+            }
+        }
+
+        // Initialize
+        renderVault();
     </script>
 </body>
 </html>
