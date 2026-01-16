@@ -101,72 +101,85 @@
         <p id="challenge-hint" style="margin-top: 40px; font-size: 0.7rem; color: var(--gold); italic; height: 20px;"></p>
     </div>
 
-    <script src="https://www.youtube.com/iframe_api"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
-
-
-        // --- YOUTUBE CONFIG ---
-        const START_SECOND = 18; // <--- SET YOUR START TIME
-        const VIDEO_ID = '2eliQ_KR8yA'; // <--- SET YOUR VIDEO ID
-
+        // --- CONFIGURATION ---
+        const START_SECOND = 18; 
+        const VIDEO_ID = '2eliQ_KR8yA'; 
+       
+        
         let player;
         let musicStarted = false;
 
+        // 1. Initialize Player
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('yt-player', {
                 height: '0',
                 width: '0',
                 videoId: VIDEO_ID,
-            playerVars: {
-                'autoplay': 1,
-                'loop': 1,
-                'playlist': VIDEO_ID,
-                'start': START_SECOND,
-                'controls': 0,
-                'modestbranding': 1,
-                'rel': 0
-            },
-            events: {
-                'onReady': onPlayerReady,
-                'onStateChange': onPlayerStateChange
-            }
-        });
-    }   
+                playerVars: {
+                    'autoplay': 1,
+                    'loop': 1,
+                    'playlist': VIDEO_ID,
+                    'start': START_SECOND,
+                    'controls': 0,
+                    'modestbranding': 1,
+                    'rel': 0
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
 
         function onPlayerReady(event) {
-        // Mute is required for most mobile browsers to allow "Autoplay"
-            event.target.mute();
+            event.target.mute(); 
             event.target.playVideo();
-    }
+        }
 
         function onPlayerStateChange(event) {
-            // If the video starts (1), check if it's before our start time
+            // Force jump to start time if it tries to play from 0
             if (event.data === YT.PlayerState.PLAYING) {
-                let currentTime = player.getCurrentTime();
-            if (currentTime < START_SECOND) {
-                player.seekTo(START_SECOND);
+                let curr = player.getCurrentTime();
+                if (curr < START_SECOND - 2) { // 2 second buffer
+                    player.seekTo(START_SECOND);
+                }
             }
-        }
-    // If it ends (0), loop it back to the specific start time
+            // Loop back to start time, not 0:00
             if (event.data === YT.PlayerState.ENDED) {
                 player.seekTo(START_SECOND);
                 player.playVideo();
             }
-    }
+        }
 
-        // THE CURE: Force interaction to unmute and seek again
-        document.body.addEventListener('click', function() {
+        // 2. Interaction Trigger (The "Kickstart")
+        function startEverything() {
             if (player && !musicStarted) {
                 player.unMute();
                 player.setVolume(100);
-                // Force one final seek to be absolutely sure
                 player.seekTo(START_SECOND);
                 player.playVideo();
                 musicStarted = true;
-                document.getElementById('musicControl').innerText = "🔊 MUSIC ON";
+                const btn = document.getElementById('musicControl');
+                if(btn) btn.innerText = "🔊 MUSIC ON";
+            }
         }
-        }, { once: true });
+
+        document.body.addEventListener('click', startEverything, { once: true });
+        document.body.addEventListener('touchstart', startEverything, { once: true });
+
+        function toggleMusic() {
+            const btn = document.getElementById('musicControl');
+            if (player.isMuted()) {
+                player.unMute();
+                btn.innerText = "🔊 MUSIC ON";
+            } else {
+                player.mute();
+                btn.innerText = "🔇 MUSIC OFF";
+            }
+        }
 
         // --- SYDNEY TIME CONFIGURATION ---
         const TARGET_ISO = "2026-02-06T00:00:00+11:00"; 
