@@ -6,24 +6,40 @@
     <title>Day I | The Eternal Rose</title>
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400&family=Montserrat:wght@200;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,700&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
     
     <style>
-        :root { --gold: #c5a059; --bg: #050505; --rose-glow: #ff2d2d; }
+        :root { --gold: #c5a059; --bg: #050505; --rose-glow: #ff2d2d; --accent: #f0d7a7; }
         
         body, html { 
             margin: 0; padding: 0; background: var(--bg); color: white; 
-            font-family: 'Montserrat', sans-serif; 
-            height: 1600vh;
+            font-family: 'Montserrat', sans-serif; height: 1600vh;
             overflow-x: hidden; scrollbar-width: none;
         }
 
         /* --- THE LOCK --- */
         #quiz-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #050505; z-index: 9999;
+            background: radial-gradient(circle at center, #1a0505 0%, #050505 100%); z-index: 9999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
+        .quiz-card {
+            text-align: center; padding: 50px 30px; border: 1px solid var(--gold);
+            background: rgba(10, 10, 10, 0.9); max-width: 400px; width: 85%;
+            box-shadow: 0 0 50px rgba(197, 160, 89, 0.15); backdrop-filter: blur(10px);
+        }
+        .quiz-card input {
+            background: transparent; border: none; border-bottom: 2px solid var(--gold);
+            color: white; text-align: center; padding: 15px; width: 80%;
+            margin-top: 30px; font-family: 'Montserrat'; outline: none; font-size: 1.1rem;
+        }
+        .btn-unlock {
+            margin-top: 40px; background: linear-gradient(45deg, var(--gold), var(--accent));
+            border: none; padding: 15px 40px; color: black; font-weight: 700; cursor: pointer;
+            letter-spacing: 3px; text-transform: uppercase; font-size: 0.8rem;
+            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.4); transition: 0.3s;
+        }
+        .btn-unlock:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(197, 160, 89, 0.6); }
 
         /* --- ROSE SHOWER --- */
         .rose-petal {
@@ -33,92 +49,93 @@
         @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
 
         /* --- THE MAP --- */
-        #map-wrapper { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh; 
-            z-index: 1; display: none;
-        }
-        #map { height: 100%; width: 100%; background: #000; }
+        #map-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 1; display: none; }
+        #map { height: 100%; width: 100%; background: #000; filter: grayscale(0.5) contrast(1.2); }
 
         #rose-traveler {
             position: fixed; top: 50%; left: 50%; z-index: 100; pointer-events: none;
             width: 80px; height: 80px; transform: translate(-50%, -50%);
-            filter: drop-shadow(0 0 15px var(--rose-glow)); display: none;
-            transition: width 0.3s ease-out, height 0.3s ease-out, opacity 0.5s;
+            filter: drop-shadow(0 0 25px var(--rose-glow)); display: none;
+            transition: width 0.1s linear, height 0.1s linear;
         }
 
-        .city-label { 
-            position: relative; z-index: 20; height: 400vh; 
-            display: flex; align-items: center; justify-content: center; 
-            pointer-events: none;
-        }
+        .city-label { position: relative; z-index: 20; height: 400vh; display: flex; align-items: center; justify-content: center; pointer-events: none; }
         .label-text { 
-            background: rgba(0, 0, 0, 0.8); border-bottom: 2px solid var(--gold); 
-            padding: 25px 50px; text-align: center; backdrop-filter: blur(10px); 
+            background: rgba(0, 0, 0, 0.85); border-left: 3px solid var(--gold); 
+            padding: 30px 60px; text-align: center; backdrop-filter: blur(15px); 
         }
-        
-        h1 { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--gold); margin: 0; font-style: italic; }
+        .label-text h1 { font-family: 'Playfair Display'; font-size: 3.5rem; color: var(--gold); margin: 0; font-weight: 400; font-style: italic; }
+        .label-text p { letter-spacing: 8px; font-size: 0.7rem; color: var(--accent); text-transform: uppercase; margin-top: 10px; }
 
-        .reveal-zone { 
-            position: relative; z-index: 200; background: var(--bg); 
-            padding: 150px 20px; text-align: center;
-        }
+        .reveal-zone { position: relative; z-index: 200; background: var(--bg); padding: 150px 20px; text-align: center; }
         .luxury-card { 
-            max-width: 500px; margin: 0 auto; padding: 40px 20px; 
-            border: 1px solid rgba(197, 160, 89, 0.2); background: #0a0a0a; 
+            max-width: 550px; margin: 0 auto; padding: 60px 30px; 
+            border: 1px solid rgba(197, 160, 89, 0.3); background: linear-gradient(145deg, #0a0a0a, #111); 
+            box-shadow: 0 0 60px rgba(0,0,0,0.8);
         }
 
         .video-container {
             width: 100%; max-width: 320px; aspect-ratio: 9 / 16; 
-            margin: 30px auto; border: 1px solid var(--gold); 
-            background: #000; overflow: hidden;
+            margin: 40px auto; border: 1px solid var(--gold); 
+            background: #000; overflow: hidden; box-shadow: 0 0 40px rgba(197, 160, 89, 0.2);
         }
         video { width: 100%; height: 100%; object-fit: cover; }
 
+        .sexy-text {
+            font-family: 'Playfair Display'; font-size: 1.2rem; line-height: 2;
+            background: linear-gradient(to right, #fff, var(--accent));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 30px; font-style: italic;
+        }
+
         .music-btn {
-            position: fixed; bottom: 20px; right: 20px; z-index: 2000;
-            background: rgba(0,0,0,0.8); border: 1px solid var(--gold);
-            color: var(--gold); padding: 10px 18px; border-radius: 30px;
-            display: none; cursor: pointer; font-size: 0.7rem;
+            position: fixed; bottom: 25px; right: 25px; z-index: 2000;
+            background: rgba(0,0,0,0.7); border: 1px solid var(--gold);
+            color: var(--gold); padding: 12px 20px; border-radius: 40px;
+            display: none; cursor: pointer; font-size: 0.7rem; letter-spacing: 2px;
         }
     </style>
 </head>
 <body style="overflow: hidden;"> 
 
     <div id="quiz-overlay">
-        <div style="text-align:center; padding: 40px; border: 1px solid var(--gold); background: #0a0a0a; max-width: 350px;">
-            <h2 style="font-family:'Playfair Display'; color:var(--gold); font-style: italic;">Day I</h2>
-            <p style="font-size: 0.7rem; letter-spacing: 2px;">DATE WE FIRST MET (DD/MM)?</p>
-            <input type="text" id="quiz-answer" style="background:transparent; border:none; border-bottom:1px solid var(--gold); color:white; text-align:center; padding:10px; margin-top:20px; outline:none;">
+        <div class="quiz-card">
+            <h2 style="font-family:'Playfair Display'; color:var(--gold); font-size: 2.5rem; font-style: italic; margin: 0;">Day I</h2>
+            <p style="font-size: 0.6rem; letter-spacing: 4px; color: var(--accent); margin-top: 10px;">A SPECIAL MEMORY</p>
+            <p style="font-size: 0.75rem; color: #888; margin-top: 25px;">DATE WE FIRST MET (DD/MM)?</p>
+            <input type="text" id="quiz-answer" placeholder="00/00">
             <br>
-            <button onclick="unlockDayOne()" style="margin-top:30px; background:var(--gold); border:none; padding:10px 20px; font-weight:bold; cursor:pointer;">UNLOCK</button>
+            <button class="btn-unlock" onclick="unlockDayOne()">Unlock Reward</button>
         </div>
     </div>
 
     <audio id="bg-music" loop><source src="loveyou.mp3" type="audio/mpeg"></audio>
-    <button id="musicToggle" class="music-btn" onclick="toggleMusic()">🔊 MUSIC ON</button>
+    <button id="musicToggle" class="music-btn" onclick="toggleMusic()">🔊 HARMONY ON</button>
 
     <div id="map-wrapper"><div id="map"></div></div>
     <img id="rose-traveler" src="https://pngimg.com/uploads/rose/rose_PNG639.png" alt="Rose">
 
     <div id="scroll-content" style="display:none;">
-        <div class="city-label"><div class="label-text"><h1>Miamisburg</h1><p>The Beginning</p></div></div>
-        <div class="city-label"><div class="label-text"><h1>Ludhiana</h1><p>The Connection</p></div></div>
-        <div class="city-label"><div class="label-text"><h1>Mt Druitt</h1><p>The Destination</p></div></div>
+        <div class="city-label"><div class="label-text"><h1>Miamisburg</h1><p>The Origin</p></div></div>
+        <div class="city-label"><div class="label-text"><h1>Ludhiana</h1><p>Deep Connection</p></div></div>
+        <div class="city-label"><div class="label-text"><h1>Mt Druitt</h1><p>My Final Stop</p></div></div>
 
         <div class="reveal-zone">
             <div class="luxury-card">
-                <h2 style="font-family: 'Playfair Display'; color: var(--gold); font-style: italic; font-size: 2.2rem;">"Just like this rose..."</h2>
-                
-                <p style="text-transform: none; font-size: 1rem; line-height: 1.8; color: #bbb; margin: 20px 0;">
-                    Across 15,000 kilometers, from my heart to yours. No matter the distance, you are always the destination.
-                </p>
+                <h2 style="font-family: 'Playfair Display'; color: var(--gold); font-size: 2.8rem; font-style: italic; margin-bottom: 10px;">Eternal</h2>
+                <div class="sexy-text">
+                    "Across 15,000 kilometers, from my heart to yours. <br> No matter the distance, you are always the destination."
+                </div>
 
                 <div class="video-container">
                     <video id="vault-video" controls playsinline>
                         <source src="video.mp4" type="video/mp4">
                     </video>
                 </div>
-                <a href="index.html" style="color:var(--gold); text-decoration:none; font-size:0.7rem; letter-spacing:3px; border: 1px solid var(--gold); padding: 10px 20px; display:inline-block; margin-top:20px;">RETURN TO VAULT</a>
+                
+                <div style="margin-top: 40px;">
+                    <a href="index.html" style="color:var(--gold); text-decoration:none; font-size:0.7rem; letter-spacing:4px; border-bottom: 1px solid var(--gold); padding-bottom: 5px;">CLOSE VAULT</a>
+                </div>
             </div>
         </div>
     </div>
@@ -132,7 +149,7 @@
             const r = document.createElement('div');
             r.className = 'rose-petal'; r.innerText = '🌹';
             r.style.left = Math.random() * 100 + 'vw';
-            const dur = Math.random() * 3 + 5;
+            const dur = Math.random() * 4 + 4;
             r.style.animationDuration = dur + 's';
             document.body.appendChild(r);
             setTimeout(() => r.remove(), dur * 1000);
@@ -150,16 +167,16 @@
                 document.body.style.overflowY = 'auto';
                 audio = document.getElementById('bg-music');
                 audio.currentTime = 30; audio.play();
-                setInterval(createRose, 500);
+                setInterval(createRose, 400);
                 initMap();
-            } else { alert("Try again, my love..."); }
+            } else { alert("Not quite, my love. Try again? ❤️"); }
         }
 
         function initMap() {
             map = L.map('map', { zoomControl: false, scrollWheelZoom: false, dragging: false, attributionControl: false }).setView([39.64, -84.28], 3);
             L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
             const ohio = [39.64, -84.28], punjab = [30.9, 75.8], sydney = [-33.77, 150.82];
-            L.polyline([ohio, [40, -20], [20, 40], punjab, [5, 100], sydney], { color: '#c5a059', weight: 2, dashArray: '10, 15', opacity: 0.5 }).addTo(map);
+            L.polyline([ohio, [40, -20], [20, 40], punjab, [5, 100], sydney], { color: '#c5a059', weight: 2, dashArray: '10, 20', opacity: 0.6 }).addTo(map);
         }
 
         window.addEventListener('scroll', () => {
@@ -172,14 +189,13 @@
 
             const ohio = [39.64, -84.28], punjab = [30.9, 75.8], sydney = [-33.77, 150.82];
 
-            // PHASE 1: TRAVELING (0% to 75%)
-            if (scroll <= 0.75) {
+            // PHASE 1: JOURNEY (0% to 70%)
+            if (scroll <= 0.70) {
                 mapWrap.style.opacity = "1";
                 rose.style.opacity = "1";
-                rose.style.width = "80px"; 
-                rose.style.height = "80px";
+                rose.style.width = "80px"; rose.style.height = "80px";
 
-                const p = scroll / 0.75;
+                const p = scroll / 0.70;
                 let lat, lng;
                 if (p < 0.5) {
                     let p1 = p * 2;
@@ -190,32 +206,32 @@
                     lat = punjab[0] + (sydney[0] - punjab[0]) * p2;
                     lng = punjab[1] + (sydney[1] - punjab[1]) * p2;
                 }
-                map.setView([lat, lng], 3 + (p * 1.5));
-                rose.style.transform = `translate(-50%, -50%) rotate(${scroll * 1000}deg)`;
+                map.setView([lat, lng], 3 + (p * 2));
+                rose.style.transform = `translate(-50%, -50%) rotate(${scroll * 1200}deg)`;
             } 
-            // PHASE 2: BLOOMING (75% to 90%)
-            else if (scroll > 0.75 && scroll <= 0.90) {
-                const pBloom = (scroll - 0.75) / 0.15;
+            // PHASE 2: MASSIVE BLOOM (70% to 92%)
+            else if (scroll > 0.70 && scroll <= 0.92) {
+                const pBloom = (scroll - 0.70) / 0.22;
                 mapWrap.style.opacity = 1 - pBloom;
                 
-                // MAKE ROSE BIG
-                const size = 80 + (pBloom * 250); 
+                // HUGE SIZE - Scales up to 600px
+                const size = 80 + (pBloom * 520); 
                 rose.style.width = size + "px";
                 rose.style.height = size + "px";
                 rose.style.opacity = 1;
-                rose.style.transform = `translate(-50%, -50%) rotate(${pBloom * 20}deg)`;
+                rose.style.transform = `translate(-50%, -50%) rotate(${pBloom * 45}deg)`;
             }
-            // PHASE 3: FADE AWAY
+            // PHASE 3: DISSOLVE
             else {
-                const pFinal = (scroll - 0.90) / 0.10;
+                const pFinal = (scroll - 0.92) / 0.08;
                 rose.style.opacity = 1 - pFinal;
                 mapWrap.style.opacity = "0";
             }
         });
 
         function toggleMusic() {
-            if (audio.paused) { audio.play(); document.getElementById('musicToggle').innerText = "🔊 MUSIC ON"; }
-            else { audio.pause(); document.getElementById('musicToggle').innerText = "🔇 MUSIC OFF"; }
+            if (audio.paused) { audio.play(); document.getElementById('musicToggle').innerText = "🔊 HARMONY ON"; }
+            else { audio.pause(); document.getElementById('musicToggle').innerText = "🔇 HARMONY OFF"; }
         }
     </script>
 </body>
