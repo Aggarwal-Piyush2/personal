@@ -14,124 +14,143 @@
         body, html { 
             margin: 0; padding: 0; background: var(--bg); color: white; 
             font-family: 'Montserrat', sans-serif; height: 1400vh;
-            scrollbar-width: none; overflow-x: hidden;
+            overflow-x: hidden; scrollbar-width: none;
         }
 
-        /* --- QUIZ OVERLAY (FIXED) --- */
+        /* --- THE LOCK --- */
         #quiz-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(5, 5, 5, 0.98); z-index: 1000;
+            background: #050505; z-index: 9999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
         .quiz-card {
             text-align: center; padding: 40px; border: 1px solid var(--gold);
             background: #0a0a0a; max-width: 350px; width: 90%;
+            box-shadow: 0 0 30px rgba(197, 160, 89, 0.1);
         }
         .quiz-card input {
             background: transparent; border: none; border-bottom: 1px solid var(--gold);
             color: white; text-align: center; padding: 15px; width: 80%;
-            margin-top: 20px; font-family: 'Montserrat'; outline: none; font-size: 1rem;
+            margin-top: 20px; font-family: 'Montserrat'; outline: none;
         }
         .quiz-card button {
             margin-top: 30px; background: var(--gold); border: none;
             padding: 12px 30px; color: black; font-weight: bold; cursor: pointer;
-            letter-spacing: 2px;
+            letter-spacing: 2px; text-transform: uppercase;
         }
 
-        /* --- MAP & CONTENT --- */
-        #map-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 1; }
+        /* --- THE JOURNEY ELEMENTS --- */
+        #map-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 1; display: none; }
         #map { height: 100%; width: 100%; background: #000; }
 
         #rose-traveler {
             position: fixed; top: 50%; left: 50%; z-index: 100; pointer-events: none;
             width: 80px; height: 80px; transform: translate(-50%, -50%);
-            filter: drop-shadow(0 0 10px var(--rose-glow));
-            display: none; /* Hidden until unlock */
+            filter: drop-shadow(0 0 15px var(--rose-glow));
+            display: none;
         }
 
-        .city-label { position: relative; z-index: 20; height: 350vh; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
-        .label-text { background: rgba(0, 0, 0, 0.7); border-bottom: 2px solid var(--gold); padding: 15px 35px; text-align: center; backdrop-filter: blur(10px); }
+        .city-label { position: relative; z-index: 20; height: 350vh; display: flex; align-items: center; justify-content: center; pointer-events: none; opacity: 0; transition: opacity 1s; }
+        .label-text { background: rgba(0, 0, 0, 0.8); border-bottom: 2px solid var(--gold); padding: 20px 40px; text-align: center; backdrop-filter: blur(10px); }
         
-        h1 { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--gold); margin: 0; }
-        p { letter-spacing: 5px; font-size: 0.7rem; text-transform: uppercase; margin-top: 5px; }
+        h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; color: var(--gold); margin: 0; font-style: italic; }
+        .city-label p { letter-spacing: 5px; font-size: 0.7rem; text-transform: uppercase; margin-top: 10px; color: #ccc; }
 
         .finale-trigger { height: 250vh; }
         .reveal-zone { position: relative; z-index: 200; background: var(--bg); padding: 150px 20px; text-align: center; }
-        .luxury-card { max-width: 750px; margin: 0 auto; padding: 60px 40px; border: 1px solid rgba(197, 160, 89, 0.2); background: #0a0a0a; }
+        .luxury-card { 
+            max-width: 700px; margin: 0 auto; padding: 60px 40px; 
+            border: 1px solid rgba(197, 160, 89, 0.2); background: #0a0a0a; 
+            box-shadow: 0 0 50px rgba(0,0,0,1);
+        }
 
         #fx-canvas { position: fixed; top: 0; left: 0; z-index: 150; pointer-events: none; }
 
         .music-btn {
             position: fixed; bottom: 20px; right: 20px; z-index: 2000;
-            background: rgba(0,0,0,0.7); border: 1px solid var(--gold);
-            color: var(--gold); padding: 10px 15px; border-radius: 25px;
-            display: none; cursor: pointer; font-family: 'Montserrat'; font-size: 0.7rem;
+            background: rgba(0,0,0,0.8); border: 1px solid var(--gold);
+            color: var(--gold); padding: 10px 18px; border-radius: 30px;
+            display: none; cursor: pointer; font-size: 0.7rem; font-family: 'Montserrat';
         }
     </style>
 </head>
-<body>
-
-    <div id="quiz-overlay">
+<body style="overflow: hidden;"> <div id="quiz-overlay">
         <div class="quiz-card">
-            <h2 style="font-family:'Playfair Display'; color:var(--gold); font-style: italic;">The First Secret</h2>
-            <p style="font-size: 0.7rem; letter-spacing: 2px; opacity: 0.8;">WHAT WAS THE FIRST DAY WE MET AS BOYFRIEND-GIRLFRIEND (DD/MM)?</p>
-            <input type="text" id="quiz-answer" placeholder="Enter answer...">
+            <h2 style="font-family:'Playfair Display'; color:var(--gold); font-style: italic; font-size: 2rem;">Day I</h2>
+            <p style="font-size: 0.65rem; letter-spacing: 2px; opacity: 0.7; margin-bottom: 20px;">Date of our First Day as Boyfriend-Girlfriend (DD/MM)?</p>
+            <input type="text" id="quiz-answer" placeholder="Type here...">
             <br>
-            <button onclick="checkQuiz()">UNLOCK JOURNEY</button>
+            <button onclick="unlockDayOne()">Unlock Secret</button>
         </div>
     </div>
 
-    <audio id="bg-music" loop>
-        <source src="loveyou.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="bg-music" loop><source src="loveyou.mp3" type="audio/mpeg"></audio>
     <button id="musicToggle" class="music-btn" onclick="toggleMusic()">🔊 MUSIC ON</button>
 
     <canvas id="fx-canvas"></canvas>
+    
     <div id="map-wrapper"><div id="map"></div></div>
+    
     <img id="rose-traveler" src="https://pngimg.com/uploads/rose/rose_PNG639.png" alt="Rose">
 
-    <div class="city-label"><div class="label-text"><h1>Miamisburg</h1><p>Beginning</p></div></div>
-    <div class="city-label"><div class="label-text"><h1>Ludhiana</h1><p>The Connection</p></div></div>
-    <div class="city-label"><div class="label-text"><h1>Mt Druitt</h1><p>Destination</p></div></div>
+    <div id="scroll-content" style="display:none;">
+        <div class="city-label" style="opacity:1;"><div class="label-text"><h1>Miamisburg</h1><p>The Beginning</p></div></div>
+        <div class="city-label" style="opacity:1;"><div class="label-text"><h1>Ludhiana</h1><p>The Connection</p></div></div>
+        <div class="city-label" style="opacity:1;"><div class="label-text"><h1>Mt Druitt</h1><p>The Destination</p></div></div>
 
-    <div class="finale-trigger"></div>
+        <div class="finale-trigger"></div>
 
-    <div class="reveal-zone">
-        <div class="luxury-card">
-            <h2 style="font-family: 'Playfair Display'; font-size: 2.8rem; color: var(--gold); font-style: italic;">"Just like this rose..."</h2>
-            <p style="text-transform: none; font-size: 1.1rem; line-height: 2.2; color: #ccc; margin: 40px 0;">
-                Across 15,000 kilometers, from my heart to yours. No matter the distance, you are always the destination.
-            </p>
-            <a href="index.html" style="color:var(--gold); text-decoration:none; font-size:0.7rem; letter-spacing:3px; border: 1px solid var(--gold); padding: 10px 20px;">RETURN TO THE VAULT</a>
+        <div class="reveal-zone">
+            <div class="luxury-card">
+                <h2 style="font-family: 'Playfair Display'; font-size: 2.5rem; color: var(--gold); font-style: italic;">"Just like this rose..."</h2>
+                <p style="text-transform: none; font-size: 1.1rem; line-height: 2.2; color: #bbb; margin: 40px 0; font-weight: 200;">
+                    Across 15,000 kilometers, from my heart to yours. No matter the distance, you are always the destination.
+                </p>
+                <a href="index.html" style="color:var(--gold); text-decoration:none; font-size:0.7rem; letter-spacing:3px; border: 1px solid var(--gold); padding: 12px 25px; display: inline-block;">RETURN TO VAULT</a>
+            </div>
         </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        const audio = document.getElementById('bg-music');
-        const START_TIME = 18;
-        let unlocked = false;
+        let map, audio;
+        let isRevealed = false;
 
-        // --- QUIZ & MUSIC UNLOCK ---
-        function checkQuiz() {
+        function unlockDayOne() {
             const val = document.getElementById('quiz-answer').value.toLowerCase().trim();
-            const correct = "11/07"; // Change this to your actual answer
-
-            if (val === correct) {
-                unlocked = true;
+            // Change "miamisburg" to your answer
+            if (val === "11/07") {
+                isRevealed = true;
+                
+                // 1. UI Reveal
                 document.getElementById('quiz-overlay').style.display = 'none';
+                document.getElementById('map-wrapper').style.display = 'block';
                 document.getElementById('rose-traveler').style.display = 'block';
+                document.getElementById('scroll-content').style.display = 'block';
                 document.getElementById('musicToggle').style.display = 'block';
-                
-                // Audio Start
-                audio.currentTime = START_TIME;
-                audio.play();
-                
-                // Allow scrolling
                 document.body.style.overflowY = 'auto';
+
+                // 2. Music Start
+                audio = document.getElementById('bg-music');
+                audio.currentTime = 18;
+                audio.play();
+
+                // 3. Initialize Map after reveal
+                initMap();
             } else {
-                alert("Try again, my love... ❤️");
+                alert("That's not it, my love. Try again? ❤️");
             }
+        }
+
+        function initMap() {
+            map = L.map('map', { zoomControl: false, scrollWheelZoom: false, dragging: false, attributionControl: false }).setView([39, -84], 3);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+
+            const ohio = [39.64, -84.28], punjab = [31.14, 75.34], sydney = [-33.77, 150.82];
+            L.polyline([ohio, [45, 0], punjab, [0, 90], sydney], { color: '#c5a059', weight: 1.5, dashArray: '10, 15', opacity: 0.4 }).addTo(map);
+
+            // Trigger animation frame for particles
+            animate();
         }
 
         function toggleMusic() {
@@ -139,27 +158,16 @@
             else { audio.pause(); document.getElementById('musicToggle').innerText = "🔇 MUSIC OFF"; }
         }
 
-        // --- PREVENT SCROLL UNTIL UNLOCKED ---
-        document.body.style.overflowY = 'hidden';
-
-        // --- MAP INITIALIZATION ---
-        const map = L.map('map', { zoomControl: false, scrollWheelZoom: false, dragging: false, attributionControl: false }).setView([39, -84], 3);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
-
-        const ohio = [39.64, -84.28], punjab = [31.14, 75.34], sydney = [-33.77, 150.82];
-        L.polyline([ohio, [45, 0], punjab, [0, 90], sydney], { color: '#c5a059', weight: 1.5, dashArray: '10, 15', opacity: 0.4 }).addTo(map);
-
-        let sparkleActive = false;
-        let sparkleStrength = 0;
-
         // --- SCROLL ENGINE ---
         window.addEventListener('scroll', () => {
-            if (!unlocked) return;
+            if (!isRevealed) return;
 
             const scrollTotal = document.body.offsetHeight - window.innerHeight;
             const scroll = window.scrollY / scrollTotal;
             const rose = document.getElementById('rose-traveler');
             const mapWrap = document.getElementById('map-wrapper');
+
+            const ohio = [39.64, -84.28], punjab = [31.14, 75.34], sydney = [-33.77, 150.82];
 
             if (scroll <= 0.8) {
                 const p = scroll / 0.8;
@@ -175,7 +183,8 @@
                 }
                 map.setView([lat, lng], 3 + (p * 2));
                 mapWrap.style.opacity = 1;
-                rose.style.width = "80px"; rose.style.height = "80px"; rose.style.opacity = 1;
+                rose.style.opacity = 1;
+                rose.style.width = "80px";
                 rose.style.transform = `translate(-50%, -50%) rotate(${scroll * 720}deg)`;
                 sparkleActive = false;
             } 
@@ -194,11 +203,11 @@
             }
         });
 
-        // --- FX CANVAS ---
+        // --- PARTICLES ---
         const canvas = document.getElementById('fx-canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        
+        let sparkleActive = false; let sparkleStrength = 0;
         const fxObjects = [];
         for(let i=0; i<30; i++) fxObjects.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, s: Math.random()*2+1, r: Math.random()*360 });
         const sparkles = [];
@@ -223,7 +232,6 @@
             }
             requestAnimationFrame(animate);
         }
-        animate();
     </script>
 </body>
 </html>
