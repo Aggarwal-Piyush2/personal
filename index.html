@@ -101,85 +101,48 @@
         <p id="challenge-hint" style="margin-top: 40px; font-size: 0.7rem; color: var(--gold); italic; height: 20px;"></p>
     </div>
 
-<script src="https://www.youtube.com/iframe_api"></script>
+<div id="music-container" style="position:absolute; top:-999px; left:-999px;">
+    <iframe id="yt-iframe" width="100" height="100" 
+        src="https://www.youtube.com/embed/2eliQ_KR8yA?enablejsapi=1&start=18&autoplay=1&mute=1&loop=1&playlist=2eliQ_KR8yA" 
+        frameborder="0" allow="autoplay">
+    </iframe>
+</div>
 
-    <script>
-        // --- CONFIGURATION ---
-        const START_SECOND = 18; 
-        const VIDEO_ID = '2eliQ_KR8yA'; 
-       
-        
-        let player;
-        let musicStarted = false;
+<script>
+   
+    const START_TIME = 18;
+    let musicStarted = false;
 
-        // 1. Initialize Player
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('yt-player', {
-                height: '0',
-                width: '0',
-                videoId: VIDEO_ID,
-                playerVars: {
-                    'autoplay': 1,
-                    'loop': 1,
-                    'playlist': VIDEO_ID,
-                    'start': START_SECOND,
-                    'controls': 0,
-                    'modestbranding': 1,
-                    'rel': 0
-                },
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
-            });
-        }
-
-        function onPlayerReady(event) {
-            event.target.mute(); 
-            event.target.playVideo();
-        }
-
-        function onPlayerStateChange(event) {
-            // Force jump to start time if it tries to play from 0
-            if (event.data === YT.PlayerState.PLAYING) {
-                let curr = player.getCurrentTime();
-                if (curr < START_SECOND - 2) { // 2 second buffer
-                    player.seekTo(START_SECOND);
-                }
-            }
-            // Loop back to start time, not 0:00
-            if (event.data === YT.PlayerState.ENDED) {
-                player.seekTo(START_SECOND);
-                player.playVideo();
-            }
-        }
-
-        // 2. Interaction Trigger (The "Kickstart")
-        function startEverything() {
-            if (player && !musicStarted) {
-                player.unMute();
-                player.setVolume(100);
-                player.seekTo(START_SECOND);
-                player.playVideo();
-                musicStarted = true;
-                const btn = document.getElementById('musicControl');
-                if(btn) btn.innerText = "🔊 MUSIC ON";
-            }
-        }
-
-        document.body.addEventListener('click', startEverything, { once: true });
-        document.body.addEventListener('touchstart', startEverything, { once: true });
-
-        function toggleMusic() {
+    // The Interaction Trigger: This unmutes the hidden iframe
+    function handleInteraction() {
+        if (!musicStarted) {
+            const iframe = document.getElementById('yt-iframe');
+            // This command tells the YouTube iframe to unmute and play
+            iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
+            iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+            
+            musicStarted = true;
             const btn = document.getElementById('musicControl');
-            if (player.isMuted()) {
-                player.unMute();
-                btn.innerText = "🔊 MUSIC ON";
-            } else {
-                player.mute();
-                btn.innerText = "🔇 MUSIC OFF";
-            }
+            if(btn) btn.innerText = "🔊 MUSIC ON";
+            console.log("Music Unmuted");
         }
+    }
+
+    // Listen for both clicks and touches (for mobile)
+    document.body.addEventListener('click', handleInteraction);
+    document.body.addEventListener('touchstart', handleInteraction);
+
+    function toggleMusic() {
+        const btn = document.getElementById('musicControl');
+        const iframe = document.getElementById('yt-iframe');
+        if (btn.innerText.includes("OFF")) {
+            iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
+            btn.innerText = "🔊 MUSIC ON";
+        } else {
+            iframe.contentWindow.postMessage('{"event":"command","func":"mute","args":""}', '*');
+            btn.innerText = "🔇 MUSIC OFF";
+        }
+    }
 
         // --- SYDNEY TIME CONFIGURATION ---
         const TARGET_ISO = "2026-02-06T00:00:00+11:00"; 
