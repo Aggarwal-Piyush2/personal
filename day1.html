@@ -59,10 +59,18 @@
         .finale-trigger { height: 250vh; }
         .reveal-zone { position: relative; z-index: 200; background: var(--bg); padding: 150px 20px; text-align: center; }
         .luxury-card { 
-            max-width: 700px; margin: 0 auto; padding: 60px 40px; 
+            max-width: 750px; margin: 0 auto; padding: 60px 40px; 
             border: 1px solid rgba(197, 160, 89, 0.2); background: #0a0a0a; 
             box-shadow: 0 0 50px rgba(0,0,0,1);
         }
+
+        /* Local Video Container */
+        .video-container {
+            width: 100%; max-width: 600px; margin: 40px auto 0;
+            border: 1px solid var(--gold); background: #000;
+            overflow: hidden;
+        }
+        video { width: 100%; display: block; }
 
         #fx-canvas { position: fixed; top: 0; left: 0; z-index: 150; pointer-events: none; }
 
@@ -74,17 +82,19 @@
         }
     </style>
 </head>
-<body style="overflow: hidden;"> <div id="quiz-overlay">
+<body style="overflow: hidden;"> 
+
+    <div id="quiz-overlay">
         <div class="quiz-card">
             <h2 style="font-family:'Playfair Display'; color:var(--gold); font-style: italic; font-size: 2rem;">Day I</h2>
-            <p style="font-size: 0.65rem; letter-spacing: 2px; opacity: 0.7; margin-bottom: 20px;">Date of our First Day as Boyfriend-Girlfriend (DD/MM)?</p>
+            <p style="font-size: 0.65rem; letter-spacing: 2px; opacity: 0.7; margin-bottom: 20px;">DATE OF OUR FIRST DAY AS BOYFRIEND-GIRLFRIEND (DD/MM)?</p>
             <input type="text" id="quiz-answer" placeholder="Type here...">
             <br>
             <button onclick="unlockDayOne()">Unlock Secret</button>
         </div>
     </div>
 
-    <audio id="bg-music" loop><source src="loveyou.mp3" type="audio/mpeg"></audio>
+    <audio id="bg-music" loop><source src="music.mp3" type="audio/mpeg"></audio>
     <button id="musicToggle" class="music-btn" onclick="toggleMusic()">🔊 MUSIC ON</button>
 
     <canvas id="fx-canvas"></canvas>
@@ -102,11 +112,21 @@
 
         <div class="reveal-zone">
             <div class="luxury-card">
-                <h2 style="font-family: 'Playfair Display'; font-size: 2.5rem; color: var(--gold); font-style: italic;">"Just like this rose..."</h2>
-                <p style="text-transform: none; font-size: 1.1rem; line-height: 2.2; color: #bbb; margin: 40px 0; font-weight: 200;">
+                <h2 style="font-family: 'Playfair Display'; font-size: 2.8rem; color: var(--gold); font-style: italic;">"Just like this rose..."</h2>
+                <p style="text-transform: none; font-size: 1.1rem; line-height: 2.2; color: #bbb; margin: 40px 0;">
                     Across 15,000 kilometers, from my heart to yours. No matter the distance, you are always the destination.
                 </p>
-                <a href="index.html" style="color:var(--gold); text-decoration:none; font-size:0.7rem; letter-spacing:3px; border: 1px solid var(--gold); padding: 12px 25px; display: inline-block;">RETURN TO VAULT</a>
+                
+                <div class="video-container">
+                    <video id="vault-video" controls poster="thumb.jpg">
+                        <source src="video.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+
+                <div style="margin-top: 60px;">
+                    <a href="index.html" style="color:var(--gold); text-decoration:none; font-size:0.7rem; letter-spacing:3px; border: 1px solid var(--gold); padding: 12px 25px;">RETURN TO VAULT</a>
+                </div>
             </div>
         </div>
     </div>
@@ -118,11 +138,8 @@
 
         function unlockDayOne() {
             const val = document.getElementById('quiz-answer').value.toLowerCase().trim();
-            // Change "miamisburg" to your answer
             if (val === "11/07") {
                 isRevealed = true;
-                
-                // 1. UI Reveal
                 document.getElementById('quiz-overlay').style.display = 'none';
                 document.getElementById('map-wrapper').style.display = 'block';
                 document.getElementById('rose-traveler').style.display = 'block';
@@ -130,12 +147,10 @@
                 document.getElementById('musicToggle').style.display = 'block';
                 document.body.style.overflowY = 'auto';
 
-                // 2. Music Start
                 audio = document.getElementById('bg-music');
-                audio.currentTime = 18;
+                audio.currentTime = 30;
                 audio.play();
 
-                // 3. Initialize Map after reveal
                 initMap();
             } else {
                 alert("That's not it, my love. Try again? ❤️");
@@ -145,11 +160,8 @@
         function initMap() {
             map = L.map('map', { zoomControl: false, scrollWheelZoom: false, dragging: false, attributionControl: false }).setView([39, -84], 3);
             L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
-
             const ohio = [39.64, -84.28], punjab = [31.14, 75.34], sydney = [-33.77, 150.82];
             L.polyline([ohio, [45, 0], punjab, [0, 90], sydney], { color: '#c5a059', weight: 1.5, dashArray: '10, 15', opacity: 0.4 }).addTo(map);
-
-            // Trigger animation frame for particles
             animate();
         }
 
@@ -158,15 +170,12 @@
             else { audio.pause(); document.getElementById('musicToggle').innerText = "🔇 MUSIC OFF"; }
         }
 
-        // --- SCROLL ENGINE ---
         window.addEventListener('scroll', () => {
             if (!isRevealed) return;
-
             const scrollTotal = document.body.offsetHeight - window.innerHeight;
             const scroll = window.scrollY / scrollTotal;
             const rose = document.getElementById('rose-traveler');
             const mapWrap = document.getElementById('map-wrapper');
-
             const ohio = [39.64, -84.28], punjab = [31.14, 75.34], sydney = [-33.77, 150.82];
 
             if (scroll <= 0.8) {
@@ -203,7 +212,6 @@
             }
         });
 
-        // --- PARTICLES ---
         const canvas = document.getElementById('fx-canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
