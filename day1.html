@@ -74,7 +74,7 @@
     <div id="quiz-overlay">
         <div class="quiz-card">
             <h2 style="font-family:'Playfair Display'; color:var(--gold); font-style: italic;">The First Secret</h2>
-            <p style="font-size: 0.7rem; letter-spacing: 2px; opacity: 0.8;">WHERE DID OUR JOURNEY BEGIN?</p>
+            <p style="font-size: 0.7rem; letter-spacing: 2px; opacity: 0.8;">WHAT WAS THE FIRST DAY WE MET AS BOYFRIEND-GIRLFRIEND (DD/MM)?</p>
             <input type="text" id="quiz-answer" placeholder="Enter answer...">
             <br>
             <button onclick="checkQuiz()">UNLOCK JOURNEY</button>
@@ -82,7 +82,7 @@
     </div>
 
     <audio id="bg-music" loop>
-        <source src="music.mp3" type="audio/mpeg">
+        <source src="loveyou.mp3" type="audio/mpeg">
     </audio>
     <button id="musicToggle" class="music-btn" onclick="toggleMusic()">🔊 MUSIC ON</button>
 
@@ -115,7 +115,7 @@
         // --- QUIZ & MUSIC UNLOCK ---
         function checkQuiz() {
             const val = document.getElementById('quiz-answer').value.toLowerCase().trim();
-            const correct = "miamisburg"; // Change this to your actual answer
+            const correct = "11/07"; // Change this to your actual answer
 
             if (val === correct) {
                 unlocked = true;
