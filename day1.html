@@ -13,7 +13,8 @@
         
         body, html { 
             margin: 0; padding: 0; background: var(--bg); color: white; 
-            font-family: 'Montserrat', sans-serif; height: 1400vh;
+            font-family: 'Montserrat', sans-serif; 
+            height: 1600vh; /* Increased height to give map more "breathing room" */
             overflow-x: hidden; scrollbar-width: none;
         }
 
@@ -32,28 +33,43 @@
         }
         @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
 
-        /* --- THE JOURNEY ELEMENTS --- */
-        #map-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 1; display: none; }
+        /* --- THE MAP (STAYS FIXED) --- */
+        #map-wrapper { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh; 
+            z-index: 1; display: none; transition: opacity 0.8s;
+        }
         #map { height: 100%; width: 100%; background: #000; }
 
         #rose-traveler {
             position: fixed; top: 50%; left: 50%; z-index: 100; pointer-events: none;
             width: 80px; height: 80px; transform: translate(-50%, -50%);
             filter: drop-shadow(0 0 15px var(--rose-glow)); display: none;
+            transition: opacity 0.5s;
         }
 
-        .city-label { position: relative; z-index: 20; height: 350vh; display: flex; align-items: center; justify-content: center; pointer-events: none; opacity: 1; }
-        .label-text { background: rgba(0, 0, 0, 0.8); border-bottom: 2px solid var(--gold); padding: 20px 40px; text-align: center; backdrop-filter: blur(10px); }
+        /* --- SCROLL SECTIONS --- */
+        .city-label { 
+            position: relative; z-index: 20; height: 400vh; 
+            display: flex; align-items: center; justify-content: center; 
+            pointer-events: none;
+        }
+        .label-text { 
+            background: rgba(0, 0, 0, 0.8); border-bottom: 2px solid var(--gold); 
+            padding: 25px 50px; text-align: center; backdrop-filter: blur(10px); 
+        }
         
-        h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; color: var(--gold); margin: 0; font-style: italic; }
+        h1 { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--gold); margin: 0; font-style: italic; }
 
-        .reveal-zone { position: relative; z-index: 200; background: var(--bg); padding: 100px 20px; text-align: center; }
+        /* --- THE FINALE (ONLY COMES AFTER MAP) --- */
+        .reveal-zone { 
+            position: relative; z-index: 200; background: var(--bg); 
+            padding: 150px 20px; text-align: center; margin-top: 100vh;
+        }
         .luxury-card { 
             max-width: 500px; margin: 0 auto; padding: 40px 20px; 
             border: 1px solid rgba(197, 160, 89, 0.2); background: #0a0a0a; 
         }
 
-        /* VERTICAL IPHONE RATIO VIDEO (9:16) */
         .video-container {
             width: 100%; max-width: 320px; aspect-ratio: 9 / 16; 
             margin: 30px auto; border: 1px solid var(--gold); 
@@ -74,7 +90,7 @@
     <div id="quiz-overlay">
         <div style="text-align:center; padding: 40px; border: 1px solid var(--gold); background: #0a0a0a; max-width: 350px;">
             <h2 style="font-family:'Playfair Display'; color:var(--gold); font-style: italic;">Day I</h2>
-            <p style="font-size: 0.7rem; letter-spacing: 2px;">DATE WE FIRST MET AS BOYFRIEND-GIRLFRIEND (DD/MM)?</p>
+            <p style="font-size: 0.7rem; letter-spacing: 2px;">DATE WE FIRST MET (DD/MM)?</p>
             <input type="text" id="quiz-answer" style="background:transparent; border:none; border-bottom:1px solid var(--gold); color:white; text-align:center; padding:10px; margin-top:20px; outline:none;">
             <br>
             <button onclick="unlockDayOne()" style="margin-top:30px; background:var(--gold); border:none; padding:10px 20px; font-weight:bold; cursor:pointer;">UNLOCK</button>
@@ -88,20 +104,20 @@
     <img id="rose-traveler" src="https://pngimg.com/uploads/rose/rose_PNG639.png" alt="Rose">
 
     <div id="scroll-content" style="display:none;">
-        <div class="city-label"><div class="label-text"><h1>Miamisburg</h1><p>Beginning</p></div></div>
+        <div class="city-label"><div class="label-text"><h1>Miamisburg</h1><p>The Beginning</p></div></div>
         <div class="city-label"><div class="label-text"><h1>Ludhiana</h1><p>The Connection</p></div></div>
-        <div class="city-label"><div class="label-text"><h1>Mt Druitt</h1><p>Destination</p></div></div>
+        <div class="city-label"><div class="label-text"><h1>Mt Druitt</h1><p>The Destination</p></div></div>
+
+        <div style="height: 150vh;"></div>
 
         <div class="reveal-zone">
             <div class="luxury-card">
                 <h2 style="font-family: 'Playfair Display'; color: var(--gold); font-style: italic;">"Just like this rose..."</h2>
-                
                 <div class="video-container">
                     <video id="vault-video" controls playsinline>
                         <source src="video.mp4" type="video/mp4">
                     </video>
                 </div>
-
                 <a href="index.html" style="color:var(--gold); text-decoration:none; font-size:0.7rem; letter-spacing:3px; border: 1px solid var(--gold); padding: 10px 20px; display:inline-block; margin-top:20px;">RETURN TO VAULT</a>
             </div>
         </div>
@@ -112,15 +128,12 @@
         let map, audio;
         let isRevealed = false;
 
-        // RED ROSE SHOWER LOGIC
         function createRose() {
             const r = document.createElement('div');
-            r.className = 'rose-petal';
-            r.innerText = '🌹';
+            r.className = 'rose-petal'; r.innerText = '🌹';
             r.style.left = Math.random() * 100 + 'vw';
             const dur = Math.random() * 3 + 5;
             r.style.animationDuration = dur + 's';
-            r.style.opacity = Math.random() * 0.5 + 0.5;
             document.body.appendChild(r);
             setTimeout(() => r.remove(), dur * 1000);
         }
@@ -135,59 +148,78 @@
                 document.getElementById('scroll-content').style.display = 'block';
                 document.getElementById('musicToggle').style.display = 'block';
                 document.body.style.overflowY = 'auto';
-
                 audio = document.getElementById('bg-music');
-                audio.currentTime = 30;
-                audio.play();
-
-                // Start rose shower
+                audio.currentTime = 30; audio.play();
                 setInterval(createRose, 500);
                 initMap();
             } else { alert("Try again, my love..."); }
         }
 
         function initMap() {
-            map = L.map('map', { zoomControl: false, scrollWheelZoom: false, dragging: false, attributionControl: false }).setView([39, -84], 3);
+            map = L.map('map', { 
+                zoomControl: false, scrollWheelZoom: false, 
+                dragging: false, attributionControl: false 
+            }).setView([39.64, -84.28], 3);
+            
             L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
-            const ohio = [39.64, -84.28], punjab = [31.14, 75.34], sydney = [-33.77, 150.82];
-            L.polyline([ohio, [45, 0], punjab, [0, 90], sydney], { color: '#c5a059', weight: 1.5, dashArray: '10, 15', opacity: 0.4 }).addTo(map);
+            
+            const ohio = [39.64, -84.28], punjab = [30.9, 75.8], sydney = [-33.77, 150.82];
+            
+            // Draw a more accurate path
+            L.polyline([ohio, [40, -20], [20, 40], punjab, [5, 100], sydney], { 
+                color: '#c5a059', weight: 2, dashArray: '10, 15', opacity: 0.5 
+            }).addTo(map);
         }
+
+        window.addEventListener('scroll', () => {
+            if (!isRevealed) return;
+
+            const scrollHeight = document.body.offsetHeight - window.innerHeight;
+            const scroll = window.scrollY / scrollHeight;
+            const rose = document.getElementById('rose-traveler');
+            const mapWrap = document.getElementById('map-wrapper');
+
+            // Coordinates
+            const ohio = [39.64, -84.28], punjab = [30.9, 75.8], sydney = [-33.77, 150.82];
+
+            // PHASE 1: JOURNEY (0% to 85% of scroll)
+            if (scroll <= 0.85) {
+                mapWrap.style.opacity = "1";
+                rose.style.opacity = "1";
+                
+                const p = scroll / 0.85; // Local percentage for map journey
+                let lat, lng;
+
+                if (p < 0.5) { // Ohio to Punjab
+                    let p1 = p * 2;
+                    lat = ohio[0] + (punjab[0] - ohio[0]) * p1;
+                    lng = ohio[1] + (punjab[1] - ohio[1]) * p1;
+                } else { // Punjab to Sydney
+                    let p2 = (p - 0.5) * 2;
+                    lat = punjab[0] + (sydney[0] - punjab[0]) * p2;
+                    lng = punjab[1] + (sydney[1] - punjab[1]) * p2;
+                }
+
+                map.setView([lat, lng], 3 + (p * 1.5)); // Slight zoom in as we travel
+                rose.style.transform = `translate(-50%, -50%) rotate(${scroll * 1000}deg)`;
+            } 
+            // PHASE 2: FADE OUT MAP (85% to 92%)
+            else if (scroll > 0.85 && scroll < 0.92) {
+                const fadeP = (scroll - 0.85) / 0.07;
+                mapWrap.style.opacity = 1 - fadeP;
+                rose.style.opacity = 1 - fadeP;
+            }
+            // PHASE 3: TOTAL HIDE
+            else {
+                mapWrap.style.opacity = "0";
+                rose.style.opacity = "0";
+            }
+        });
 
         function toggleMusic() {
             if (audio.paused) { audio.play(); document.getElementById('musicToggle').innerText = "🔊 MUSIC ON"; }
             else { audio.pause(); document.getElementById('musicToggle').innerText = "🔇 MUSIC OFF"; }
         }
-
-        window.addEventListener('scroll', () => {
-            if (!isRevealed) return;
-            const scroll = window.scrollY / (document.body.offsetHeight - window.innerHeight);
-            const rose = document.getElementById('rose-traveler');
-            const mapWrap = document.getElementById('map-wrapper');
-            const ohio = [39.64, -84.28], punjab = [31.14, 75.34], sydney = [-33.77, 150.82];
-
-            if (scroll <= 0.8) {
-                const p = scroll / 0.8;
-                let lat, lng;
-                if (p < 0.5) {
-                    let p1 = p * 2;
-                    lat = ohio[0] + (punjab[0] - ohio[0]) * p1;
-                    lng = ohio[1] + (punjab[1] - ohio[1]) * p1;
-                } else {
-                    let p2 = (p - 0.5) * 2;
-                    lat = punjab[0] + (sydney[0] - punjab[0]) * p2;
-                    lng = punjab[1] + (sydney[1] - punjab[1]) * p2;
-                }
-                map.setView([lat, lng], 3 + (p * 2));
-                mapWrap.style.opacity = 1;
-                rose.style.opacity = 1;
-                rose.style.width = "80px";
-                rose.style.transform = `translate(-50%, -50%) rotate(${scroll * 720}deg)`;
-            } else {
-                const pBloom = (scroll - 0.8) / 0.2;
-                mapWrap.style.opacity = 1 - pBloom;
-                rose.style.opacity = 1 - pBloom;
-            }
-        });
     </script>
 </body>
 </html>
