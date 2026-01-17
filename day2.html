@@ -185,7 +185,7 @@
     <script>
         // --- CONFIGURATION ---
         const UNLOCK_DATE = new Date("2024-07-12T00:00:00").getTime(); // Set your date
-        const PUZZLE_IMG = "us2.jpg"; // PUT YOUR PHOTO FILENAME HERE
+        const PUZZLE_IMG = "us2.jpeg"; // PUT YOUR PHOTO FILENAME HERE
 
         // --- MUSIC LOGIC ---
         const audio = document.getElementById('bg-music');
@@ -248,6 +248,8 @@
 
         // 1. SCROLL ENGINE
         window.addEventListener('scroll', () => {
+            audio = document.getElementById('bg-music');
+            audio.currentTime = 18; audio.play();
             const scrollTotal = document.body.offsetHeight - window.innerHeight;
             const scroll = window.scrollY / scrollTotal;
             
