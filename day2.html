@@ -107,9 +107,47 @@
             justify-content: center; align-items: center;
             flex-direction: column; color: black;
         }
+
+        /* TIME LOCK & JIGSAW OVERLAY */
+        #time-lock-overlay, #puzzle-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 5000; display: flex;
+            flex-direction: column; align-items: center; justify-content: center;
+            text-align: center;
+        }
+
+        #puzzle-board {
+            display: grid; grid-template-columns: repeat(3, 80px);
+            grid-template-rows: repeat(3, 80px); gap: 2px;
+            border: 2px solid var(--gold); margin: 20px 0;
+        }
+
+        .puzzle-piece {
+            width: 80px; height: 80px; background-size: 240px 240px;
+            cursor: pointer; border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .music-control {
+            position: fixed; top: 20px; right: 20px; z-index: 6000;
+            background: rgba(0,0,0,0.5); border: 1px solid var(--gold);
+            color: var(--gold); padding: 5px 10px; font-size: 10px; border-radius: 15px;
+        }
     </style>
 </head>
 <body>
+    <audio id="bg-music" loop><source src="Mohabbat.mp3" type="audio/mpeg"></audio>
+    <button class="music-control" onclick="toggleMusic()">🎵 MUSIC</button>
+
+    <div id="time-lock-overlay">
+        <h2 style="font-family:'Playfair Display'; color:var(--gold);">Day II</h2>
+        <p id="timer-text" style="font-size: 0.8rem; letter-spacing: 2px;"></p>
+    </div>
+
+    <div id="puzzle-overlay" style="display:none;">
+        <h2 style="font-family:'Playfair Display'; color:var(--gold); font-size: 1.5rem;">Piece together a memory...</h2>
+        <div id="puzzle-board"></div>
+        <p style="font-size: 0.6rem; color: #666;">SWAP PIECES TO FINISH</p>
+    </div>
 
     <div id="success-overlay">
         <h1 style="font-family: 'Playfair Display'; font-size: 2.5rem;">YES! ❤️</h1>
@@ -145,6 +183,66 @@
     </div>
 
     <script>
+        // --- CONFIGURATION ---
+        const UNLOCK_DATE = new Date("2024-07-12T00:00:00").getTime(); // Set your date
+        const PUZZLE_IMG = "us2.jpg"; // PUT YOUR PHOTO FILENAME HERE
+
+        // --- MUSIC LOGIC ---
+        const audio = document.getElementById('bg-music');
+        function toggleMusic() {
+            if (audio.paused) { audio.play(); } else { audio.pause(); }
+    }
+
+        // --- TIME LOCK LOGIC ---
+        const timerInterval = setInterval(() => {
+        const now = new Date().getTime();
+        const diff = UNLOCK_DATE - now;
+        if (diff <= 0) {
+            clearInterval(timerInterval);
+            document.getElementById('time-lock-overlay').style.display = 'none';
+            document.getElementById('puzzle-overlay').style.display = 'flex';
+            initPuzzle();
+        } else {
+            const h = Math.floor(diff / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+            document.getElementById('timer-text').innerHTML = `UNLOCKS IN: ${h}h ${m}m ${s}s`;
+        }
+    }, 1000);
+
+        // --- JIGSAW LOGIC ---
+        let pieces = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+        let shuffled = [...pieces].sort(() => Math.random() - 0.5);
+        let selected = null;
+
+        function initPuzzle() {
+            const board = document.getElementById('puzzle-board');
+            board.innerHTML = "";
+            shuffled.forEach((val, idx) => {
+                const div = document.createElement('div');
+                div.className = "puzzle-piece";
+                div.style.backgroundImage = `url(${PUZZLE_IMG})`;
+                div.style.backgroundPosition = `${-(val % 3) * 80}px ${-Math.floor(val / 3) * 80}px`;
+                div.onclick = () => {
+                    if (selected === null) {
+                        selected = idx;
+                        div.style.border = "1px solid gold";
+                    } else {
+                        [shuffled[selected], shuffled[idx]] = [shuffled[idx], shuffled[selected]];
+                        selected = null;
+                        initPuzzle();
+                        if (shuffled.every((v, i) => v === pieces[i])) {
+                            setTimeout(() => {
+                                document.getElementById('puzzle-overlay').style.display = 'none';
+                                audio.play(); // Music starts when puzzle is solved
+                        }, 500);
+                        }
+                    }
+                };
+                board.appendChild(div);
+            });
+        }
+  
         
         let noCount = 0;
 
