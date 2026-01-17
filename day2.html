@@ -140,7 +140,10 @@
 
     <div id="time-lock-overlay">
         <h2 style="font-family:'Playfair Display'; color:var(--gold);">Day II</h2>
-        <p id="timer-text" style="font-size: 0.8rem; letter-spacing: 2px;"></p>
+        <div id="lock-container"></div>
+            <p id="timer-text" style="font-size: 0.8rem; letter-spacing: 2px;"></p>
+            <div id="entry-button-area"></div>
+        </div>
     </div>
 
     <div id="puzzle-overlay" style="display:none;">
@@ -160,7 +163,7 @@
     <div class="scene">
         <div class="box-wrapper" id="box">
             <div class="lid" id="lid-hinge"></div>
-            <img id="diamond-ring" src="https://www.pngmart.com/files/1/Diamond-Ring-PNG-Transparent-Image.png" alt="Diamond Ring">
+            <img id="diamond-ring" src="diamond-ring.png" alt="Diamond Ring">
             <div class="base"></div>
         </div>
     </div>
@@ -197,11 +200,12 @@
         const timerInterval = setInterval(() => {
         const now = new Date().getTime();
         const diff = UNLOCK_DATE - now;
+        const timerElement = document.getElementById('timer-text');
+        const buttonArea = document.getElementById('entry-button-area');
         if (diff <= 0) {
             clearInterval(timerInterval);
-            document.getElementById('time-lock-overlay').style.display = 'none';
-            document.getElementById('puzzle-overlay').style.display = 'flex';
-            initPuzzle();
+            buttonArea.innerHTML = `<button onclick="startExperience()" style="background:var(--gold); color:black; border:none; padding:15px 30px; letter-spacing:2px; font-weight:600; cursor:pointer; margin-top:20px;">OPEN VAULT</button>`;
+           
         } else {
             const h = Math.floor(diff / (1000 * 60 * 60));
             const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -209,6 +213,18 @@
             document.getElementById('timer-text').innerHTML = `UNLOCKS IN: ${h}h ${m}m ${s}s`;
         }
     }, 1000);
+        // This function handles the "Autoplay" bypass
+        function startExperience() {
+            // 1. Play the music immediately
+            audio.play().catch(e => console.log("Autoplay prevented, will play on next click."));
+    
+            // 2. Switch from Time Lock to Puzzle
+            document.getElementById('time-lock-overlay').style.display = 'none';
+            document.getElementById('puzzle-overlay').style.display = 'flex';
+    
+            // 3. Start the puzzle
+            initPuzzle();
+    }
 
         // --- JIGSAW LOGIC ---
         let pieces = [0, 1, 2, 3, 4, 5, 6, 7, 8];
@@ -234,7 +250,7 @@
                         if (shuffled.every((v, i) => v === pieces[i])) {
                             setTimeout(() => {
                                 document.getElementById('puzzle-overlay').style.display = 'none';
-                                audio.play(); // Music starts when puzzle is solved
+                              //  audio.play(); // Music starts when puzzle is solved
                         }, 500);
                         }
                     }
@@ -248,8 +264,7 @@
 
         // 1. SCROLL ENGINE
         window.addEventListener('scroll', () => {
-            audio = document.getElementById('bg-music');
-            audio.currentTime = 18; audio.play();
+            
             const scrollTotal = document.body.offsetHeight - window.innerHeight;
             const scroll = window.scrollY / scrollTotal;
             
