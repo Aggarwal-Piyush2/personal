@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,700&family=Montserrat:wght@300;500&display=swap" rel="stylesheet">
     
     <style>
-        :root { --soft-pink: #fce4ec; --rose: #ff80ab; --warm-shadow: #2d1b1b; }
+        :root { --soft-pink: #fce4ec; --rose: #ff80ab; --warm-shadow: #1a0a0a; }
         
         body, html { 
             margin: 0; padding: 0; background: var(--soft-pink); 
@@ -15,65 +15,79 @@
             overflow: hidden; -webkit-tap-highlight-color: transparent;
         }
 
-        /* 1. ATMOSPHERE */
+        /* SYDNEY TIME LOCK OVERLAY */
+        #time-lock {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: var(--warm-shadow); z-index: 2000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: white; text-align: center;
+        }
+
+        /* ATMOSPHERE */
         #bg-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle, transparent 20%, var(--warm-shadow) 100%);
-            opacity: 0; transition: opacity 1s; z-index: 1;
+            opacity: 0; transition: opacity 1.5s; z-index: 1;
         }
 
-        /* 2. THE TEDDY AREA */
         .container {
             position: relative; z-index: 10; height: 100vh;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: filter 0.5s;
         }
 
-        .instruction {
-            font-family: 'Playfair Display', serif; font-size: 1.2rem;
+        #hint {
+            font-family: 'Playfair Display', serif; font-size: 1.1rem;
             color: #880e4f; margin-bottom: 20px; font-style: italic;
-            transition: opacity 0.5s;
+            text-align: center; padding: 0 20px;
         }
 
         #teddy {
-            width: 280px; cursor: pointer;
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
+            width: 260px; cursor: pointer;
+            transition: transform 0.3s, filter 0.5s;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1)) grayscale(0.8);
         }
 
-        /* 3. THE WHISPER (MESSAGES) */
         #whisper-box {
-            margin-top: 30px; min-height: 60px; text-align: center;
+            margin-top: 30px; min-height: 80px; text-align: center;
             padding: 0 40px; color: #ad1457; font-weight: 500;
-            opacity: 0; transition: 0.8s all; transform: translateY(10px);
+            opacity: 0; transition: 0.8s all;
         }
 
-        /* 4. HUG METER */
         .meter-container {
-            position: absolute; bottom: 50px; width: 200px; height: 4px;
+            position: absolute; bottom: 80px; width: 200px; height: 4px;
             background: rgba(0,0,0,0.05); border-radius: 2px;
         }
         #meter-fill {
             width: 0%; height: 100%; background: var(--rose);
-            border-radius: 2px; box-shadow: 0 0 10px var(--rose);
+            box-shadow: 0 0 10px var(--rose);
         }
 
-        /* Animations */
+        .hugging { animation: pulse 1.2s infinite ease-in-out; }
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(0.95); }
+            50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
-        .hugging { animation: pulse 1.5s infinite ease-in-out; }
     </style>
 </head>
 <body>
 
+    <audio id="teddy-music" loop>
+        <source src="palpal.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="time-lock">
+        <h2 style="font-family:'Playfair Display'">Patience, Love...</h2>
+        <p id="timer">Calculating Sydney Time...</p>
+    </div>
+
     <div id="bg-overlay"></div>
 
-    <div class="container">
-        <div class="instruction" id="hint">Hold me to hear a secret...</div>
+    <div class="container" id="main-content" style="display:none;">
+        <div id="hint">Tap the teddy's heart 5 times to wake him up...</div>
         
-        <img id="teddy" src="https://i.postimg.cc/RVVKLD36/download.png" alt="Teddy">
+        <img id="teddy" src="teddy.jpg" alt="Teddy">
 
         <div id="whisper-box"></div>
 
@@ -83,36 +97,67 @@
     </div>
 
     <script>
+        const UNLOCK_DATE = "2024-02-10T00:00:00"; // Teddy Day
+        const audio = document.getElementById('teddy-music');
         const teddy = document.getElementById('teddy');
         const fill = document.getElementById('meter-fill');
         const whisper = document.getElementById('whisper-box');
         const overlay = document.getElementById('bg-overlay');
         const hint = document.getElementById('hint');
 
+        let tapCount = 0;
+        let isAwake = false;
         let holdTimer;
         let progress = 0;
 
-        // The "Whispers" - Mix of Sweet and Suggestive
-        const messages = [
-            "You're the only one I want to wake up to... and stay in bed with. 😏",
-            "This teddy is soft, but you know I’m not always this gentle.",
-            "I'm sending this bear to guard you... because I'm not there to hold those curves myself tonight.",
-            "Every time you squeeze this, imagine it's me. And imagine what I'd be doing to you.",
-            "I love your heart, but I'm also really, really craving your body right now.",
-            "You look so beautiful when you blush. I can't wait to make it happen in person.",
-            "Counting down the days until I don't need a virtual hug to feel you against me."
-        ];
+        // --- 1. SYDNEY TIME CONFIG ---
+        function updateTimer() {
+            const now = new Date();
+            // Convert current time to Sydney (AEST/AEDT is UTC+11 usually)
+            const sydneyTime = new Date(now.toLocaleString("en-US", {timeZone: "Australia/Sydney"}));
+            const target = new Date(UNLOCK_DATE);
+            const diff = target - sydneyTime;
 
-        function startHold() {
+            if (diff <= 0) {
+                document.getElementById('time-lock').style.display = 'none';
+                document.getElementById('main-content').style.display = 'flex';
+                clearInterval(timerInterval);
+            } else {
+                const h = Math.floor(diff / 3600000);
+                const m = Math.floor((diff % 3600000) / 60000);
+                const s = Math.floor((diff % 60000) / 1000);
+                document.getElementById('timer').innerHTML = `Available in Sydney in: ${h}h ${m}m ${s}s`;
+            }
+        }
+        const timerInterval = setInterval(updateTimer, 1000);
+
+        // --- 2. OBSTACLE: WAKE UP THE TEDDY ---
+        teddy.addEventListener('click', () => {
+            if (isAwake) return;
+            tapCount++;
+            teddy.style.transform = `scale(${1 + tapCount*0.05})`;
+            
+            if (tapCount >= 5) {
+                isAwake = true;
+                teddy.style.filter = "drop-shadow(0 10px 20px rgba(0,0,0,0.1)) grayscale(0)";
+                hint.innerHTML = "He's warm now. Now hold him close... (Long Press)";
+                // Start music at preferred time (e.g., 30 seconds in)
+                audio.currentTime = 30; 
+                audio.play();
+            }
+        });
+
+        // --- 3. THE HUG LOGIC ---
+        function startHold(e) {
+            if (!isAwake) return;
+            e.preventDefault();
             teddy.classList.add('hugging');
-            overlay.style.opacity = "0.7";
-            hint.style.opacity = "0";
+            overlay.style.opacity = "1";
             whisper.style.opacity = "0";
 
             holdTimer = setInterval(() => {
-                progress += 2;
+                progress += 1.5;
                 fill.style.width = progress + "%";
-
                 if (progress >= 100) {
                     clearInterval(holdTimer);
                     showWhisper();
@@ -127,28 +172,29 @@
             if (progress < 100) {
                 progress = 0;
                 fill.style.width = "0%";
-                hint.style.opacity = "1";
             }
         }
+
+        const messages = [
+            "You're the only one I want to wake up to... and stay in bed with. 😏",
+            "This teddy is soft, but you know I’m not always this gentle.",
+            "Sending this bear to guard you... because I'm not there to hold those curves myself.",
+            "Every time you squeeze this, imagine it's me. And imagine what I'd be doing.",
+            "I love your heart, but I'm also really craving your body right now.",
+            "Counting down until I don't need a virtual hug to feel you against me."
+        ];
 
         function showWhisper() {
             const randomMsg = messages[Math.floor(Math.random() * messages.length)];
             whisper.innerHTML = randomMsg;
             whisper.style.opacity = "1";
             whisper.style.transform = "translateY(0)";
-            
-            // Reset for next hug
-            setTimeout(() => {
-                progress = 0;
-                fill.style.width = "0%";
-            }, 1000);
+            setTimeout(() => { progress = 0; fill.style.width = "0%"; }, 1000);
         }
 
-        // iPhone Touch Events
-        teddy.addEventListener('touchstart', (e) => { e.preventDefault(); startHold(); });
+        // iPhone & Mouse Events
+        teddy.addEventListener('touchstart', startHold);
         teddy.addEventListener('touchend', endHold);
-        
-        // Mouse Events for testing
         teddy.addEventListener('mousedown', startHold);
         teddy.addEventListener('mouseup', endHold);
     </script>
