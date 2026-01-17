@@ -81,9 +81,56 @@
         .ticket-header { border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 10px; font-weight: 900; letter-spacing: 2px; }
 
         canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1; }
+        /* --- LOCK OVERLAY --- */
+        #gatekeeper {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--cocoa); z-index: 1000; display: flex;
+            flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 20px;
+    }
+        .lock-box {
+            border: 2px solid var(--gold); padding: 40px 20px;
+            background: rgba(61, 28, 2, 0.4); backdrop-filter: blur(10px);
+            border-radius: 15px; width: 85%; max-width: 320px;
+    }
+        .code-inputs { display: flex; gap: 8px; justify-content: center; margin: 25px 0; }
+        .code-inputs input {
+            width: 45px; height: 60px; background: transparent; 
+            border: 1px solid var(--gold); color: var(--gold);
+            font-size: 2rem; text-align: center; font-family: 'Playfair Display';
+    }
+        /* Hide actual content until unlocked */
+        #main-wrapper { display: none; }
     </style>
 </head>
 <body onload="initMelt()">
+    <audio id="bg-music" loop><source src="Chocolate.mp3" type="audio/mpeg"></audio>
+
+<div id="gatekeeper">
+    <div class="lock-box">
+        <h2 style="font-family:'Playfair Display'; color:var(--gold); margin-bottom:10px;">Day III</h2>
+        <p id="timer-display" style="font-size: 0.7rem; letter-spacing: 2px;"></p>
+        
+        <div id="combination-area" style="display:none;">
+            <p style="font-size: 0.7rem; opacity: 0.7; margin-bottom: 15px;">ENTER THE 4-DIGIT CODE</p>
+            <div class="code-inputs">
+                <input type="number" pattern="\d*" id="d1" oninput="if(this.value.length>1)this.value=this.value.slice(-1); document.getElementById('d2').focus()">
+                <input type="number" pattern="\d*" id="d2" oninput="if(this.value.length>1)this.value=this.value.slice(-1); document.getElementById('d3').focus()">
+                <input type="number" pattern="\d*" id="d3" oninput="if(this.value.length>1)this.value=this.value.slice(-1); document.getElementById('d4').focus()">
+                <input type="number" pattern="\d*" id="d4" oninput="if(this.value.length>1)this.value=this.value.slice(-1);">
+            </div>
+            <button onclick="checkCode()" style="background:var(--gold); border:none; padding:12px 25px; font-weight:bold; letter-spacing:2px; color:black;">UNLOCK BOX</button>
+        </div>
+    </div>
+</div>
+
+<div id="main-wrapper">
+    <div class="melt-container" id="meltLayer">...</div>
+    <canvas id="dust"></canvas>
+    <header>...</header>
+    <div class="box-container">...</div>
+    <div id="ticket-reveal">...</div>
+</div>
 
     <div class="melt-container" id="meltLayer">
         <div class="drip" style="left:0;"></div>
@@ -155,7 +202,74 @@
                 }
             }
         }
+            // --- CONFIGURATION ---
+        const UNLOCK_DATE = new Date("2024-07-13T00:00:00").getTime(); 
+        const CORRECT_CODE = "1234"; // Set your 4-digit code here
+        const audio = document.getElementById('bg-music');
 
+        // --- 1. TIME LOCK LOGIC ---
+        const timer = setInterval(() => {
+            const now = new Date().getTime();
+            const diff = UNLOCK_DATE - now;
+            if (diff <= 0) {
+                clearInterval(timer);
+                document.getElementById('timer-display').style.display = 'none';
+                document.getElementById('combination-area').style.display = 'block';
+            } else {
+                const h = Math.floor(diff / (1000 * 60 * 60));
+                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((diff % (1000 * 60)) / 1000);
+                document.getElementById('timer-display').innerHTML = `LOCKED FOR: ${h}h ${m}m ${s}s`;
+            }
+        }, 1000);
+
+        // --- 2. CODE CHECK & MUSIC START ---
+        function checkCode() {
+            const val = document.getElementById('d1').value + document.getElementById('d2').value + 
+                        document.getElementById('d3').value + document.getElementById('d4').value;
+    
+            if (val === CORRECT_CODE) {
+            document.getElementById('gatekeeper').style.display = 'none';
+                document.getElementById('main-wrapper').style.display = 'block';
+        
+                // Music starts at 40 seconds
+                audio.currentTime = 40;
+                audio.play();
+        
+                // Start your original animations
+                initMelt();
+                draw(); 
+            } else {
+                alert("Incorrect code, try again!");
+                ["d1","d2","d3","d4"].forEach(id => document.getElementById(id).value = '');
+                document.getElementById('d1').focus();
+            }
+        }
+
+        // --- 3. YOUR ORIGINAL TRUFFLE/PARTICLE FUNCTIONS ---
+        // let opened = 0;
+        function unwrapped(el) {
+            if(!el.classList.contains('flipped')) {
+                el.classList.add('flipped');
+                opened++;
+                if(opened === 9) {
+                    setTimeout(() => {
+                        document.getElementById('ticket-reveal').style.display = 'block';
+                        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                    }, 800);
+                }
+            }
+        }
+
+        function initMelt() {
+            const drips = document.querySelectorAll('.drip');
+            drips.forEach((d, i) => {
+                setTimeout(() => { d.style.height = (40 + Math.random() * 40) + "vh"; }, i * 200);
+            });
+            setTimeout(() => { drips.forEach(d => d.style.height = "0"); }, 2000);
+        }
+
+// ... include your existing 'draw' and particle code here ...
         // Particle System
         const canvas = document.getElementById('dust');
         const ctx = canvas.getContext('2d');
