@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
     
     <style>
-        :root { --bg: #020202; --accent: #d1d1d1; --rose: #ff4d6d; }
+        :root { --bg: #020202; --accent: #d1d1d1; --warm-glow: rgba(255, 60, 0, 0); }
         
         body, html { 
             margin: 0; padding: 0; background: var(--bg); color: var(--accent); 
@@ -15,146 +15,211 @@
             transition: background 1s ease; scroll-behavior: smooth;
         }
 
-        #particles-js { position: fixed; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
-
-        /* FOGGY MIRROR SECTION */
-        .reveal-container {
-            position: relative; width: 320px; height: 200px; margin: 50px auto;
-            border: 1px solid rgba(255,255,255,0.1); overflow: hidden;
-        }
-        #fog-canvas { position: absolute; top: 0; left: 0; z-index: 10; touch-action: none; cursor: crosshair; }
-        .hidden-msg {
-            position: absolute; width: 100%; height: 100%; display: flex;
-            align-items: center; justify-content: center; text-align: center;
-            font-family: 'Playfair Display'; font-style: italic; font-size: 1.2rem;
-            background: #050505; color: white; padding: 20px; box-sizing: border-box;
+        /* SYDNEY TIME LOCK */
+        #lock-screen {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: #000; z-index: 3000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; color: white;
         }
 
-        /* HEARTBEAT LOGIC */
-        .heart-container { margin: 60px 0; text-align: center; }
-        #heart-icon {
-            font-size: 3rem; color: #4a0404; transition: 0.5s; cursor: pointer;
-            display: inline-block; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+        #particles-js {
+            position: fixed; width: 100%; height: 100%; z-index: 1; pointer-events: none;
         }
-        .beating { animation: heartbeat 1.2s infinite ease-in-out; color: var(--rose) !important; text-shadow: 0 0 20px var(--rose); }
+
+        .hero {
+            height: 100vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; position: relative; z-index: 2;
+        }
+
+        .shadow-couple {
+            width: 260px; height: 420px;
+            background: linear-gradient(to bottom, #1a1a1a, #000);
+            border-radius: 130px 130px 40px 40px;
+            filter: blur(45px); opacity: 0.2;
+            transform: scale(0.85); transition: 0.8s cubic-bezier(0.2, 0, 0.2, 1);
+        }
+
+        .section { 
+            padding: 100px 30px; text-align: center; position: relative; z-index: 2;
+            opacity: 0; transform: translateY(30px); transition: all 1s ease-out;
+        }
+        .section.visible { opacity: 1; transform: translateY(0); }
+
+        .meter-ui {
+            background: rgba(255,255,255,0.03); padding: 40px;
+            border-radius: 2px; border: 1px solid rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px); max-width: 350px; margin: 0 auto;
+        }
+
+        input[type=range] { width: 100%; -webkit-appearance: none; background: transparent; }
+        input[type=range]::-webkit-slider-runnable-track { background: rgba(255,255,255,0.1); height: 1px; }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 24px; width: 24px;
+            border: 1px solid #fff; border-radius: 50%; background: #000;
+            margin-top: -12px; box-shadow: 0 0 15px rgba(255,255,255,0.2);
+        }
+
+        h2 { font-family: 'Playfair Display', serif; font-weight: 400; font-size: 2rem; margin-bottom: 40px; }
         
-        @keyframes heartbeat {
-            0% { transform: scale(1); }
-            15% { transform: scale(1.25); }
-            30% { transform: scale(1); }
-            45% { transform: scale(1.15); }
-            60% { transform: scale(1); }
+        .list-item { 
+            font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase;
+            margin: 25px 0; opacity: 0.4; transition: 0.6s;
+        }
+        .list-item.active { opacity: 1; transform: scale(1.1); color: #fff; }
+
+        .final-note {
+            font-family: 'Playfair Display', serif; font-style: italic;
+            font-size: 1.4rem; line-height: 1.8; color: #fff; max-width: 400px; margin: 0 auto;
         }
 
-        /* REST OF STYLES FROM PREVIOUS VERSION */
-        .section { padding: 80px 30px; text-align: center; opacity: 0; transform: translateY(30px); transition: 1s; }
-        .visible { opacity: 1; transform: translateY(0); }
-        .meter-ui { background: rgba(255,255,255,0.03); padding: 30px; backdrop-filter: blur(10px); max-width: 320px; margin: 0 auto; }
-        input[type=range] { width: 100%; -webkit-appearance: none; background: rgba(255,255,255,0.1); height: 1px; }
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%; background: #fff; }
+        #entry-btn {
+            display: none; background: none; border: 1px solid white; color: white;
+            padding: 15px 35px; margin-top: 20px; font-family: 'Montserrat';
+            letter-spacing: 4px; cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-    <audio id="bg-music" loop><source src="music.mp3" type="audio/mpeg"></audio>
+    <audio id="bg-music" loop><source src="Meharma.mp3" type="audio/mpeg"></audio>
+
+    <div id="lock-screen">
+        <h1 style="font-family:'Playfair Display'; font-weight: 200;">DAY VI</h1>
+        <p id="timer" style="letter-spacing: 2px; font-size: 0.8rem; opacity: 0.6;">CALCULATING SYDNEY TIME...</p>
+        <button id="entry-btn" onclick="enterSanctuary()">ENTER THE SANCTUARY</button>
+    </div>
 
     <div id="particles-js"></div>
 
-    <div class="section visible" style="height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column;">
-        <h1 style="font-family:'Playfair Display'; font-weight: 200; letter-spacing: 5px;">THE SANCTUARY</h1>
-        <p style="font-size: 0.7rem; letter-spacing: 3px; opacity: 0.5;">WIPE THE GLASS TO SEE MY HEART</p>
-        
-        <div class="reveal-container">
-            <div class="hidden-msg">"Every time I hold you, the rest of the world just... disappears."</div>
-            <canvas id="fog-canvas"></canvas>
+    <div id="main-content" style="display:none;">
+        <div class="hero">
+            <div class="shadow-couple" id="mainShadow"></div>
+            <div style="position:absolute; bottom:15%; text-align:center; z-index: 5;">
+                <p style="font-family:'Playfair Display'; font-style:italic; font-size:1.2rem;">My favorite place is your arms.</p>
+                <div style="width:1px; height:50px; background:white; margin:20px auto; opacity:0.3;"></div>
+            </div>
         </div>
-        
-        <button onclick="document.getElementById('bg-music').play(); this.style.display='none';" style="background:none; border:1px solid white; color:white; padding:10px 20px; font-family:'Montserrat'; margin-top:20px;">START AUDIO</button>
-    </div>
 
-    <div class="section">
-        <h2>Adjust the Pressure</h2>
-        <div class="meter-ui">
-            <input type="range" min="1" max="100" value="20" id="hugSlider">
-            <p id="label" style="margin-top:20px; letter-spacing: 3px; font-size: 0.8rem;">GENTLE HOLD</p>
+        <div class="section">
+            <h2>The Pressure</h2>
+            <div class="meter-ui">
+                <input type="range" min="1" max="100" value="10" id="hugSlider">
+                <p id="meterLabel" style="margin-top:30px; font-size:0.7rem; letter-spacing:4px; text-transform:uppercase;">Gentle Presence</p>
+                <p id="meterDesc" style="font-size:0.8rem; opacity:0.4; font-style:italic; margin-top:10px;">A reminder that I'm here.</p>
+            </div>
         </div>
-    </div>
 
-    <div class="section">
-        <div class="heart-container">
-            <p style="font-size: 0.6rem; letter-spacing: 4px; opacity: 0.5; margin-bottom: 20px;">TOUCH TO SYNC OUR HEARTS</p>
-            <div id="heart-icon" ontouchstart="startHeart()" ontouchend="stopHeart()" onmousedown="startHeart()" onmouseup="stopHeart()">❤️</div>
+        <div class="section" id="listSection">
+            <h2>You deserve this because...</h2>
+            <div class="list-item">You carry the world gracefully</div>
+            <div class="list-item">Your smile is my favorite view</div>
+            <div class="list-item">You've been so strong lately</div>
+            <div class="list-item">Being you is more than enough</div>
         </div>
-    </div>
 
-    <div class="section" style="padding-bottom: 150px;">
-        <p style="font-family:'Playfair Display'; font-style:italic; font-size:1.3rem; line-height: 1.8;">
-            "You are my safe place, Diya. No matter how loud the world gets, it's always quiet in your arms."
-        </p>
+        <div class="section">
+            <h2 style="font-size:1.2rem; opacity:0.5;">The Hugs I Owe You</h2>
+            <p style="line-height:3.5; font-weight:200; font-size: 0.9rem; letter-spacing: 2px;">
+                THE LONG-TIME-NO-SEE HUG<br>
+                THE SAFE-HAVEN HUG<br>
+                THE QUIET-MORNING HUG
+            </p>
+        </div>
+
+        <div class="section" style="padding-bottom:200px;">
+            <div class="final-note">
+                💌 “If I could right now, I’d pull you close and remind you: you never have to face anything alone.”
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
     <script>
-        // --- 1. FOGGY MIRROR LOGIC ---
-        const canvas = document.getElementById('fog-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = 320; canvas.height = 200;
+        // 1. SYDNEY TIME LOCK
+        const UNLOCK_DATE = "2024-02-12T00:00:00"; 
+        const timerTask = setInterval(() => {
+            const now = new Date();
+            const syd = new Date(now.toLocaleString("en-US", {timeZone: "Australia/Sydney"}));
+            const diff = new Date(UNLOCK_DATE) - syd;
+            if(diff <= 0) {
+                document.getElementById('timer').style.display = 'none';
+                document.getElementById('entry-btn').style.display = 'block';
+                clearInterval(timerTask);
+            } else {
+                const h = Math.floor(diff/3600000); const m = Math.floor((diff%3600000)/60000); const s = Math.floor((diff%60000)/1000);
+                document.getElementById('timer').innerText = `Opening in Sydney in: ${h}h ${m}m ${s}s`;
+            }
+        }, 1000);
 
-        // Create the "Fog"
-        ctx.fillStyle = 'rgba(200, 200, 200, 0.95)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        // Add some texture to the fog
-        for(let i=0; i<100; i++) {
-            ctx.fillStyle = `rgba(255,255,255,${Math.random()*0.1})`;
-            ctx.beginPath(); ctx.arc(Math.random()*320, Math.random()*200, 20, 0, Math.PI*2); ctx.fill();
+        function enterSanctuary() {
+            document.getElementById('lock-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            document.getElementById('bg-music').play();
+            initParticles();
         }
 
-        function wipe(e) {
-            const rect = canvas.getBoundingClientRect();
-            const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-            const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-            ctx.globalCompositeOperation = 'destination-out';
-            ctx.beginPath(); ctx.arc(x, y, 25, 0, Math.PI*2); ctx.fill();
-            // Add a "water drop" effect
-            ctx.globalCompositeOperation = 'source-over';
-        }
-        canvas.addEventListener('mousemove', (e) => { if(e.buttons === 1) wipe(e); });
-        canvas.addEventListener('touchmove', (e) => { wipe(e); e.preventDefault(); });
-
-        // --- 2. HEART SYNC LOGIC ---
-        const heart = document.getElementById('heart-icon');
-        function startHeart() { 
-            heart.classList.add('beating'); 
-            document.body.style.background = "#1a0202";
-            if(window.navigator.vibrate) window.navigator.vibrate([100, 50, 100]); 
-        }
-        function stopHeart() { 
-            heart.classList.remove('beating'); 
-            document.body.style.background = "#020202";
-        }
-
-        // --- 3. SCROLL REVEAL ---
+        // 2. SCROLL REVEAL
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // Special trigger for list items
+                    if(entry.target.id === 'listSection') {
+                        const items = entry.target.querySelectorAll('.list-item');
+                        items.forEach((it, i) => setTimeout(() => it.classList.add('active'), i * 400));
+                    }
+                }
+            });
         }, { threshold: 0.1 });
-        document.querySelectorAll('.section').forEach(s => observer.observe(s));
+        document.querySelectorAll('.section').forEach(section => observer.observe(section));
 
-        // --- 4. HUG SLIDER ---
-        document.getElementById('hugSlider').oninput = function() {
+        // 3. PARALLAX SHADOW
+        window.addEventListener('scroll', () => {
+            const s = window.scrollY;
+            const shadow = document.getElementById('mainShadow');
+            shadow.style.transform = `scale(${0.85 + s/2000}) translateY(${s/5}px)`;
+            shadow.style.filter = `blur(${Math.max(45 - s/10, 10)}px)`;
+            shadow.style.opacity = Math.min(0.2 + s/500, 0.7);
+        });
+
+        // 4. HUG SLIDER
+        const slider = document.getElementById('hugSlider');
+        const label = document.getElementById('meterLabel');
+        const desc = document.getElementById('meterDesc');
+        slider.oninput = function() {
             const val = this.value;
-            document.getElementById('label').innerText = val > 70 ? "NEVER LETTING GO" : val > 30 ? "TIGHT HOLD" : "GENTLE HOLD";
-            document.body.style.background = `radial-gradient(circle, rgb(${val/2},0,0) 0%, black 100%)`;
+            const r = Math.min(val * 0.8, 50);
+            document.body.style.background = `radial-gradient(circle at center, rgb(${r}, ${r/6}, 0) 0%, #020202 100%)`;
+            
+            if(val < 33) {
+                label.innerText = "Gentle Presence";
+                desc.innerText = "A reminder that I'm here.";
+            } else if(val < 80) {
+                label.innerText = "The Tight Hold";
+                desc.innerText = "The kind where you can finally let go.";
+            } else {
+                label.innerText = "Safe Haven";
+                desc.innerText = "I'm never letting you go. Ever.";
+                label.style.color = "#ff4d00";
+                if(window.navigator.vibrate) window.navigator.vibrate(10); // Subtle vibration
+            }
         };
 
-        // --- 5. PARTICLES ---
-        particlesJS("particles-js", {
-            "particles": {
-                "number": { "value": 30 },
-                "opacity": { "value": 0.2 },
-                "size": { "value": 2 },
-                "move": { "speed": 1, "direction": "top" }
-            }
-        });
+        // 5. PARTICLES CONFIG
+        function initParticles() {
+            particlesJS("particles-js", {
+                "particles": {
+                    "number": { "value": 40 },
+                    "color": { "value": "#ffffff" },
+                    "opacity": { "value": 0.2, "random": true },
+                    "size": { "value": 2, "random": true },
+                    "line_linked": { "enable": false },
+                    "move": { "enable": true, "speed": 1, "direction": "top", "random": true, "straight": false, "out_mode": "out" }
+                }
+            });
+        }
     </script>
 </body>
 </html>
