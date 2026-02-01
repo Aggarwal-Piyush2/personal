@@ -130,6 +130,33 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        // This tells the browser to wait until Feb 7th, 2026, Sydney Time
+        const UNLOCK_DATE = "2026-02-07T00:00:00";
+
+        // 2. THIS IS THE SETINTERVAL FUNCTION
+    const timerTask = setInterval(() => {
+        
+        const now = new Date();
+        // This line converts the user's phone time to Sydney Time
+        const sydTime = new Date(now.toLocaleString("en-US", {timeZone: "Australia/Sydney"}));
+        const diff = new Date(UNLOCK_DATE) - sydTime;
+
+        if(diff <= 0) {
+            // If the time is Feb 7th or later, show the quiz
+            document.getElementById('quiz-inputs').style.display = 'block';
+            document.getElementById('unlock-btn').style.display = 'inline-block';
+            document.getElementById('countdown-timer').style.display = 'none';
+            clearInterval(timerTask); // This stops the "heartbeat" once unlocked
+        } else {
+            // Otherwise, keep updating the countdown numbers
+            const h = Math.floor(diff/3600000);
+            const m = Math.floor((diff%3600000)/60000);
+            const s = Math.floor((diff%60000)/1000);
+            document.getElementById('countdown-timer').innerText = `REVEALING IN: ${h}h ${m}m ${s}s`;
+        }
+    }, 1000); // <--- The "1000" means run this every 1 second
+
+    
         let map, audio, canvas, ctx;
         let isRevealed = false;
         let sparkles = [];
