@@ -1,513 +1,248 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Will You Be My Valentine?</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Will You Be My Valentine?</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,700&family=Montserrat:wght@200;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,700&family=Montserrat:wght@200;400&display=swap" rel="stylesheet">
 
-  <style>
-    :root { --gold:#c5a059; }
+<style>
+:root { --gold:#c5a059; }
 
-    body{
-      margin:0;
-      min-height:100vh;
-      background: radial-gradient(circle at center, #1a0505 0%, #050505 100%);
-      font-family:'Montserrat',sans-serif;
-      color:white;
-      overflow-x:hidden;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      padding:24px 14px;
-    }
+body{
+  margin:0;
+  min-height:100vh;
+  background: radial-gradient(circle at center, #1a0505 0%, #050505 100%);
+  font-family:'Montserrat',sans-serif;
+  color:white;
+  overflow-x:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:24px 14px;
+}
 
-    /* Floating hearts */
-    .emoji{
-      position:fixed; top:-50px;
-      font-size:24px; z-index:1;
-      user-select:none; pointer-events:none;
-      animation: fall linear forwards;
-      opacity:0.8;
-    }
-    @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+/* floating hearts */
+.emoji{
+  position:fixed;
+  top:-50px;
+  font-size:24px;
+  animation: fall linear forwards;
+  pointer-events:none;
+}
+@keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
 
-    /* Confetti/sparkles */
-    .confetti{
-      position:fixed;
-      top:-20px;
-      width:10px;
-      height:10px;
-      z-index:999;
-      pointer-events:none;
-      border-radius:2px;
-      animation: confettiFall linear forwards;
-      opacity:0.95;
-    }
-    @keyframes confettiFall{
-      to{ transform: translateY(110vh) rotate(900deg); }
-    }
+/* confetti */
+.confetti{
+  position:fixed;
+  top:-20px;
+  width:10px;
+  height:10px;
+  border-radius:2px;
+  animation: confettiFall linear forwards;
+  pointer-events:none;
+}
+@keyframes confettiFall{
+  to{ transform: translateY(110vh) rotate(900deg); }
+}
 
-    .wrap{
-      width:min(980px, 100%);
-      position:relative;
-      z-index:5;
-      text-align:center;
-    }
+.wrap{
+  width:min(980px, 100%);
+  text-align:center;
+}
 
-    h1{
-      font-family:'Playfair Display', serif;
-      font-style:italic;
-      font-size: clamp(2.2rem, 4.5vw, 3.8rem);
-      color: var(--gold);
-      margin: 0 0 10px;
-      text-shadow: 0 0 20px rgba(197,160,89,0.25);
-    }
+h1{
+  font-family:'Playfair Display';
+  font-style:italic;
+  font-size:3rem;
+  color:var(--gold);
+}
 
-    .sub{
-      margin:0 0 26px;
-      letter-spacing:6px;
-      font-size:0.72rem;
-      opacity:0.6;
-    }
+.sub{
+  opacity:0.6;
+  letter-spacing:6px;
+  margin-bottom:20px;
+}
 
-    .card{
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(197,160,89,0.18);
-      border-radius: 12px;
-      padding: 22px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 14px 50px rgba(0,0,0,0.35);
-      transition: 500ms ease;
-    }
+.card{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(197,160,89,0.2);
+  border-radius:12px;
+  padding:22px;
+  transition:500ms ease;
+}
 
-    /* YES glow mode */
-    .card.yes-mode{
-      border-color: rgba(197,160,89,0.60);
-      box-shadow:
-        0 14px 60px rgba(0,0,0,0.45),
-        0 0 55px rgba(197,160,89,0.30);
-      animation: yesGlow 1800ms ease-in-out infinite;
-    }
-    @keyframes yesGlow{
-      0%   { transform: scale(1); }
-      50%  { transform: scale(1.012); }
-      100% { transform: scale(1); }
-    }
+/* glow after yes */
+.card.yes-mode{
+  box-shadow:0 0 55px rgba(197,160,89,0.3);
+}
 
-    .note{
-      max-width: 760px;
-      margin: 0 auto 18px;
-      line-height: 1.75;
-      font-size: 0.98rem;
-      opacity: 0.92;
-    }
+.media{
+  display:grid;
+  gap:12px;
+  margin-top:14px;
+}
 
-    .media{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:12px;
-      margin-top:14px;
-    }
-    @media (min-width: 720px){
-      .media{ grid-template-columns: 1fr 1fr; }
-      .wide{ grid-column: 1 / -1; }
-    }
+.photo{
+  width:100%;
+  border-radius:10px;
+}
 
-    .photo{
-      width:100%;
-      aspect-ratio: 4/5;
-      object-fit: cover;
-      border-radius: 10px;
-      border: 1px solid rgba(197,160,89,0.18);
-      background: rgba(255,255,255,0.02);
-      transition: 450ms ease;
-      filter: saturate(0.95) brightness(0.95);
-    }
+.question{
+  font-family:'Playfair Display';
+  font-size:2rem;
+  color:var(--gold);
+  margin-top:20px;
+}
 
-    .card.yes-mode .photo{
-      filter: saturate(1.1) brightness(1.06);
-      box-shadow: 0 0 25px rgba(197,160,89,0.12);
-      transform: translateY(-1px);
-    }
+.btns{
+  margin-top:14px;
+  display:flex;
+  gap:12px;
+  justify-content:center;
+}
 
-  /* Video hidden until YES */
+button{
+  background:black;
+  border:1px solid var(--gold);
+  color:var(--gold);
+  padding:10px 18px;
+  border-radius:20px;
+  cursor:pointer;
+  transition:0.25s;
+  position:relative;
+}
+button:hover{ transform:translateY(-2px); }
 
+.result{
+  margin-top:14px;
+  min-height:40px;
+}
 
-    .question{
-      margin-top: 22px;
-      font-family:'Playfair Display', serif;
-      font-size: clamp(1.7rem, 3vw, 2.5rem);
-      color: var(--gold);
-      text-shadow: 0 0 16px rgba(197,160,89,0.18);
-    }
+.back{
+  display:block;
+  margin-top:18px;
+  opacity:0.7;
+  color:white;
+}
 
-    .btns{
-      margin-top: 14px;
-      display:flex;
-      gap:12px;
-      justify-content:center;
-      flex-wrap:wrap;
-    }
-
-    button{
-      background: rgba(0,0,0,0.6);
-      border: 1px solid var(--gold);
-      color: var(--gold);
-      padding: 12px 20px;
-      border-radius: 999px;
-      cursor:pointer;
-      font-family:'Montserrat',sans-serif;
-      font-size: 0.82rem;
-      letter-spacing: 1.5px;
-      transition: 0.25s ease;
-      position: relative;
-    }
-    button:hover{
-      transform: translateY(-2px);
-      background: rgba(197,160,89,0.10);
-      border-color: var(--gold);
-    }
-
-    .btn-secondary{
-      border-color: rgba(197,160,89,0.45);
-      color: rgba(197,160,89,0.92);
-      background: rgba(0,0,0,0.45);
-    }
-
-    .result{
-      margin-top: 16px;
-      min-height: 44px;
-      font-size: 0.95rem;
-      line-height: 1.6;
-      opacity: 0.95;
-    }
-
-    /* Reveals after YES */
-    .reveal{
-      margin-top: 14px;
-      max-width: 760px;
-      margin-left:auto;
-      margin-right:auto;
-      padding: 16px 16px;
-      border-radius: 12px;
-      border: 1px solid rgba(197,160,89,0.18);
-      background: rgba(255,255,255,0.02);
-      backdrop-filter: blur(10px);
-      display:none;
-      text-align:left;
-      line-height:1.7;
-      opacity:0.96;
-    }
-    .reveal strong{
-      font-family:'Playfair Display',serif;
-      color: var(--gold);
-      font-size: 1.1rem;
-      font-weight: 700;
-    }
-
-    .next-row{
-      margin-top: 14px;
-      display:none;
-      justify-content:center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .back{
-      display:inline-block;
-      margin-top: 18px;
-      color:white;
-      opacity:0.75;
-      text-decoration:none;
-      border-bottom: 1px dashed rgba(197,160,89,0.45);
-      padding-bottom: 2px;
-    }
-    .back:hover{ color: var(--gold); }
-
-    /* Modal for prank NO */
-    .modal-bg{
-      position:fixed;
-      inset:0;
-      background: rgba(0,0,0,0.65);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      z-index: 1000;
-      padding: 18px;
-    }
-    .modal{
-      width: min(520px, 100%);
-      background: rgba(10,10,10,0.92);
-      border: 1px solid rgba(197,160,89,0.22);
-      border-radius: 14px;
-      padding: 18px 16px;
-      backdrop-filter: blur(10px);
-      text-align:center;
-      box-shadow: 0 18px 70px rgba(0,0,0,0.55);
-    }
-    .modal h2{
-      margin: 0 0 8px;
-      font-family:'Playfair Display',serif;
-      font-style: italic;
-      color: var(--gold);
-      font-size: 1.6rem;
-    }
-    .modal p{
-      margin: 0 0 14px;
-      line-height: 1.6;
-      opacity: 0.92;
-      font-size: 0.95rem;
-    }
-    .modal .row{
-      display:flex;
-      gap:10px;
-      justify-content:center;
-      flex-wrap:wrap;
-    }
-
-    /* Music toggle */
-    .music-toggle {
-      position: fixed; bottom: 20px; right: 20px;
-      background: rgba(0,0,0,0.6);
-      border: 1px solid var(--gold);
-      color: var(--gold);
-      padding: 8px 15px;
-      border-radius: 20px;
-      cursor: pointer;
-      z-index: 1200;
-      font-family: 'Montserrat';
-      font-size: 0.7rem;
-      letter-spacing: 1px;
-    }
-  </style>
+/* prank modal */
+.modal-bg{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.7);
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+.modal{
+  background:#111;
+  padding:20px;
+  border-radius:12px;
+  text-align:center;
+}
+</style>
 </head>
 
 <body>
-  <audio id="bg-music" loop preload="auto">
-    <source src="tum.mp3" type="audio/mpeg">
-  </audio>
-  <button id="musicControl" class="music-toggle" onclick="toggleMusic()">🔊 MUSIC OFF</button>
 
-  <div class="wrap">
-    <h1>For You ❤️</h1>
-    <p class="sub">JUST ONE QUESTION</p>
+<div class="wrap">
 
-    <div class="card" id="card">
-      <p class="note" id="introText">
-        I made this little page because you mean a lot to me.
-        <br>
-        You make everything feel softer, happier, and more beautiful.
-        <br><br>
-        So… I wanted to ask you this in a special way.
-      </p>
+<h1>For You ❤️</h1>
+<p class="sub">JUST ONE QUESTION</p>
 
-      <div class="media">
-        <img class="photo" src="v1.jpeg" alt="Photo 1" loading="lazy">
-        <img class="photo" src="v2.jpeg" alt="Photo 2" loading="lazy">
-        <img class="photo wide" src="v3.1.jpeg" alt="Photo 3" loading="lazy">
+<div class="card" id="card">
 
-       
-      </div>
+<p>
+I made this little page because you mean a lot to me.<br>
+So… I wanted to ask you something special.
+</p>
 
-      <div class="question" id="questionText">Will you be my Valentine? 💌</div>
+<div class="media">
+<img class="photo" src="v1.jpeg">
+<img class="photo" src="v2.jpeg">
+<img class="photo" src="v3.1.jpeg">
+</div>
 
-      <div class="btns" id="btnRow">
-        <button id="yesBtn" onclick="sayYes()">YES 💖</button>
-        <button id="noBtn" class="btn-secondary" onclick="sayNo()">Not right now</button>
-      </div>
+<div class="question" id="questionText">Will you be my Valentine? 💌</div>
 
-      <div id="result" class="result"></div>
+<div class="btns">
+<button id="yesBtn">YES 💖</button>
+<button id="noBtn">Not right now</button>
+</div>
 
-      <div id="reveal1" class="reveal">
-        <strong>One thing I need you to know…</strong>
-        <br><br>
-        I don’t just like you, I genuinely crave you.
-        The way you look at me, the way you talk, the way you care for me, the way you treat me,the way you exist…
-        .
-      </div>
+<div id="result" class="result"></div>
 
-      <div id="reveal2" class="reveal">
-        <strong>And if you say yes…</strong>
-        <br><br>
-        I’m stealing you forever.
-        All of your time is mine and mine only. 🌹
-      </div>
+</div>
 
-      <!-- Copy option removed, only keep Back to The Vault -->
-      <div id="nextRow" class="next-row">
-        <a href="index.html" style="text-decoration:none;">
-          <button class="btn-secondary" type="button">Back to The Vault</button>
-        </a>
-      </div>
-    </div>
+<a class="back" href="index.html">← Back</a>
 
-    <a class="back" href="index.html">← Back</a>
-  </div>
+</div>
 
-  <!-- Modal for prank "Not right now" -->
-  <div class="modal-bg" id="modalBg">
-    <div class="modal">
-      <h2>Nice try 😌</h2>
-      <p>
-        That button is a prank. You’re not allowed to say no.
-        Go ahead… press YES like you mean it. 💖
-      </p>
-      <div class="row">
-        <button onclick="closeModal()">Okay</button>
-        <button class="btn-secondary" type="button" onclick="sayYes()">Fine, YES 💖</button>
-      </div>
-    </div>
-  </div>
+<!-- prank modal -->
+<div class="modal-bg" id="modalBg">
+<div class="modal">
+<h2>Nice try 😌</h2>
+<p>You can’t say no. Press YES 💖</p>
+<button onclick="closeModal()">Okay</button>
+</div>
+</div>
 
-  <script>
-    // floating hearts
-    const emojis = ['❤️','💖','✨','🌹','💌','🌸'];
-    function createEmoji() {
-      const e = document.createElement('div');
-      e.className = 'emoji';
-      e.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-      e.style.left = Math.random() * 100 + 'vw';
-      const duration = Math.random() * 3 + 4;
-      e.style.animationDuration = duration + 's';
-      e.style.opacity = (Math.random() * 0.55 + 0.35).toFixed(2);
-      document.body.appendChild(e);
-      setTimeout(() => e.remove(), duration * 1000);
-    }
-    setInterval(createEmoji, 420);
+<script>
+const card = document.getElementById('card');
+const result = document.getElementById('result');
+const yesBtn = document.getElementById('yesBtn');
+const noBtn = document.getElementById('noBtn');
+const modalBg = document.getElementById('modalBg');
 
-    // elements
-    const card = document.getElementById('card');
-    const result = document.getElementById('result');
-    const reveal1 = document.getElementById('reveal1');
-    const reveal2 = document.getElementById('reveal2');
-    const nextRow = document.getElementById('nextRow');
-    const btnRow = document.getElementById('btnRow');
-    const questionText = document.getElementById('questionText');
-    const introText = document.getElementById('introText');
-   
+/* floating hearts */
+function heart(){
+ const e=document.createElement('div');
+ e.className='emoji';
+ e.textContent='❤️';
+ e.style.left=Math.random()*100+'vw';
+ document.body.appendChild(e);
+ setTimeout(()=>e.remove(),4000);
+}
+setInterval(heart,450);
 
-    // audio
-    const audio = document.getElementById('bg-music');
-    const musicBtn = document.getElementById('musicControl');
-    let musicEnabled = false;
+/* confetti */
+function confetti(){
+ for(let i=0;i<80;i++){
+  const c=document.createElement('div');
+  c.className='confetti';
+  c.style.left=Math.random()*100+'vw';
+  c.style.background='pink';
+  c.style.animationDuration=Math.random()*2+2+'s';
+  document.body.appendChild(c);
+  setTimeout(()=>c.remove(),4000);
+ }
+}
 
-    function toggleMusic() {
-      if (audio.paused) {
-        audio.play().catch(()=>{});
-        musicBtn.innerText = "🔊 MUSIC ON";
-        musicEnabled = true;
-      } else {
-        audio.pause();
-        musicBtn.innerText = "🔇 MUSIC OFF";
-      }
-    }
+/* YES */
+yesBtn.onclick = function(){
+ card.classList.add('yes-mode');
+ confetti();
 
-    // confetti burst
-    function confettiBurst(count = 120) {
-      for (let i = 0; i < count; i++) {
-        const c = document.createElement('div');
-        c.className = 'confetti';
-        c.style.left = (Math.random() * 100) + 'vw';
-        c.style.background = `hsl(${Math.floor(Math.random() * 60) + 330}, 85%, 72%)`;
-        c.style.width = (Math.random() * 8 + 6) + 'px';
-        c.style.height = (Math.random() * 12 + 6) + 'px';
-        c.style.borderRadius = (Math.random() > 0.55) ? '999px' : '2px';
-        const duration = Math.random() * 2.6 + 3;
-        c.style.animationDuration = duration + 's';
-        document.body.appendChild(c);
-        setTimeout(()=>c.remove(), duration * 1000);
-      }
-    }
+ result.innerHTML = "Come here 😘💖 You’re officially mine FOREVER and EVER. 🌹✨";
 
-    function heartStorm() {
-      for (let i = 0; i < 45; i++) setTimeout(createEmoji, i * 25);
-    }
+ yesBtn.disabled = true;
+ noBtn.disabled = true;
+};
 
-    function typeLine(el, text, speed = 18) {
-      el.innerHTML = "";
-      let i = 0;
-      const timer = setInterval(() => {
-        el.innerHTML += text.charAt(i);
-        i++;
-        if (i >= text.length) clearInterval(timer);
-      }, speed);
-    }
+/* prank NO button runs away */
+noBtn.addEventListener('mouseenter',()=>{
+ noBtn.style.left=(Math.random()*200-100)+'px';
+ noBtn.style.top=(Math.random()*60-30)+'px';
+});
 
-    function sayYes() {
-  closeModal();
+noBtn.onclick = () => modalBg.style.display='flex';
 
-  card.classList.add('yes-mode');
+function closeModal(){
+ modalBg.style.display='none';
+}
+</script>
 
-  if (!musicEnabled) {
-    audio.currentTime = 10;
-    audio.play().catch(()=>{});
-    musicBtn.innerText = "🔊 MUSIC ON";
-    musicEnabled = true;
-  }
-
-  confettiBurst(140);
-  heartStorm();
-
-  questionText.textContent = "She said YES 💖";
-
-  typeLine(
-    result,
-    "Come here 😘💖  You’re officially mine FOREVER and EVER. 🌹✨",
-    18
-  );
-
-  setTimeout(() => { reveal1.style.display = "block"; }, 700);
-  setTimeout(() => { reveal2.style.display = "block"; }, 1500);
-  setTimeout(() => { nextRow.style.display = "flex"; }, 2200);
-
-  setTimeout(() => {
-    introText.innerHTML = "Okay… now it’s official. <br><br><b style='color:#c5a059;'>My Valentine.</b> 💌";
-  }, 900);
-
-  btnRow.style.opacity = "0.65";
-  document.getElementById('yesBtn').disabled = true;
-  document.getElementById('noBtn').disabled = true;
-
-
-
-
-    // prank NO modal + runaway button
-    const modalBg = document.getElementById('modalBg');
-    const noBtn = document.getElementById('noBtn');
-
-    function sayNo() {
-      // If they manage to click it, still treat as prank
-      modalBg.style.display = "flex";
-    }
-    function closeModal() { modalBg.style.display = "none"; }
-    modalBg.addEventListener('click', (e) => { if (e.target === modalBg) closeModal(); });
-
-    // Runaway behavior for the NO button
-    function dodgeNoButton() {
-      // Only dodge before YES is chosen
-      if (document.getElementById('yesBtn').disabled) return;
-
-      const cardRect = card.getBoundingClientRect();
-      const btnRect = noBtn.getBoundingClientRect();
-
-      const maxX = Math.max(0, cardRect.width - btnRect.width - 24);
-      const maxY = Math.max(0, 90); // keep it near the button row
-
-      const x = Math.random() * maxX;
-      const y = (Math.random() * maxY) - (maxY / 3);
-
-      noBtn.style.position = "relative";
-      noBtn.style.left = (x - maxX/2) + "px";
-      noBtn.style.top = (y) + "px";
-
-      result.innerHTML = "Not right now is not available 😌💖";
-    }
-
-    // Dodge on hover and on touch
-    noBtn.addEventListener('mouseenter', dodgeNoButton);
-    noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); dodgeNoButton(); }, { passive:false });
-  </script>
 </body>
 </html>
