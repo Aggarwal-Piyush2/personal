@@ -132,12 +132,24 @@
       transform: translateY(-1px);
     }
 
-    video{
-      width:100%;
-      border-radius:10px;
-      border: 1px solid rgba(197,160,89,0.18);
-      background: rgba(0,0,0,0.35);
-    }
+  /* Video hidden until YES */
+#valVideo{
+  width:100%;
+  border-radius:10px;
+  border: 1px solid rgba(197,160,89,0.18);
+  background: rgba(0,0,0,0.35);
+
+  display:none;
+  opacity:0;
+  transform: translateY(10px);
+  transition: opacity 500ms ease, transform 500ms ease;
+}
+
+#valVideo.show{
+  opacity:1;
+  transform: translateY(0);
+}
+
 
     .question{
       margin-top: 22px;
@@ -443,44 +455,49 @@
     }
 
     function sayYes() {
-      // close modal if open
-      closeModal();
+  closeModal();
 
-      card.classList.add('yes-mode');
+  card.classList.add('yes-mode');
 
-      if (!musicEnabled) {
-        audio.currentTime = 10;
-        audio.play().catch(()=>{});
-        musicBtn.innerText = "🔊 MUSIC ON";
-        musicEnabled = true;
-      }
+  if (!musicEnabled) {
+    audio.currentTime = 10;
+    audio.play().catch(()=>{});
+    musicBtn.innerText = "🔊 MUSIC ON";
+    musicEnabled = true;
+  }
 
-      confettiBurst(140);
-      heartStorm();
+  confettiBurst(140);
+  heartStorm();
 
-      questionText.textContent = "She said YES 💖";
+  questionText.textContent = "She said YES 💖";
 
-      // spicier, flirty, romantic message
-      typeLine(
-        result,
-        "Come here 😘💖  You’re officially mine FOREVER and EVER.🌹✨",
-        18
-      );
+  typeLine(
+    result,
+    "Come here 😘💖  You’re officially mine FOREVER and EVER. 🌹✨",
+    18
+  );
 
-      setTimeout(() => { reveal1.style.display = "block"; }, 700);
-      setTimeout(() => { reveal2.style.display = "block"; }, 1500);
-      setTimeout(() => { nextRow.style.display = "flex"; }, 2200);
+  setTimeout(() => { reveal1.style.display = "block"; }, 700);
+  setTimeout(() => { reveal2.style.display = "block"; }, 1500);
+  setTimeout(() => { nextRow.style.display = "flex"; }, 2200);
 
-      setTimeout(() => {
-        introText.innerHTML = "Okay… now it’s official. <br><br><b style='color:#c5a059;'>My Valentine.</b> 💌";
-      }, 900);
+  setTimeout(() => {
+    introText.innerHTML = "Okay… now it’s official. <br><br><b style='color:#c5a059;'>My Valentine.</b> 💌";
+  }, 900);
 
-      btnRow.style.opacity = "0.65";
-      document.getElementById('yesBtn').disabled = true;
-      document.getElementById('noBtn').disabled = true;
+  btnRow.style.opacity = "0.65";
+  document.getElementById('yesBtn').disabled = true;
+  document.getElementById('noBtn').disabled = true;
 
-      setTimeout(() => { video.play().catch(()=>{}); }, 800);
-    }
+  /* ⭐ SHOW + FADE + SCROLL + PLAY VIDEO */
+  setTimeout(() => {
+    video.style.display = "block";
+    requestAnimationFrame(() => video.classList.add("show"));
+    video.scrollIntoView({ behavior: "smooth", block: "center" });
+    video.play().catch(()=>{});
+  }, 1000);
+}
+
 
     // prank NO modal + runaway button
     const modalBg = document.getElementById('modalBg');
