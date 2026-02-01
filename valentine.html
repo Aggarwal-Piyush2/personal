@@ -23,7 +23,7 @@
       padding:24px 14px;
     }
 
-    /* Falling hearts */
+    /* Floating hearts */
     .emoji{
       position:fixed; top:-50px;
       font-size:24px; z-index:1;
@@ -33,20 +33,20 @@
     }
     @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
 
-    /* Confetti hearts (YES) */
-    .confetti {
-      position: fixed;
-      top: -20px;
-      width: 10px;
-      height: 10px;
-      z-index: 999;
-      pointer-events: none;
-      border-radius: 2px;
+    /* Confetti/sparkles */
+    .confetti{
+      position:fixed;
+      top:-20px;
+      width:10px;
+      height:10px;
+      z-index:999;
+      pointer-events:none;
+      border-radius:2px;
       animation: confettiFall linear forwards;
-      opacity: 0.9;
+      opacity:0.95;
     }
-    @keyframes confettiFall {
-      to { transform: translateY(110vh) rotate(720deg); }
+    @keyframes confettiFall{
+      to{ transform: translateY(110vh) rotate(900deg); }
     }
 
     .wrap{
@@ -82,17 +82,17 @@
       transition: 500ms ease;
     }
 
-    /* glow + gentle pulse on YES */
+    /* YES glow mode */
     .card.yes-mode{
-      border-color: rgba(197,160,89,0.55);
+      border-color: rgba(197,160,89,0.60);
       box-shadow:
         0 14px 60px rgba(0,0,0,0.45),
-        0 0 45px rgba(197,160,89,0.28);
+        0 0 55px rgba(197,160,89,0.30);
       animation: yesGlow 1800ms ease-in-out infinite;
     }
     @keyframes yesGlow{
       0%   { transform: scale(1); }
-      50%  { transform: scale(1.01); }
+      50%  { transform: scale(1.012); }
       100% { transform: scale(1); }
     }
 
@@ -126,7 +126,6 @@
       filter: saturate(0.95) brightness(0.95);
     }
 
-    /* spotlight effect on YES */
     .card.yes-mode .photo{
       filter: saturate(1.1) brightness(1.06);
       box-shadow: 0 0 25px rgba(197,160,89,0.12);
@@ -174,10 +173,9 @@
       border-color: var(--gold);
     }
 
-    /* Make NO button calmer + secondary */
     .btn-secondary{
       border-color: rgba(197,160,89,0.45);
-      color: rgba(197,160,89,0.9);
+      color: rgba(197,160,89,0.92);
       background: rgba(0,0,0,0.45);
     }
 
@@ -189,14 +187,7 @@
       opacity: 0.95;
     }
 
-    .tiny{
-      margin-top: 10px;
-      opacity: 0.55;
-      font-size: 0.72rem;
-      letter-spacing: 3px;
-    }
-
-    /* Hidden love note reveal */
+    /* Reveals after YES */
     .reveal{
       margin-top: 14px;
       max-width: 760px;
@@ -227,6 +218,13 @@
       flex-wrap: wrap;
     }
 
+    .tiny{
+      margin-top: 10px;
+      opacity: 0.55;
+      font-size: 0.72rem;
+      letter-spacing: 3px;
+    }
+
     .back{
       display:inline-block;
       margin-top: 18px;
@@ -238,7 +236,7 @@
     }
     .back:hover{ color: var(--gold); }
 
-    /* Small modal for "Not right now" */
+    /* Modal for NO */
     .modal-bg{
       position:fixed;
       inset:0;
@@ -279,7 +277,7 @@
       flex-wrap:wrap;
     }
 
-    /* Optional audio control on this page */
+    /* Music toggle */
     .music-toggle {
       position: fixed; bottom: 20px; right: 20px;
       background: rgba(0,0,0,0.6);
@@ -292,15 +290,14 @@
       font-family: 'Montserrat';
       font-size: 0.7rem;
       letter-spacing: 1px;
-      display:none; /* becomes visible if you use audio */
     }
   </style>
 </head>
 
 <body>
-  <!-- OPTIONAL: if you want music on this page, add an mp3 file and set src -->
+  <!-- OPTIONAL MUSIC: put palpal.mp3 in same folder -->
   <audio id="bg-music" loop preload="auto">
-    <source src="khaab.mp3" type="audio/mpeg">
+    <source src="palpal.mp3" type="audio/mpeg">
   </audio>
   <button id="musicControl" class="music-toggle" onclick="toggleMusic()">🔊 MUSIC OFF</button>
 
@@ -323,7 +320,7 @@
         <img class="photo" src="photo2.jpg" alt="Photo 2" loading="lazy">
         <img class="photo wide" src="photo3.jpg" alt="Photo 3" loading="lazy">
 
-        <video class="wide" controls playsinline preload="metadata">
+        <video id="valVideo" class="wide" controls playsinline preload="metadata">
           <source src="video1.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
@@ -338,20 +335,25 @@
 
       <div id="result" class="result"></div>
 
-      <div id="reveal" class="reveal">
+      <div id="reveal1" class="reveal">
         <strong>One thing I need you to know…</strong>
         <br><br>
         I don’t just like you — I genuinely appreciate you.
         The way you talk, the way you laugh, the way you care…
         it’s the kind of feeling that makes me grateful every day.
+      </div>
+
+      <div id="reveal2" class="reveal">
+        <strong>And if you say yes…</strong>
         <br><br>
-        If you say yes, I promise: your Valentine’s Day will be special. 🌹
+        I promise: I’ll make this Valentine’s feel special — the kind you remember. 🌹
       </div>
 
       <div id="nextRow" class="next-row">
-        <!-- Optional: link this to your next surprise page -->
-        <button onclick="goNext()">✨ Next Surprise</button>
-        <button class="btn-secondary" onclick="copyMessage()">📩 Copy a cute message</button>
+        <button onclick="copyMessage()">📩 Copy message</button>
+        <a href="index.html" style="text-decoration:none;">
+          <button class="btn-secondary" type="button">Back to The Vault</button>
+        </a>
       </div>
 
       <div class="tiny">FEB 2 • JUST US</div>
@@ -378,14 +380,14 @@
   </div>
 
   <script>
-    // Falling hearts always (soft vibe)
+    // floating hearts
     const emojis = ['❤️','💖','✨','🌹','💌','🌸'];
     function createEmoji() {
       const e = document.createElement('div');
       e.className = 'emoji';
       e.textContent = emojis[Math.floor(Math.random() * emojis.length)];
       e.style.left = Math.random() * 100 + 'vw';
-      const duration = Math.random() * 3 + 4; // 4–7 sec
+      const duration = Math.random() * 3 + 4;
       e.style.animationDuration = duration + 's';
       e.style.opacity = (Math.random() * 0.55 + 0.35).toFixed(2);
       document.body.appendChild(e);
@@ -393,53 +395,52 @@
     }
     setInterval(createEmoji, 420);
 
-    // YES extras
+    // elements
     const card = document.getElementById('card');
     const result = document.getElementById('result');
-    const reveal = document.getElementById('reveal');
+    const reveal1 = document.getElementById('reveal1');
+    const reveal2 = document.getElementById('reveal2');
     const nextRow = document.getElementById('nextRow');
     const btnRow = document.getElementById('btnRow');
     const questionText = document.getElementById('questionText');
     const introText = document.getElementById('introText');
+    const video = document.getElementById('valVideo');
 
-    // Optional music
+    // audio
     const audio = document.getElementById('bg-music');
     const musicBtn = document.getElementById('musicControl');
     let musicEnabled = false;
-
-    // If you actually have khaab.mp3 on this page, show control
-    // (It will still fail silently if file not found)
-    musicBtn.style.display = 'block';
 
     function toggleMusic() {
       if (audio.paused) {
         audio.play().catch(()=>{});
         musicBtn.innerText = "🔊 MUSIC ON";
+        musicEnabled = true;
       } else {
         audio.pause();
         musicBtn.innerText = "🔇 MUSIC OFF";
       }
     }
 
-    function confettiBurst(count = 90) {
+    // confetti/sparkles burst
+    function confettiBurst(count = 120) {
       for (let i = 0; i < count; i++) {
         const c = document.createElement('div');
         c.className = 'confetti';
         c.style.left = (Math.random() * 100) + 'vw';
-        c.style.background = `hsl(${Math.floor(Math.random() * 60) + 330}, 80%, 70%)`;
+        c.style.background = `hsl(${Math.floor(Math.random() * 60) + 330}, 85%, 72%)`;
         c.style.width = (Math.random() * 8 + 6) + 'px';
-        c.style.height = (Math.random() * 10 + 6) + 'px';
-        c.style.borderRadius = (Math.random() > 0.6) ? '999px' : '2px';
-        const duration = Math.random() * 2.5 + 3; // 3–5.5s
+        c.style.height = (Math.random() * 12 + 6) + 'px';
+        c.style.borderRadius = (Math.random() > 0.55) ? '999px' : '2px';
+        const duration = Math.random() * 2.6 + 3;
         c.style.animationDuration = duration + 's';
-        c.style.transform = `translateY(0) rotate(${Math.random()*360}deg)`;
         document.body.appendChild(c);
         setTimeout(()=>c.remove(), duration * 1000);
       }
     }
 
-    function bigHeartBurst() {
-      for (let i = 0; i < 30; i++) setTimeout(createEmoji, i * 30);
+    function heartStorm() {
+      for (let i = 0; i < 45; i++) setTimeout(createEmoji, i * 25);
     }
 
     function typeLine(el, text, speed = 18) {
@@ -453,54 +454,50 @@
     }
 
     function sayYes() {
-      // Visual mode
       card.classList.add('yes-mode');
 
-      // Start music softly (optional)
+      // attempt play music + show state
       if (!musicEnabled) {
-        audio.currentTime = 18;
+        audio.currentTime = 10;
         audio.play().catch(()=>{});
         musicBtn.innerText = "🔊 MUSIC ON";
         musicEnabled = true;
       }
 
-      // Big effects
-      confettiBurst(110);
-      bigHeartBurst();
+      // effects
+      confettiBurst(140);
+      heartStorm();
 
-      // Update text with a little “story”
+      // update text
       questionText.textContent = "She said YES 💖";
       typeLine(result, "You just made me the happiest person alive 😭💖  I promise I’ll make this Valentine’s unforgettable. 🌹", 18);
 
-      // Reveal note + next buttons
-      reveal.style.display = "block";
-      nextRow.style.display = "flex";
+      // reveal sections in sequence
+      setTimeout(() => { reveal1.style.display = "block"; }, 700);
+      setTimeout(() => { reveal2.style.display = "block"; }, 1500);
+      setTimeout(() => { nextRow.style.display = "flex"; }, 2200);
 
-      // Disable buttons after YES
+      // soften intro
+      setTimeout(() => {
+        introText.innerHTML = "Okay… now it’s official. <br><br><b style='color:#c5a059;'>My Valentine.</b> 💌";
+      }, 900);
+
+      // disable buttons
       btnRow.style.opacity = "0.65";
       document.getElementById('yesBtn').disabled = true;
       document.getElementById('noBtn').disabled = true;
 
-      // Optional: change intro line after a beat
+      // try to autoplay video (may require user gesture, but YES click counts)
       setTimeout(() => {
-        introText.innerHTML = "Okay… now it’s official. <br><br>My Valentine. 💌";
-      }, 900);
+        video.play().catch(()=>{});
+      }, 800);
     }
 
-    // Better NO (not prank) -> gentle modal
+    // NO modal
     const modalBg = document.getElementById('modalBg');
-    function sayNo() {
-      modalBg.style.display = "flex";
-    }
-    function closeModal() {
-      modalBg.style.display = "none";
-    }
-
-    // Optional next page
-    function goNext() {
-      // Change this if you have a next page (example: day2.html or a surprise page)
-      window.location.href = "index.html";
-    }
+    function sayNo() { modalBg.style.display = "flex"; }
+    function closeModal() { modalBg.style.display = "none"; }
+    modalBg.addEventListener('click', (e) => { if (e.target === modalBg) closeModal(); });
 
     function copyMessage() {
       const msg = "You’re officially my Valentine 💖🌹";
@@ -510,11 +507,6 @@
         result.innerHTML = "Copy this 💌: <br><br><em>" + msg + "</em>";
       });
     }
-
-    // Close modal on background click
-    modalBg.addEventListener('click', (e) => {
-      if (e.target === modalBg) closeModal();
-    });
   </script>
 </body>
 </html>
