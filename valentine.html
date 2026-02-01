@@ -166,6 +166,7 @@
       font-size: 0.82rem;
       letter-spacing: 1.5px;
       transition: 0.25s ease;
+      position: relative;
     }
     button:hover{
       transform: translateY(-2px);
@@ -218,13 +219,6 @@
       flex-wrap: wrap;
     }
 
-    .tiny{
-      margin-top: 10px;
-      opacity: 0.55;
-      font-size: 0.72rem;
-      letter-spacing: 3px;
-    }
-
     .back{
       display:inline-block;
       margin-top: 18px;
@@ -236,7 +230,7 @@
     }
     .back:hover{ color: var(--gold); }
 
-    /* Modal for NO */
+    /* Modal for prank NO */
     .modal-bg{
       position:fixed;
       inset:0;
@@ -295,9 +289,8 @@
 </head>
 
 <body>
-  <!-- OPTIONAL MUSIC: put palpal.mp3 in same folder -->
   <audio id="bg-music" loop preload="auto">
-    <source src="palpal.mp3" type="audio/mpeg">
+    <source src="tum.mp3" type="audio/mpeg">
   </audio>
   <button id="musicControl" class="music-toggle" onclick="toggleMusic()">🔊 MUSIC OFF</button>
 
@@ -315,7 +308,6 @@
       </p>
 
       <div class="media">
-        <!-- Replace file names with your own -->
         <img class="photo" src="photo1.jpg" alt="Photo 1" loading="lazy">
         <img class="photo" src="photo2.jpg" alt="Photo 2" loading="lazy">
         <img class="photo wide" src="photo3.jpg" alt="Photo 3" loading="lazy">
@@ -338,43 +330,40 @@
       <div id="reveal1" class="reveal">
         <strong>One thing I need you to know…</strong>
         <br><br>
-        I don’t just like you — I genuinely appreciate you.
-        The way you talk, the way you laugh, the way you care…
-        it’s the kind of feeling that makes me grateful every day.
+        I don’t just like you, I genuinely crave you.
+        The way you look at me, the way you talk, the way you exist…
+        it makes it way too hard to play it cool.
       </div>
 
       <div id="reveal2" class="reveal">
         <strong>And if you say yes…</strong>
         <br><br>
-        I promise: I’ll make this Valentine’s feel special — the kind you remember. 🌹
+        I’m stealing you for the night.
+        Dinner, kisses, and a little trouble, in the best way. 🌹
       </div>
 
+      <!-- Copy option removed, only keep Back to The Vault -->
       <div id="nextRow" class="next-row">
-        <button onclick="copyMessage()">📩 Copy message</button>
         <a href="index.html" style="text-decoration:none;">
           <button class="btn-secondary" type="button">Back to The Vault</button>
         </a>
       </div>
-
-      <div class="tiny">FEB 2 • JUST US</div>
     </div>
 
     <a class="back" href="index.html">← Back</a>
   </div>
 
-  <!-- Modal for "Not right now" -->
+  <!-- Modal for prank "Not right now" -->
   <div class="modal-bg" id="modalBg">
     <div class="modal">
-      <h2>That’s okay ❤️</h2>
+      <h2>Nice try 😌</h2>
       <p>
-        No pressure at all. I just wanted to ask in a sweet way.
-        If you want, we can talk about it whenever you feel comfortable.
+        That button is a prank. You’re not allowed to say no.
+        Go ahead… press YES like you mean it. 💖
       </p>
       <div class="row">
-        <button onclick="closeModal()">Close</button>
-        <a href="index.html" style="text-decoration:none;">
-          <button class="btn-secondary" type="button">Back to The Vault</button>
-        </a>
+        <button onclick="closeModal()">Okay</button>
+        <button class="btn-secondary" type="button" onclick="sayYes()">Fine, YES 💖</button>
       </div>
     </div>
   </div>
@@ -422,7 +411,7 @@
       }
     }
 
-    // confetti/sparkles burst
+    // confetti burst
     function confettiBurst(count = 120) {
       for (let i = 0; i < count; i++) {
         const c = document.createElement('div');
@@ -454,9 +443,11 @@
     }
 
     function sayYes() {
+      // close modal if open
+      closeModal();
+
       card.classList.add('yes-mode');
 
-      // attempt play music + show state
       if (!musicEnabled) {
         audio.currentTime = 10;
         audio.play().catch(()=>{});
@@ -464,49 +455,68 @@
         musicEnabled = true;
       }
 
-      // effects
       confettiBurst(140);
       heartStorm();
 
-      // update text
       questionText.textContent = "She said YES 💖";
-      typeLine(result, "You just made me the happiest person alive 😭💖  I promise I’ll make this Valentine’s unforgettable. 🌹", 18);
 
-      // reveal sections in sequence
+      // spicier, flirty, romantic message
+      typeLine(
+        result,
+        "Come here 😘💖  You’re officially mine tonight. I’m taking you out, holding your hand the whole time, and kissing you like I’ve been waiting forever. 🌹✨",
+        18
+      );
+
       setTimeout(() => { reveal1.style.display = "block"; }, 700);
       setTimeout(() => { reveal2.style.display = "block"; }, 1500);
       setTimeout(() => { nextRow.style.display = "flex"; }, 2200);
 
-      // soften intro
       setTimeout(() => {
         introText.innerHTML = "Okay… now it’s official. <br><br><b style='color:#c5a059;'>My Valentine.</b> 💌";
       }, 900);
 
-      // disable buttons
       btnRow.style.opacity = "0.65";
       document.getElementById('yesBtn').disabled = true;
       document.getElementById('noBtn').disabled = true;
 
-      // try to autoplay video (may require user gesture, but YES click counts)
-      setTimeout(() => {
-        video.play().catch(()=>{});
-      }, 800);
+      setTimeout(() => { video.play().catch(()=>{}); }, 800);
     }
 
-    // NO modal
+    // prank NO modal + runaway button
     const modalBg = document.getElementById('modalBg');
-    function sayNo() { modalBg.style.display = "flex"; }
+    const noBtn = document.getElementById('noBtn');
+
+    function sayNo() {
+      // If they manage to click it, still treat as prank
+      modalBg.style.display = "flex";
+    }
     function closeModal() { modalBg.style.display = "none"; }
     modalBg.addEventListener('click', (e) => { if (e.target === modalBg) closeModal(); });
 
-    function copyMessage() {
-      const msg = "You’re officially my Valentine 💖🌹";
-      navigator.clipboard?.writeText(msg).then(() => {
-        result.innerHTML = "Copied 💌<br>Now send it to her 😉";
-      }).catch(() => {
-        result.innerHTML = "Copy this 💌: <br><br><em>" + msg + "</em>";
-      });
+    // Runaway behavior for the NO button
+    function dodgeNoButton() {
+      // Only dodge before YES is chosen
+      if (document.getElementById('yesBtn').disabled) return;
+
+      const cardRect = card.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      const maxX = Math.max(0, cardRect.width - btnRect.width - 24);
+      const maxY = Math.max(0, 90); // keep it near the button row
+
+      const x = Math.random() * maxX;
+      const y = (Math.random() * maxY) - (maxY / 3);
+
+      noBtn.style.position = "relative";
+      noBtn.style.left = (x - maxX/2) + "px";
+      noBtn.style.top = (y) + "px";
+
+      result.innerHTML = "Not right now is not available 😌💖";
     }
+
+    // Dodge on hover and on touch
+    noBtn.addEventListener('mouseenter', dodgeNoButton);
+    noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); dodgeNoButton(); }, { passive:false });
   </script>
 </body>
 </html>
