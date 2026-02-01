@@ -4,25 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Vault</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,700&family=Montserrat:wght@200;400&display=swap" rel="stylesheet">
+
     <style>
         :root { --gold: #c5a059; }
 
         body {
             margin: 0; padding: 0;
-            /* Full screen romantic gradient */
             background: radial-gradient(circle at center, #1a0505 0%, #050505 100%);
-            color: white; font-family: 'Montserrat', sans-serif;
-            min-height: 100vh; width: 100vw;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            width: 100vw;
             overflow-x: hidden;
-            display: flex; flex-direction: column; align-items: center;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         /* --- EMOJI SHOWER --- */
         .emoji {
-            position: fixed; top: -50px;
-            font-size: 24px; z-index: 1;
-            user-select: none; pointer-events: none;
+            position: fixed;
+            top: -50px;
+            font-size: 24px;
+            z-index: 1;
+            user-select: none;
+            pointer-events: none;
             animation: fall linear forwards;
         }
         @keyframes fall {
@@ -30,87 +39,148 @@
         }
 
         .header {
-            text-align: center; margin: 80px 0 40px 0; z-index: 10;
+            text-align: center;
+            margin: 80px 0 40px 0;
+            z-index: 10;
         }
+
         h1 { 
-            font-family: 'Playfair Display', serif; font-size: 3.5rem; 
-            color: var(--gold); margin: 0; font-style: italic;
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            color: var(--gold);
+            margin: 0;
+            font-style: italic;
             text-shadow: 0 0 20px rgba(197, 160, 89, 0.3);
         }
-        .subtitle { letter-spacing: 6px; font-size: 0.7rem; opacity: 0.6; margin-top: 10px; }
 
-        /* --- THE GRID --- */
+        .subtitle {
+            letter-spacing: 6px;
+            font-size: 0.7rem;
+            opacity: 0.6;
+            margin-top: 10px;
+        }
+
+        /* --- GRID --- */
         #grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 15px; padding: 20px;
-            max-width: 800px; width: 90%; z-index: 10;
-            margin-bottom: 100px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            padding: 20px;
+            max-width: 800px;
+            width: 90%;
+            z-index: 10;
+            margin-bottom: 90px;
         }
-        @media (min-width: 600px) { #grid { grid-template-columns: repeat(4, 1fr); } }
+
+        @media (min-width: 600px) {
+            #grid { grid-template-columns: repeat(4, 1fr); }
+        }
 
         .day-card {
-            aspect-ratio: 1/1; border: 1px solid rgba(197, 160, 89, 0.2);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-decoration: none; color: white; transition: 0.4s ease;
-            background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(8px);
+            aspect-ratio: 1/1;
+            border: 1px solid rgba(197, 160, 89, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: white;
+            transition: 0.4s ease;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(8px);
             border-radius: 4px;
         }
+
         .day-card.unlocked:hover { 
-            border-color: var(--gold); 
+            border-color: var(--gold);
             background: rgba(197, 160, 89, 0.1);
             transform: translateY(-5px);
         }
-        .day-card.locked { opacity: 0.25; cursor: not-allowed; }
-        
-        .day-card span { font-family: 'Playfair Display'; font-size: 1.8rem; color: var(--gold); }
-        .day-card small { font-size: 0.55rem; margin-top: 8px; letter-spacing: 2px; opacity: 0.8; }
 
-        .music-toggle {
-            position: fixed; bottom: 20px; right: 20px;
-            background: rgba(0,0,0,0.6); border: 1px solid var(--gold); color: var(--gold);
-            padding: 8px 15px; border-radius: 20px; cursor: pointer; z-index: 100;
-            font-family: 'Montserrat'; font-size: 0.7rem; letter-spacing: 1px;
+        .day-card.locked {
+            opacity: 0.25;
+            cursor: not-allowed;
         }
 
-        /* --- VALENTINE BUTTON (ADDED) --- */
+        .day-card span {
+            font-family: 'Playfair Display';
+            font-size: 1.8rem;
+            color: var(--gold);
+        }
+
+        .day-card small {
+            font-size: 0.55rem;
+            margin-top: 8px;
+            letter-spacing: 2px;
+            opacity: 0.8;
+        }
+
+        /* --- MUSIC BUTTON --- */
+        .music-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            z-index: 100;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+        }
+
+        /* ===============================
+           ❤️ VALENTINE SPECIAL BUTTON
+           =============================== */
         .valentine-link {
+            display: inline-block;
             margin-top: -40px;
-            margin-bottom: 100px;
-            padding: 14px 28px;
+            margin-bottom: 110px;
+
+            padding: 14px 32px;
             border-radius: 40px;
 
-            font-family: 'Montserrat';
             font-size: 0.8rem;
             letter-spacing: 3px;
             text-decoration: none;
 
             color: var(--gold);
             border: 1px solid var(--gold);
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.65);
 
             box-shadow:
-                0 0 10px rgba(197,160,89,0.4),
-                0 0 25px rgba(197,160,89,0.25);
+                0 0 10px rgba(197,160,89,0.5),
+                0 0 30px rgba(197,160,89,0.3);
 
             transition: 0.35s ease;
-            z-index: 20;
+
+            animation: pulse 2.2s infinite;
         }
 
         .valentine-link:hover {
-            background: rgba(197,160,89,0.15);
-            transform: translateY(-4px) scale(1.05);
+            transform: translateY(-4px) scale(1.06);
+            background: rgba(197,160,89,0.12);
             box-shadow:
-                0 0 20px rgba(197,160,89,0.7),
-                0 0 45px rgba(197,160,89,0.45);
+                0 0 20px rgba(197,160,89,0.8),
+                0 0 50px rgba(197,160,89,0.5);
+        }
+
+        @keyframes pulse {
+            0%   { box-shadow: 0 0 10px rgba(197,160,89,0.4); }
+            50%  { box-shadow: 0 0 25px rgba(197,160,89,0.7); }
+            100% { box-shadow: 0 0 10px rgba(197,160,89,0.4); }
         }
     </style>
 </head>
+
 <body>
 
     <audio id="bg-music" loop preload="auto">
         <source src="khaab.mp3" type="audio/mpeg">
     </audio>
+
     <button id="musicControl" class="music-toggle" onclick="toggleMusic()">🔊 MUSIC OFF</button>
 
     <div class="header">
@@ -120,31 +190,28 @@
 
     <div id="grid"></div>
 
-    <!-- ✅ VALENTINE LINK (ADDED) -->
-    <a href="valentine.html" class="valentine-link">❤️ VALENTINE SPECIAL</a>
+    <!-- ❤️ NEW LINK (ONLY ADDITION) -->
+    <a href="valentine.html" class="valentine-link">💌 OPEN MY HEART</a>
 
     <script>
-        // --- CONFIGURATION ---
-        const TARGET_ISO = "2026-01-06T00:00:00+11:00"; // Sydney Time
+        const TARGET_ISO = "2026-01-06T00:00:00+11:00";
         const audio = document.getElementById('bg-music');
         let musicStarted = false;
 
-        // --- EMOJI SHOWER ---
         const emojis = ['❤️', '💖', '✨', '🌹', '💌', '🌸'];
+
         function createEmoji() {
             const e = document.createElement('div');
             e.className = 'emoji';
             e.innerText = emojis[Math.floor(Math.random() * emojis.length)];
             e.style.left = Math.random() * 100 + 'vw';
-            const duration = Math.random() * 3 + 4; // 4-7 seconds
+            const duration = Math.random() * 3 + 4;
             e.style.animationDuration = duration + 's';
-            e.style.opacity = Math.random() * 0.7 + 0.3;
             document.body.appendChild(e);
             setTimeout(() => e.remove(), duration * 1000);
         }
         setInterval(createEmoji, 400);
 
-        // --- GRID RENDERING ---
         const challenges = [
             { title: "I", link: "day1.html" },
             { title: "II", link: "day2.html" },
@@ -158,7 +225,8 @@
 
         function renderVault() {
             const grid = document.getElementById('grid');
-            grid.innerHTML = ''; // Clear previous
+            grid.innerHTML = '';
+
             const now = new Date();
             const startDate = new Date(TARGET_ISO);
 
@@ -175,22 +243,21 @@
                 } else {
                     card.className = 'day-card locked';
                     card.href = "#";
-                    card.onclick = (e) => { 
-                        e.preventDefault(); 
-                        alert(`This secret unlocks on Feb ${6 + index} at Midnight.`); 
+                    card.onclick = (e) => {
+                        e.preventDefault();
+                        alert(`This secret unlocks on Feb ${6 + index} at Midnight.`);
                     };
                 }
+
                 card.innerHTML = `<span>${day.title}</span><small>DAY ${index + 1}</small>`;
                 grid.appendChild(card);
             });
         }
 
-        // --- MUSIC CONTROL ---
-        // Music unblocks on the very first click anywhere
         window.addEventListener('click', () => {
             if (!musicStarted) {
                 audio.currentTime = 18;
-                audio.play().catch(e => console.log("Playback blocked"));
+                audio.play();
                 musicStarted = true;
                 document.getElementById('musicControl').innerText = "🔊 MUSIC ON";
             }
@@ -206,8 +273,8 @@
             }
         }
 
-        // Initialize
         renderVault();
     </script>
+
 </body>
 </html>

@@ -1,241 +1,266 @@
+<!-- Save as: will-you-be-my-valentine.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Will You Be My Valentine?</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Will You Be My Valentine?</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,700&family=Montserrat:wght@200;400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,700&family=Montserrat:wght@200;400&display=swap" rel="stylesheet">
 
-<style>
-:root { --gold:#c5a059; }
+  <style>
+    :root { --gold:#c5a059; }
 
-body{
-    margin:0;
-    min-height:100vh;
-    background: radial-gradient(circle at center, #1a0505 0%, #050505 100%);
-    font-family:'Montserrat',sans-serif;
-    color:white;
-    overflow-x:hidden;
-    display:flex;
-    justify-content:center;
-}
-
-/* floating hearts */
-.emoji{
-    position:fixed;
-    top:-40px;
-    font-size:22px;
-    pointer-events:none;
-    animation:fall linear forwards;
-    z-index:1;
-}
-@keyframes fall{
-    to{ transform:translateY(110vh) rotate(360deg); }
-}
-
-/* container */
-.wrapper{
-    width:95%;
-    max-width:950px;
-    padding:60px 15px 100px;
-    text-align:center;
-    z-index:5;
-}
-
-/* headings */
-h1{
-    font-family:'Playfair Display',serif;
-    font-style:italic;
-    font-size:3rem;
-    color:var(--gold);
-    margin:0;
-    text-shadow:0 0 18px rgba(197,160,89,.25);
-}
-
-.subtitle{
-    letter-spacing:5px;
-    font-size:.7rem;
-    opacity:.6;
-    margin:10px 0 35px;
-}
-
-/* card */
-.card{
-    background:rgba(255,255,255,.03);
-    border:1px solid rgba(197,160,89,.2);
-    border-radius:10px;
-    padding:22px;
-    backdrop-filter:blur(10px);
-}
-
-/* message */
-.message{
-    font-size:.95rem;
-    line-height:1.7;
-    opacity:.9;
-    margin-bottom:25px;
-}
-
-/* media grid */
-.grid{
-    display:grid;
-    grid-template-columns:1fr;
-    gap:12px;
-}
-
-@media(min-width:700px){
-    .grid{
-        grid-template-columns:1fr 1fr;
+    body{
+      margin:0;
+      min-height:100vh;
+      background: radial-gradient(circle at center, #1a0505 0%, #050505 100%);
+      font-family:'Montserrat',sans-serif;
+      color:white;
+      overflow-x:hidden;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:24px 14px;
     }
-    .wide{
-        grid-column:1/-1;
+
+    /* Falling hearts */
+    .emoji{
+      position:fixed; top:-50px;
+      font-size:24px; z-index:1;
+      user-select:none; pointer-events:none;
+      animation: fall linear forwards;
+      opacity:0.75;
     }
-}
+    @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
 
-.photo{
-    width:100%;
-    aspect-ratio:4/5;
-    object-fit:cover;
-    border-radius:8px;
-    border:1px solid rgba(197,160,89,.2);
-}
+    .wrap{
+      width:min(980px, 100%);
+      position:relative;
+      z-index:5;
+      text-align:center;
+    }
 
-video{
-    width:100%;
-    border-radius:8px;
-    border:1px solid rgba(197,160,89,.2);
-}
+    h1{
+      font-family:'Playfair Display', serif;
+      font-style:italic;
+      font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+      color: var(--gold);
+      margin: 0 0 10px;
+      text-shadow: 0 0 20px rgba(197,160,89,0.25);
+    }
 
-/* question */
-.question{
-    margin-top:25px;
-    font-family:'Playfair Display',serif;
-    font-size:2rem;
-    color:var(--gold);
-}
+    .sub{
+      margin:0 0 26px;
+      letter-spacing:6px;
+      font-size:0.72rem;
+      opacity:0.6;
+    }
 
-/* buttons */
-.buttons{
-    margin-top:18px;
-}
+    .card{
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(197,160,89,0.18);
+      border-radius: 12px;
+      padding: 22px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 14px 50px rgba(0,0,0,0.35);
+    }
 
-button{
-    background:rgba(0,0,0,.6);
-    border:1px solid var(--gold);
-    color:var(--gold);
-    padding:10px 18px;
-    border-radius:25px;
-    margin:6px;
-    cursor:pointer;
-    transition:.3s;
-    font-size:.8rem;
-    letter-spacing:1px;
-}
+    .note{
+      max-width: 760px;
+      margin: 0 auto 18px;
+      line-height: 1.75;
+      font-size: 0.98rem;
+      opacity: 0.92;
+    }
 
-button:hover{
-    transform:translateY(-3px);
-    background:rgba(197,160,89,.12);
-}
+    /* Photos + video */
+    .media{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+      margin-top:14px;
+    }
+    @media (min-width: 720px){
+      .media{ grid-template-columns: 1fr 1fr; }
+      .wide{ grid-column: 1 / -1; }
+    }
 
-.result{
-    margin-top:18px;
-    font-size:.9rem;
-    min-height:30px;
-    opacity:.95;
-}
+    .photo{
+      width:100%;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid rgba(197,160,89,0.18);
+      background: rgba(255,255,255,0.02);
+    }
 
-/* back link */
-.back{
-    display:inline-block;
-    margin-top:25px;
-    color:white;
-    opacity:.7;
-    text-decoration:none;
-}
-.back:hover{ color:var(--gold); }
-</style>
+    video{
+      width:100%;
+      border-radius:10px;
+      border: 1px solid rgba(197,160,89,0.18);
+      background: rgba(0,0,0,0.35);
+    }
+
+    .question{
+      margin-top: 22px;
+      font-family:'Playfair Display', serif;
+      font-size: clamp(1.7rem, 3vw, 2.5rem);
+      color: var(--gold);
+      text-shadow: 0 0 16px rgba(197,160,89,0.18);
+    }
+
+    .btns{
+      margin-top: 14px;
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+
+    button{
+      background: rgba(0,0,0,0.6);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 12px 20px;
+      border-radius: 999px;
+      cursor:pointer;
+      font-family:'Montserrat',sans-serif;
+      font-size: 0.82rem;
+      letter-spacing: 1.5px;
+      transition: 0.25s ease;
+      position:relative;
+    }
+    button:hover{
+      transform: translateY(-2px);
+      background: rgba(197,160,89,0.10);
+      border-color: var(--gold);
+    }
+
+    .result{
+      margin-top: 16px;
+      min-height: 44px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      opacity: 0.95;
+    }
+
+    .tiny{
+      margin-top: 10px;
+      opacity: 0.55;
+      font-size: 0.72rem;
+      letter-spacing: 3px;
+    }
+
+    .back{
+      display:inline-block;
+      margin-top: 18px;
+      color:white;
+      opacity:0.75;
+      text-decoration:none;
+      border-bottom: 1px dashed rgba(197,160,89,0.45);
+      padding-bottom: 2px;
+    }
+    .back:hover{ color: var(--gold); }
+
+    /* Sweet pop animation on YES */
+    .pop{
+      animation: pop 550ms ease forwards;
+    }
+    @keyframes pop {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.04); }
+      100% { transform: scale(1); }
+    }
+  </style>
 </head>
 
-
 <body>
-
-<div class="wrapper">
-
+  <div class="wrap">
     <h1>For You ❤️</h1>
-    <div class="subtitle">A LITTLE SURPRISE</div>
+    <p class="sub">JUST ONE QUESTION</p>
 
-    <div class="card">
+    <div class="card" id="card">
+      <p class="note">
+        I made this little page because you mean a lot to me.
+        <br>
+        You make everything feel softer, happier, and more beautiful.
+        <br><br>
+        So… I wanted to ask you this in a special way.
+      </p>
 
-        <div class="message">
-            Every day with you feels warmer, softer, and happier.<br>
-            You make ordinary moments feel magical.<br><br>
-            So I just wanted to ask you something…
-        </div>
+      <div class="media">
+        <!-- Replace file names with your own -->
+        <img class="photo" src="photo1.jpg" alt="Photo 1" loading="lazy">
+        <img class="photo" src="photo2.jpg" alt="Photo 2" loading="lazy">
+        <img class="photo wide" src="photo3.jpg" alt="Photo 3" loading="lazy">
 
-        <div class="grid">
+        <video class="wide" controls playsinline preload="metadata">
+          <source src="video1.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
 
-            <!-- Replace these with your files -->
-            <img src="photo1.jpg" class="photo" alt="">
-            <img src="photo2.jpg" class="photo" alt="">
-            <img src="photo3.jpg" class="photo wide" alt="">
+      <div class="question">Will you be my Valentine? 💌</div>
 
-            <video class="wide" controls>
-                <source src="video1.mp4" type="video/mp4">
-            </video>
+      <div class="btns">
+        <button id="yesBtn" onclick="sayYes()">YES 💖</button>
+        <button id="noBtn" onclick="sayNo()">No 🙈</button>
+      </div>
 
-        </div>
-
-        <div class="question">Will you be my Valentine? 💖</div>
-
-        <div class="buttons">
-            <button onclick="yes()">YES 💌</button>
-            <button onclick="no()">No 🙈</button>
-        </div>
-
-        <div id="result" class="result"></div>
-
+      <div id="result" class="result"></div>
+      <div class="tiny">FEB 2 • JUST US</div>
     </div>
 
-    <a href="index.html" class="back">← Back to The Vault</a>
+    <!-- Optional: link back to your vault if you want -->
+    <a class="back" href="index.html">← Back</a>
+  </div>
 
-</div>
+  <script>
+    // Floating hearts
+    const emojis = ['❤️','💖','✨','🌹','💌','🌸'];
+    function createEmoji() {
+      const e = document.createElement('div');
+      e.className = 'emoji';
+      e.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      e.style.left = Math.random() * 100 + 'vw';
+      const duration = Math.random() * 3 + 4; // 4–7 seconds
+      e.style.animationDuration = duration + 's';
+      e.style.opacity = (Math.random() * 0.6 + 0.3).toFixed(2);
+      document.body.appendChild(e);
+      setTimeout(() => e.remove(), duration * 1000);
+    }
+    setInterval(createEmoji, 420);
 
+    const result = document.getElementById('result');
+    const card = document.getElementById('card');
+    const noBtn = document.getElementById('noBtn');
 
-<script>
-/* floating hearts */
-const hearts=['❤️','💖','🌹','✨','💌','🌸'];
+    function sayYes() {
+      card.classList.remove('pop');
+      void card.offsetWidth; // restart animation
+      card.classList.add('pop');
 
-function createHeart(){
-    const e=document.createElement('div');
-    e.className='emoji';
-    e.innerText=hearts[Math.floor(Math.random()*hearts.length)];
-    e.style.left=Math.random()*100+'vw';
-    const d=Math.random()*3+4;
-    e.style.animationDuration=d+'s';
-    document.body.appendChild(e);
-    setTimeout(()=>e.remove(),d*1000);
-}
-setInterval(createHeart,500);
+      result.innerHTML = "You just made me the happiest person 😭💖<br>Okay… you’re officially my Valentine 🌹";
+      // heart burst
+      for (let i = 0; i < 28; i++) setTimeout(createEmoji, i * 35);
+    }
 
-/* buttons */
-const result=document.getElementById('result');
+    function sayNo() {
+      const msgs = [
+        "That button is suspicious 😳",
+        "Try again 😌",
+        "I think you meant YES 😭",
+        "Be niceee 🥺",
+        "Okay but… please? 💌"
+      ];
+      result.textContent = msgs[Math.floor(Math.random() * msgs.length)];
 
-function yes(){
-    result.innerHTML="You just made me the happiest person alive 😭❤️<br>Best Valentine ever 🌹";
-    for(let i=0;i<25;i++) setTimeout(createHeart,i*40);
-}
-
-function no(){
-    const msgs=[
-        "hey that's illegal 😤",
-        "try the other button 😌",
-        "be niceeee 🥺",
-        "I only programmed YES 😂"
-    ];
-    result.innerText=msgs[Math.floor(Math.random()*msgs.length)];
-}
-</script>
-
+      // playful move the No button a bit
+      const x = (Math.random() * 160) - 80;
+      const y = (Math.random() * 70) - 35;
+      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    }
+  </script>
 </body>
 </html>
