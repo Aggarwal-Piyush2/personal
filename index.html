@@ -11,7 +11,7 @@
         :root { --gold: #c5a059; }
 
         body {
-            margin: 0; padding: 0;
+            margin: 0;
             background: radial-gradient(circle at center, #1a0505 0%, #050505 100%);
             color: white;
             font-family: 'Montserrat', sans-serif;
@@ -34,23 +34,24 @@
             pointer-events: none;
             animation: fall linear forwards;
         }
+
         @keyframes fall {
             to { transform: translateY(110vh) rotate(360deg); }
         }
 
         .header {
             text-align: center;
-            margin: 80px 0 40px 0;
+            margin: 80px 0 30px 0;
             z-index: 10;
         }
 
-        h1 { 
+        h1 {
             font-family: 'Playfair Display', serif;
             font-size: 3.5rem;
             color: var(--gold);
             margin: 0;
             font-style: italic;
-            text-shadow: 0 0 20px rgba(197, 160, 89, 0.3);
+            text-shadow: 0 0 20px rgba(197,160,89,0.3);
         }
 
         .subtitle {
@@ -58,6 +59,46 @@
             font-size: 0.7rem;
             opacity: 0.6;
             margin-top: 10px;
+        }
+
+        /* ===============================
+           ❤️ VALENTINE BUTTON (TOP)
+           =============================== */
+        .valentine-link {
+            margin-bottom: 35px;
+            padding: 14px 34px;
+            border-radius: 40px;
+
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            text-decoration: none;
+
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            background: rgba(0,0,0,0.7);
+
+            box-shadow:
+                0 0 12px rgba(197,160,89,0.5),
+                0 0 30px rgba(197,160,89,0.3);
+
+            transition: 0.35s ease;
+
+            animation: pulse 2.2s infinite;
+            z-index: 10;
+        }
+
+        .valentine-link:hover {
+            transform: translateY(-4px) scale(1.07);
+            background: rgba(197,160,89,0.15);
+            box-shadow:
+                0 0 25px rgba(197,160,89,0.9),
+                0 0 60px rgba(197,160,89,0.6);
+        }
+
+        @keyframes pulse {
+            0%   { box-shadow: 0 0 10px rgba(197,160,89,0.4); }
+            50%  { box-shadow: 0 0 25px rgba(197,160,89,0.75); }
+            100% { box-shadow: 0 0 10px rgba(197,160,89,0.4); }
         }
 
         /* --- GRID --- */
@@ -69,7 +110,7 @@
             max-width: 800px;
             width: 90%;
             z-index: 10;
-            margin-bottom: 90px;
+            margin-bottom: 100px;
         }
 
         @media (min-width: 600px) {
@@ -91,9 +132,9 @@
             border-radius: 4px;
         }
 
-        .day-card.unlocked:hover { 
+        .day-card.unlocked:hover {
             border-color: var(--gold);
-            background: rgba(197, 160, 89, 0.1);
+            background: rgba(197,160,89,0.1);
             transform: translateY(-5px);
         }
 
@@ -126,155 +167,109 @@
             padding: 8px 15px;
             border-radius: 20px;
             cursor: pointer;
-            z-index: 100;
             font-size: 0.7rem;
-            letter-spacing: 1px;
-        }
-
-        /* ===============================
-           ❤️ VALENTINE SPECIAL BUTTON
-           =============================== */
-        .valentine-link {
-            display: inline-block;
-            margin-top: -40px;
-            margin-bottom: 110px;
-
-            padding: 14px 32px;
-            border-radius: 40px;
-
-            font-size: 0.8rem;
-            letter-spacing: 3px;
-            text-decoration: none;
-
-            color: var(--gold);
-            border: 1px solid var(--gold);
-            background: rgba(0,0,0,0.65);
-
-            box-shadow:
-                0 0 10px rgba(197,160,89,0.5),
-                0 0 30px rgba(197,160,89,0.3);
-
-            transition: 0.35s ease;
-
-            animation: pulse 2.2s infinite;
-        }
-
-        .valentine-link:hover {
-            transform: translateY(-4px) scale(1.06);
-            background: rgba(197,160,89,0.12);
-            box-shadow:
-                0 0 20px rgba(197,160,89,0.8),
-                0 0 50px rgba(197,160,89,0.5);
-        }
-
-        @keyframes pulse {
-            0%   { box-shadow: 0 0 10px rgba(197,160,89,0.4); }
-            50%  { box-shadow: 0 0 25px rgba(197,160,89,0.7); }
-            100% { box-shadow: 0 0 10px rgba(197,160,89,0.4); }
         }
     </style>
 </head>
 
 <body>
 
-    <audio id="bg-music" loop preload="auto">
-        <source src="khaab.mp3" type="audio/mpeg">
-    </audio>
+<audio id="bg-music" loop preload="auto">
+    <source src="khaab.mp3" type="audio/mpeg">
+</audio>
 
-    <button id="musicControl" class="music-toggle" onclick="toggleMusic()">🔊 MUSIC OFF</button>
+<button id="musicControl" class="music-toggle" onclick="toggleMusic()">🔊 MUSIC OFF</button>
 
-    <div class="header">
-        <h1>The Vault</h1>
-        <p class="subtitle">EIGHT DAYS • EIGHT SECRETS</p>
-    </div>
+<div class="header">
+    <h1>The Vault</h1>
+    <p class="subtitle">EIGHT DAYS • EIGHT SECRETS</p>
+</div>
 
-    <div id="grid"></div>
+<!-- ❤️ NEW BUTTON ON TOP -->
+<a href="valentine.html" class="valentine-link">💌 WILL YOU BE MY VALENTINE?</a>
 
-    <!-- ❤️ NEW LINK (ONLY ADDITION) -->
-    <a href="valentine.html" class="valentine-link">💌 OPEN MY HEART</a>
+<div id="grid"></div>
 
-    <script>
-        const TARGET_ISO = "2026-01-06T00:00:00+11:00";
-        const audio = document.getElementById('bg-music');
-        let musicStarted = false;
+<script>
+const TARGET_ISO = "2026-01-06T00:00:00+11:00";
+const audio = document.getElementById('bg-music');
+let musicStarted = false;
 
-        const emojis = ['❤️', '💖', '✨', '🌹', '💌', '🌸'];
+const emojis = ['❤️','💖','✨','🌹','💌','🌸'];
 
-        function createEmoji() {
-            const e = document.createElement('div');
-            e.className = 'emoji';
-            e.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-            e.style.left = Math.random() * 100 + 'vw';
-            const duration = Math.random() * 3 + 4;
-            e.style.animationDuration = duration + 's';
-            document.body.appendChild(e);
-            setTimeout(() => e.remove(), duration * 1000);
-        }
-        setInterval(createEmoji, 400);
+function createEmoji(){
+    const e=document.createElement('div');
+    e.className='emoji';
+    e.innerText=emojis[Math.floor(Math.random()*emojis.length)];
+    e.style.left=Math.random()*100+'vw';
+    const d=Math.random()*3+4;
+    e.style.animationDuration=d+'s';
+    document.body.appendChild(e);
+    setTimeout(()=>e.remove(),d*1000);
+}
+setInterval(createEmoji,400);
 
-        const challenges = [
-            { title: "I", link: "day1.html" },
-            { title: "II", link: "day2.html" },
-            { title: "III", link: "day3.html" },
-            { title: "IV", link: "day4.html" },
-            { title: "V", link: "day5.html" },
-            { title: "VI", link: "day6.html" },
-            { title: "VII", link: "day7.html" },
-            { title: "VIII", link: "day8.html" }
-        ];
+const challenges=[
+    {title:"I",link:"day1.html"},
+    {title:"II",link:"day2.html"},
+    {title:"III",link:"day3.html"},
+    {title:"IV",link:"day4.html"},
+    {title:"V",link:"day5.html"},
+    {title:"VI",link:"day6.html"},
+    {title:"VII",link:"day7.html"},
+    {title:"VIII",link:"day8.html"}
+];
 
-        function renderVault() {
-            const grid = document.getElementById('grid');
-            grid.innerHTML = '';
+function renderVault(){
+    const grid=document.getElementById('grid');
+    const now=new Date();
+    const startDate=new Date(TARGET_ISO);
 
-            const now = new Date();
-            const startDate = new Date(TARGET_ISO);
+    challenges.forEach((day,index)=>{
+        const unlockDate=new Date(startDate);
+        unlockDate.setDate(startDate.getDate()+index);
 
-            challenges.forEach((day, index) => {
-                const unlockDate = new Date(startDate);
-                unlockDate.setDate(startDate.getDate() + index);
+        const card=document.createElement('a');
+        const isUnlocked=now>=unlockDate;
 
-                const card = document.createElement('a');
-                const isUnlocked = now >= unlockDate;
-
-                if (isUnlocked) {
-                    card.className = 'day-card unlocked';
-                    card.href = day.link;
-                } else {
-                    card.className = 'day-card locked';
-                    card.href = "#";
-                    card.onclick = (e) => {
-                        e.preventDefault();
-                        alert(`This secret unlocks on Feb ${6 + index} at Midnight.`);
-                    };
-                }
-
-                card.innerHTML = `<span>${day.title}</span><small>DAY ${index + 1}</small>`;
-                grid.appendChild(card);
-            });
+        if(isUnlocked){
+            card.className='day-card unlocked';
+            card.href=day.link;
+        }else{
+            card.className='day-card locked';
+            card.href="#";
+            card.onclick=(e)=>{
+                e.preventDefault();
+                alert(`This secret unlocks on Feb ${6+index} at Midnight.`);
+            };
         }
 
-        window.addEventListener('click', () => {
-            if (!musicStarted) {
-                audio.currentTime = 18;
-                audio.play();
-                musicStarted = true;
-                document.getElementById('musicControl').innerText = "🔊 MUSIC ON";
-            }
-        }, { once: true });
+        card.innerHTML=`<span>${day.title}</span><small>DAY ${index+1}</small>`;
+        grid.appendChild(card);
+    });
+}
 
-        function toggleMusic() {
-            if (audio.paused) {
-                audio.play();
-                document.getElementById('musicControl').innerText = "🔊 MUSIC ON";
-            } else {
-                audio.pause();
-                document.getElementById('musicControl').innerText = "🔇 MUSIC OFF";
-            }
-        }
+window.addEventListener('click',()=>{
+    if(!musicStarted){
+        audio.currentTime=18;
+        audio.play();
+        musicStarted=true;
+        document.getElementById('musicControl').innerText="🔊 MUSIC ON";
+    }
+},{once:true});
 
-        renderVault();
-    </script>
+function toggleMusic(){
+    if(audio.paused){
+        audio.play();
+        musicControl.innerText="🔊 MUSIC ON";
+    }else{
+        audio.pause();
+        musicControl.innerText="🔇 MUSIC OFF";
+    }
+}
+
+renderVault();
+</script>
 
 </body>
 </html>

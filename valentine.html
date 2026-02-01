@@ -1,189 +1,520 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Day VIII | The Final Question</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
-    
-    <style>
-        :root { --rose: #ff4d6d; --gold: #d4af37; --deep: #1a0005; }
-        
-        body, html { 
-            margin: 0; padding: 0; background: #000; color: white; 
-            font-family: 'Montserrat', sans-serif; height: 100vh; overflow: hidden;
-            -webkit-tap-highlight-color: transparent; transition: background 1s;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Will You Be My Valentine?</title>
 
-        /* 1. SYDNEY LOCK */
-        #lock-screen {
-            position: fixed; inset: 0; background: #000; z-index: 1000;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-        }
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,700&family=Montserrat:wght@200;400&display=swap" rel="stylesheet">
 
-        /* 2. THE PROPOSAL STAGE */
-        #proposal-stage {
-            display: none; height: 100vh; flex-direction: column;
-            justify-content: center; align-items: center; text-align: center;
-        }
+  <style>
+    :root { --gold:#c5a059; }
 
-        .question {
-            font-family: 'Playfair Display', serif; font-size: 2.5rem;
-            margin-bottom: 50px; padding: 0 20px; transition: 1s;
-        }
+    body{
+      margin:0;
+      min-height:100vh;
+      background: radial-gradient(circle at center, #1a0505 0%, #050505 100%);
+      font-family:'Montserrat',sans-serif;
+      color:white;
+      overflow-x:hidden;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:24px 14px;
+    }
 
-        .choice-container { position: relative; width: 100%; height: 150px; display: flex; justify-content: center; align-items: center; gap: 30px; }
+    /* Falling hearts */
+    .emoji{
+      position:fixed; top:-50px;
+      font-size:24px; z-index:1;
+      user-select:none; pointer-events:none;
+      animation: fall linear forwards;
+      opacity:0.8;
+    }
+    @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
 
-        .btn {
-            padding: 18px 45px; border-radius: 50px; font-size: 0.8rem;
-            letter-spacing: 4px; font-weight: 600; cursor: pointer; transition: 0.3s; border: none;
-        }
+    /* Confetti hearts (YES) */
+    .confetti {
+      position: fixed;
+      top: -20px;
+      width: 10px;
+      height: 10px;
+      z-index: 999;
+      pointer-events: none;
+      border-radius: 2px;
+      animation: confettiFall linear forwards;
+      opacity: 0.9;
+    }
+    @keyframes confettiFall {
+      to { transform: translateY(110vh) rotate(720deg); }
+    }
 
-        #yes-btn { background: var(--rose); color: white; box-shadow: 0 0 25px rgba(255, 77, 109, 0.6); z-index: 100; }
-        #yes-btn:active { transform: scale(1.3); }
+    .wrap{
+      width:min(980px, 100%);
+      position:relative;
+      z-index:5;
+      text-align:center;
+    }
 
-        #no-btn { 
-            background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.3);
-            position: absolute; transition: 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+    h1{
+      font-family:'Playfair Display', serif;
+      font-style:italic;
+      font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+      color: var(--gold);
+      margin: 0 0 10px;
+      text-shadow: 0 0 20px rgba(197,160,89,0.25);
+    }
 
-        /* 3. THE SUCCESS POP */
-        #success-layer {
-            position: fixed; inset: 0; background: radial-gradient(circle, #4a0404 0%, #000 100%);
-            display: none; z-index: 2000; flex-direction: column; justify-content: center; align-items: center;
-            text-align: center;
-        }
+    .sub{
+      margin:0 0 26px;
+      letter-spacing:6px;
+      font-size:0.72rem;
+      opacity:0.6;
+    }
 
-        .celebration-emoji { position: absolute; pointer-events: none; z-index: 2100; animation: floatUp 4s forwards; }
+    .card{
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(197,160,89,0.18);
+      border-radius: 12px;
+      padding: 22px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 14px 50px rgba(0,0,0,0.35);
+      transition: 500ms ease;
+    }
 
-        @keyframes floatUp {
-            0% { transform: translateY(100vh) scale(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-100vh) scale(1.5) rotate(360deg); opacity: 0; }
-        }
+    /* glow + gentle pulse on YES */
+    .card.yes-mode{
+      border-color: rgba(197,160,89,0.55);
+      box-shadow:
+        0 14px 60px rgba(0,0,0,0.45),
+        0 0 45px rgba(197,160,89,0.28);
+      animation: yesGlow 1800ms ease-in-out infinite;
+    }
+    @keyframes yesGlow{
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.01); }
+      100% { transform: scale(1); }
+    }
 
-        /* Screen Shake Effect */
-        .shake { animation: shake 0.5s infinite; }
-        @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            30% { transform: translate(3px, 2px) rotate(0deg); }
-            50% { transform: translate(-1px, 2px) rotate(1deg); }
-            100% { transform: translate(1px, 1px) rotate(0deg); }
-        }
-    </style>
+    .note{
+      max-width: 760px;
+      margin: 0 auto 18px;
+      line-height: 1.75;
+      font-size: 0.98rem;
+      opacity: 0.92;
+    }
+
+    .media{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+      margin-top:14px;
+    }
+    @media (min-width: 720px){
+      .media{ grid-template-columns: 1fr 1fr; }
+      .wide{ grid-column: 1 / -1; }
+    }
+
+    .photo{
+      width:100%;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid rgba(197,160,89,0.18);
+      background: rgba(255,255,255,0.02);
+      transition: 450ms ease;
+      filter: saturate(0.95) brightness(0.95);
+    }
+
+    /* spotlight effect on YES */
+    .card.yes-mode .photo{
+      filter: saturate(1.1) brightness(1.06);
+      box-shadow: 0 0 25px rgba(197,160,89,0.12);
+      transform: translateY(-1px);
+    }
+
+    video{
+      width:100%;
+      border-radius:10px;
+      border: 1px solid rgba(197,160,89,0.18);
+      background: rgba(0,0,0,0.35);
+    }
+
+    .question{
+      margin-top: 22px;
+      font-family:'Playfair Display', serif;
+      font-size: clamp(1.7rem, 3vw, 2.5rem);
+      color: var(--gold);
+      text-shadow: 0 0 16px rgba(197,160,89,0.18);
+    }
+
+    .btns{
+      margin-top: 14px;
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+
+    button{
+      background: rgba(0,0,0,0.6);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 12px 20px;
+      border-radius: 999px;
+      cursor:pointer;
+      font-family:'Montserrat',sans-serif;
+      font-size: 0.82rem;
+      letter-spacing: 1.5px;
+      transition: 0.25s ease;
+    }
+    button:hover{
+      transform: translateY(-2px);
+      background: rgba(197,160,89,0.10);
+      border-color: var(--gold);
+    }
+
+    /* Make NO button calmer + secondary */
+    .btn-secondary{
+      border-color: rgba(197,160,89,0.45);
+      color: rgba(197,160,89,0.9);
+      background: rgba(0,0,0,0.45);
+    }
+
+    .result{
+      margin-top: 16px;
+      min-height: 44px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      opacity: 0.95;
+    }
+
+    .tiny{
+      margin-top: 10px;
+      opacity: 0.55;
+      font-size: 0.72rem;
+      letter-spacing: 3px;
+    }
+
+    /* Hidden love note reveal */
+    .reveal{
+      margin-top: 14px;
+      max-width: 760px;
+      margin-left:auto;
+      margin-right:auto;
+      padding: 16px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(197,160,89,0.18);
+      background: rgba(255,255,255,0.02);
+      backdrop-filter: blur(10px);
+      display:none;
+      text-align:left;
+      line-height:1.7;
+      opacity:0.96;
+    }
+    .reveal strong{
+      font-family:'Playfair Display',serif;
+      color: var(--gold);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .next-row{
+      margin-top: 14px;
+      display:none;
+      justify-content:center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .back{
+      display:inline-block;
+      margin-top: 18px;
+      color:white;
+      opacity:0.75;
+      text-decoration:none;
+      border-bottom: 1px dashed rgba(197,160,89,0.45);
+      padding-bottom: 2px;
+    }
+    .back:hover{ color: var(--gold); }
+
+    /* Small modal for "Not right now" */
+    .modal-bg{
+      position:fixed;
+      inset:0;
+      background: rgba(0,0,0,0.65);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index: 1000;
+      padding: 18px;
+    }
+    .modal{
+      width: min(520px, 100%);
+      background: rgba(10,10,10,0.92);
+      border: 1px solid rgba(197,160,89,0.22);
+      border-radius: 14px;
+      padding: 18px 16px;
+      backdrop-filter: blur(10px);
+      text-align:center;
+      box-shadow: 0 18px 70px rgba(0,0,0,0.55);
+    }
+    .modal h2{
+      margin: 0 0 8px;
+      font-family:'Playfair Display',serif;
+      font-style: italic;
+      color: var(--gold);
+      font-size: 1.6rem;
+    }
+    .modal p{
+      margin: 0 0 14px;
+      line-height: 1.6;
+      opacity: 0.92;
+      font-size: 0.95rem;
+    }
+    .modal .row{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+
+    /* Optional audio control on this page */
+    .music-toggle {
+      position: fixed; bottom: 20px; right: 20px;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      z-index: 1200;
+      font-family: 'Montserrat';
+      font-size: 0.7rem;
+      letter-spacing: 1px;
+      display:none; /* becomes visible if you use audio */
+    }
+  </style>
 </head>
-<body id="main-body">
 
-    <audio id="bg-music" loop><source src="music.mp3" type="audio/mpeg"></audio>
+<body>
+  <!-- OPTIONAL: if you want music on this page, add an mp3 file and set src -->
+  <audio id="bg-music" loop preload="auto">
+    <source src="khaab.mp3" type="audio/mpeg">
+  </audio>
+  <button id="musicControl" class="music-toggle" onclick="toggleMusic()">🔊 MUSIC OFF</button>
 
-    <div id="lock-screen">
-        <p id="timer" style="letter-spacing: 5px; font-size: 0.7rem; opacity: 0.4;">SYNCING THE FINALE...</p>
-        <button id="entry-btn" onclick="openProposal()" style="display:none; background:none; border:1px solid var(--rose); color:white; padding:15px 40px; border-radius:50px; letter-spacing:4px;">OPEN DAY VIII</button>
+  <div class="wrap">
+    <h1>For You ❤️</h1>
+    <p class="sub">JUST ONE QUESTION</p>
+
+    <div class="card" id="card">
+      <p class="note" id="introText">
+        I made this little page because you mean a lot to me.
+        <br>
+        You make everything feel softer, happier, and more beautiful.
+        <br><br>
+        So… I wanted to ask you this in a special way.
+      </p>
+
+      <div class="media">
+        <!-- Replace file names with your own -->
+        <img class="photo" src="photo1.jpg" alt="Photo 1" loading="lazy">
+        <img class="photo" src="photo2.jpg" alt="Photo 2" loading="lazy">
+        <img class="photo wide" src="photo3.jpg" alt="Photo 3" loading="lazy">
+
+        <video class="wide" controls playsinline preload="metadata">
+          <source src="video1.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+
+      <div class="question" id="questionText">Will you be my Valentine? 💌</div>
+
+      <div class="btns" id="btnRow">
+        <button id="yesBtn" onclick="sayYes()">YES 💖</button>
+        <button id="noBtn" class="btn-secondary" onclick="sayNo()">Not right now</button>
+      </div>
+
+      <div id="result" class="result"></div>
+
+      <div id="reveal" class="reveal">
+        <strong>One thing I need you to know…</strong>
+        <br><br>
+        I don’t just like you — I genuinely appreciate you.
+        The way you talk, the way you laugh, the way you care…
+        it’s the kind of feeling that makes me grateful every day.
+        <br><br>
+        If you say yes, I promise: your Valentine’s Day will be special. 🌹
+      </div>
+
+      <div id="nextRow" class="next-row">
+        <!-- Optional: link this to your next surprise page -->
+        <button onclick="goNext()">✨ Next Surprise</button>
+        <button class="btn-secondary" onclick="copyMessage()">📩 Copy a cute message</button>
+      </div>
+
+      <div class="tiny">FEB 2 • JUST US</div>
     </div>
 
-    <div id="proposal-stage">
-        <p style="letter-spacing: 8px; font-size: 0.6rem; opacity: 0.5; margin-bottom: 20px;">DIYA,</p>
-        <h1 class="question">Will you be my Valentine?</h1>
-        
-        <div class="choice-container">
-            <button class="btn" id="yes-btn" onclick="celebrate()">YES</button>
-            <button class="btn" id="no-btn" onmouseover="teleportNo()" onclick="teleportNo()" ontouchstart="teleportNo()">NO</button>
-        </div>
+    <a class="back" href="index.html">← Back</a>
+  </div>
+
+  <!-- Modal for "Not right now" -->
+  <div class="modal-bg" id="modalBg">
+    <div class="modal">
+      <h2>That’s okay ❤️</h2>
+      <p>
+        No pressure at all. I just wanted to ask in a sweet way.
+        If you want, we can talk about it whenever you feel comfortable.
+      </p>
+      <div class="row">
+        <button onclick="closeModal()">Close</button>
+        <a href="index.html" style="text-decoration:none;">
+          <button class="btn-secondary" type="button">Back to The Vault</button>
+        </a>
+      </div>
     </div>
+  </div>
 
-    <div id="success-layer">
-        <h1 id="claimed-text" style="font-family:'Playfair Display'; color:white; font-size: 3rem; margin: 0; text-shadow: 0 0 20px var(--rose);">CLAIMED. ❤️</h1>
-        <p style="letter-spacing: 5px; font-size: 0.7rem; margin-top: 20px; color: var(--gold);">MY VALENTINE FOREVER</p>
-        
-        <div style="margin-top: 40px; padding: 30px; border-top: 1px solid rgba(255,255,255,0.1); max-width: 300px;">
-            <p style="font-family:'Playfair Display'; font-style:italic; font-size: 1rem; line-height: 1.8;">
-                "From a week of waiting to a lifetime of loving you. There was never any other choice."
-            </p>
-            <p style="margin-top: 30px; letter-spacing: 3px; font-weight: 600;">- PIYUSH</p>
-        </div>
-    </div>
+  <script>
+    // Falling hearts always (soft vibe)
+    const emojis = ['❤️','💖','✨','🌹','💌','🌸'];
+    function createEmoji() {
+      const e = document.createElement('div');
+      e.className = 'emoji';
+      e.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      e.style.left = Math.random() * 100 + 'vw';
+      const duration = Math.random() * 3 + 4; // 4–7 sec
+      e.style.animationDuration = duration + 's';
+      e.style.opacity = (Math.random() * 0.55 + 0.35).toFixed(2);
+      document.body.appendChild(e);
+      setTimeout(() => e.remove(), duration * 1000);
+    }
+    setInterval(createEmoji, 420);
 
-    <script>
-        // --- 1. SETTINGS ---
-        const UNLOCK_DATE = "2024-02-14T00:00:00"; 
-        const MUSIC_START_TIME = 0; // Set your song start time here
+    // YES extras
+    const card = document.getElementById('card');
+    const result = document.getElementById('result');
+    const reveal = document.getElementById('reveal');
+    const nextRow = document.getElementById('nextRow');
+    const btnRow = document.getElementById('btnRow');
+    const questionText = document.getElementById('questionText');
+    const introText = document.getElementById('introText');
 
-        // --- 2. TIME LOCK ---
-        const timer = setInterval(() => {
-            const now = new Date();
-            const syd = new Date(now.toLocaleString("en-US", {timeZone: "Australia/Sydney"}));
-            const diff = new Date(UNLOCK_DATE) - syd;
+    // Optional music
+    const audio = document.getElementById('bg-music');
+    const musicBtn = document.getElementById('musicControl');
+    let musicEnabled = false;
 
-            if(diff <= 0) {
-                document.getElementById('timer').style.display = 'none';
-                document.getElementById('entry-btn').style.display = 'block';
-                clearInterval(timer);
-            } else {
-                const h = Math.floor(diff/3600000);
-                const m = Math.floor((diff%3600000)/60000);
-                const s = Math.floor((diff%60000)/1000);
-                document.getElementById('timer').innerText = `UNLOCKING IN ${h}h ${m}m ${s}s`;
-            }
-        }, 1000);
+    // If you actually have khaab.mp3 on this page, show control
+    // (It will still fail silently if file not found)
+    musicBtn.style.display = 'block';
 
-        function openProposal() {
-            document.getElementById('lock-screen').style.display = 'none';
-            document.getElementById('proposal-stage').style.display = 'flex';
-            const music = document.getElementById('bg-music');
-            music.currentTime = MUSIC_START_TIME;
-            music.play();
-        }
+    function toggleMusic() {
+      if (audio.paused) {
+        audio.play().catch(()=>{});
+        musicBtn.innerText = "🔊 MUSIC ON";
+      } else {
+        audio.pause();
+        musicBtn.innerText = "🔇 MUSIC OFF";
+      }
+    }
 
-        // --- 3. THE NO PRANK (Upgraded) ---
-        let noCount = 0;
-        function teleportNo() {
-            const btn = document.getElementById('no-btn');
-            noCount++;
+    function confettiBurst(count = 90) {
+      for (let i = 0; i < count; i++) {
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        c.style.left = (Math.random() * 100) + 'vw';
+        c.style.background = `hsl(${Math.floor(Math.random() * 60) + 330}, 80%, 70%)`;
+        c.style.width = (Math.random() * 8 + 6) + 'px';
+        c.style.height = (Math.random() * 10 + 6) + 'px';
+        c.style.borderRadius = (Math.random() > 0.6) ? '999px' : '2px';
+        const duration = Math.random() * 2.5 + 3; // 3–5.5s
+        c.style.animationDuration = duration + 's';
+        c.style.transform = `translateY(0) rotate(${Math.random()*360}deg)`;
+        document.body.appendChild(c);
+        setTimeout(()=>c.remove(), duration * 1000);
+      }
+    }
 
-            // Move to a random position within the viewport
-            const padding = 50;
-            const newX = Math.random() * (window.innerWidth - btn.offsetWidth - padding);
-            const newY = Math.random() * (window.innerHeight - btn.offsetHeight - padding);
-            
-            btn.style.position = 'fixed';
-            btn.style.left = `${newX}px`;
-            btn.style.top = `${newY}px`;
+    function bigHeartBurst() {
+      for (let i = 0; i < 30; i++) setTimeout(createEmoji, i * 30);
+    }
 
-            // Playful text changes
-            if(noCount > 5) btn.innerText = "Wrong way!";
-            if(noCount > 10) btn.innerText = "Try harder! 😉";
-            if(noCount > 15) btn.style.transform = "scale(0.5)";
-        }
+    function typeLine(el, text, speed = 18) {
+      el.innerHTML = "";
+      let i = 0;
+      const timer = setInterval(() => {
+        el.innerHTML += text.charAt(i);
+        i++;
+        if (i >= text.length) clearInterval(timer);
+      }, speed);
+    }
 
-        // --- 4. THE YES EXPLOSION (Upgraded) ---
-        function celebrate() {
-            const body = document.getElementById('main-body');
-            const success = document.getElementById('success-layer');
-            
-            // Haptics
-            if ("vibrate" in navigator) navigator.vibrate([100, 50, 100, 50, 100, 50, 500]);
+    function sayYes() {
+      // Visual mode
+      card.classList.add('yes-mode');
 
-            // Reveal Success Layer
-            success.style.display = 'flex';
-            body.classList.add('shake');
-            setTimeout(() => body.classList.remove('shake'), 1000);
+      // Start music softly (optional)
+      if (!musicEnabled) {
+        audio.currentTime = 18;
+        audio.play().catch(()=>{});
+        musicBtn.innerText = "🔊 MUSIC ON";
+        musicEnabled = true;
+      }
 
-            // Explosion of Emojis
-            const emojis = ['❤️', '💖', '💍', '🌹', '✨', '💋', '🥂'];
-            for(let i=0; i < 100; i++) {
-                setTimeout(() => {
-                    const el = document.createElement('div');
-                    el.className = 'celebration-emoji';
-                    el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-                    el.style.left = Math.random() * 100 + 'vw';
-                    el.style.fontSize = (Math.random() * 20 + 20) + 'px';
-                    document.body.appendChild(el);
-                    
-                    // Remove after animation
-                    setTimeout(() => el.remove(), 4000);
-                }, i * 30);
-            }
-        }
-    </script>
+      // Big effects
+      confettiBurst(110);
+      bigHeartBurst();
+
+      // Update text with a little “story”
+      questionText.textContent = "She said YES 💖";
+      typeLine(result, "You just made me the happiest person alive 😭💖  I promise I’ll make this Valentine’s unforgettable. 🌹", 18);
+
+      // Reveal note + next buttons
+      reveal.style.display = "block";
+      nextRow.style.display = "flex";
+
+      // Disable buttons after YES
+      btnRow.style.opacity = "0.65";
+      document.getElementById('yesBtn').disabled = true;
+      document.getElementById('noBtn').disabled = true;
+
+      // Optional: change intro line after a beat
+      setTimeout(() => {
+        introText.innerHTML = "Okay… now it’s official. <br><br>My Valentine. 💌";
+      }, 900);
+    }
+
+    // Better NO (not prank) -> gentle modal
+    const modalBg = document.getElementById('modalBg');
+    function sayNo() {
+      modalBg.style.display = "flex";
+    }
+    function closeModal() {
+      modalBg.style.display = "none";
+    }
+
+    // Optional next page
+    function goNext() {
+      // Change this if you have a next page (example: day2.html or a surprise page)
+      window.location.href = "index.html";
+    }
+
+    function copyMessage() {
+      const msg = "You’re officially my Valentine 💖🌹";
+      navigator.clipboard?.writeText(msg).then(() => {
+        result.innerHTML = "Copied 💌<br>Now send it to her 😉";
+      }).catch(() => {
+        result.innerHTML = "Copy this 💌: <br><br><em>" + msg + "</em>";
+      });
+    }
+
+    // Close modal on background click
+    modalBg.addEventListener('click', (e) => {
+      if (e.target === modalBg) closeModal();
+    });
+  </script>
 </body>
 </html>
