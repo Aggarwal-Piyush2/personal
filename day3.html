@@ -16,102 +16,46 @@
         }
 
         /* 1. LIQUID MELT EFFECT */
-        .melt-container {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            pointer-events: none; z-index: 100;
-        }
-        .drip {
-            position: absolute; top: -10px; width: 20%; height: 0;
-            background: var(--melt); border-radius: 0 0 50px 50px;
-            transition: height 1.5s cubic-bezier(0.45, 0.05, 0.55, 0.95);
-            box-shadow: inset 0 -10px 20px rgba(0,0,0,0.5);
-        }
+        .melt-container { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; pointer-events: none; z-index: 100; }
+        .drip { position: absolute; top: -10px; width: 20%; height: 0; background: var(--melt); border-radius: 0 0 50px 50px; transition: height 1.5s cubic-bezier(0.45, 0.05, 0.55, 0.95); box-shadow: inset 0 -10px 20px rgba(0,0,0,0.5); }
 
         /* 2. HEADER */
-        header {
-            height: 50vh; display: flex; flex-direction: column; 
-            justify-content: center; align-items: center; text-align: center;
-        }
+        header { height: 50vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
         h1 { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--gold); margin: 0; }
         .subtitle { font-size: 0.8rem; letter-spacing: 4px; text-transform: uppercase; margin-top: 10px; opacity: 0.8; }
 
         /* 3. THE BOX GRID */
-        .box-container {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
-            padding: 20px; max-width: 380px; margin: 0 auto;
-            perspective: 1000px;
-        }
-
-        .truffle {
-            aspect-ratio: 1/1; position: relative; cursor: pointer;
-            transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .wrapper {
-            position: absolute; width: 100%; height: 100%;
-            background: radial-gradient(circle, #e6be7a 0%, #c5a059 100%);
-            border-radius: 12px; display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-            z-index: 2; backface-visibility: hidden;
-        }
+        .box-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 20px; max-width: 380px; margin: 0 auto; perspective: 1000px; }
+        .truffle { aspect-ratio: 1/1; position: relative; cursor: pointer; transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .wrapper { position: absolute; width: 100%; height: 100%; background: radial-gradient(circle, #e6be7a 0%, #c5a059 100%); border-radius: 12px; display: flex; justify-content: center; align-items: center; box-shadow: 0 8px 20px rgba(0,0,0,0.6); z-index: 2; backface-visibility: hidden; }
         .wrapper::after { content: '⚜️'; opacity: 0.6; }
-
-        .content {
-            position: absolute; width: 100%; height: 100%;
-            background: #2a1408; border-radius: 12px;
-            display: flex; justify-content: center; align-items: center;
-            padding: 8px; box-sizing: border-box; text-align: center;
-            transform: rotateY(180deg); backface-visibility: hidden;
-            font-size: 0.7rem; font-weight: 600; color: var(--gold);
-            border: 2px solid var(--gold); overflow: hidden;
-        }
-
+        .content { position: absolute; width: 100%; height: 100%; background: #2a1408; border-radius: 12px; display: flex; justify-content: center; align-items: center; padding: 8px; box-sizing: border-box; text-align: center; transform: rotateY(180deg); backface-visibility: hidden; font-size: 0.7rem; font-weight: 600; color: var(--gold); border: 2px solid var(--gold); overflow: hidden; }
         .truffle.flipped { transform: rotateY(180deg); }
 
         /* 4. THE GOLDEN TICKET SURPRISE */
-        #ticket-reveal {
-            display: none; padding: 40px 20px; margin: 40px auto;
-            max-width: 320px; background: #fff; color: #000;
-            border: 2px solid var(--gold); position: relative;
-            transform: rotate(-2deg); box-shadow: 0 0 30px var(--gold);
-            animation: ticketPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
+        #ticket-reveal { display: none; padding: 40px 20px; margin: 40px auto; max-width: 320px; background: #fff; color: #000; border: 2px solid var(--gold); position: relative; transform: rotate(-2deg); box-shadow: 0 0 30px var(--gold); animation: ticketPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         @keyframes ticketPop { from { transform: scale(0) rotate(10deg); opacity: 0; } to { transform: scale(1) rotate(-2deg); opacity: 1; } }
-
         .ticket-header { border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 10px; font-weight: 900; letter-spacing: 2px; }
 
         canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1; }
+        
         /* --- LOCK OVERLAY --- */
-        #gatekeeper {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--cocoa); z-index: 1000; display: flex;
-            flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; padding: 20px;
-    }
-        .lock-box {
-            border: 2px solid var(--gold); padding: 40px 20px;
-            background: rgba(61, 28, 2, 0.4); backdrop-filter: blur(10px);
-            border-radius: 15px; width: 85%; max-width: 320px;
-    }
+        #gatekeeper { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--cocoa); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+        .lock-box { border: 2px solid var(--gold); padding: 40px 20px; background: rgba(61, 28, 2, 0.4); backdrop-filter: blur(10px); border-radius: 15px; width: 85%; max-width: 320px; }
         .code-inputs { display: flex; gap: 8px; justify-content: center; margin: 25px 0; }
-        .code-inputs input {
-            width: 45px; height: 60px; background: transparent; 
-            border: 1px solid var(--gold); color: var(--gold);
-            font-size: 2rem; text-align: center; font-family: 'Playfair Display';
-    }
-        /* Hide actual content until unlocked */
+        .code-inputs input { width: 45px; height: 60px; background: transparent; border: 1px solid var(--gold); color: var(--gold); font-size: 2rem; text-align: center; font-family: 'Playfair Display'; }
         #main-wrapper { display: none; }
     </style>
 </head>
-<body onload="initMelt()">
+<body>
     <audio id="bg-music" loop><source src="Chocolate.mp3" type="audio/mpeg"></audio>
 
     <div id="gatekeeper">
         <div class="lock-box">
             <h2 style="font-family:'Playfair Display'; color:var(--gold);">Day III</h2>
-            <p id="timer-display" style="font-size: 0.7rem; letter-spacing: 2px;"></p>
+            <p id="timer-display" style="font-size: 0.7rem; letter-spacing: 2px;">SYNCING TIME...</p>
             <div id="combination-area" style="display:none;">
-                <p style="font-size: 0.7rem; opacity: 0.7; margin-bottom: 15px;">ENTER THE 4-DIGIT CODE</p>
+                <p style="font-size: 0.7rem; opacity: 0.7; margin-bottom: 15px;">ENTER THE 4-DIGIT CODE (Our Shagun Date)</p>
                 <div class="code-inputs">
                     <input type="number" pattern="\d*" id="d1" oninput="if(this.value.length>1)this.value=this.value.slice(-1); if(this.value)document.getElementById('d2').focus()">
                     <input type="number" pattern="\d*" id="d2" oninput="if(this.value.length>1)this.value=this.value.slice(-1); if(this.value)document.getElementById('d3').focus()">
@@ -125,11 +69,7 @@
 
     <div id="main-wrapper">
         <div class="melt-container" id="meltLayer">
-            <div class="drip" style="left:0;"></div>
-            <div class="drip" style="left:20%;"></div>
-            <div class="drip" style="left:40%;"></div>
-            <div class="drip" style="left:60%;"></div>
-            <div class="drip" style="left:80%;"></div>
+            <div class="drip" style="left:0;"></div><div class="drip" style="left:20%;"></div><div class="drip" style="left:40%;"></div><div class="drip" style="left:60%;"></div><div class="drip" style="left:80%;"></div>
         </div>
         <canvas id="dust"></canvas>
         <header>
@@ -142,7 +82,7 @@
             <div class="truffle" onclick="unwrapped(this)"><div class="wrapper"></div><div class="content">Kinder than any heart of caramel.</div></div>
             <div class="truffle" onclick="unwrapped(this)"><div class="wrapper"></div><div class="content">Your sweet smile is my favorite flavor.</div></div>
             <div class="truffle" onclick="unwrapped(this)"><div class="wrapper"></div><div class="content">Our love is 100% pure gold.</div></div>
-            <div class="truffle" onclick="unwrapped(this)"><div class="wrapper"></div><div class="content"><img src="https://i.postimg.cc/JhKpPkrC/us.jpg" style="width:100%; height:100%; object-fit:cover;"></div></div>
+            <div class="truffle" onclick="unwrapped(this)"><div class="wrapper"></div><div class="content"><img src="us.jpg" style="width:100%; height:100%; object-fit:cover;"></div></div>
             <div class="truffle" onclick="unwrapped(this)"><div class="wrapper"></div><div class="content">Dark, rich, and intensely beautiful.</div></div>
             <div class="truffle" onclick="unwrapped(this)"><div class="wrapper"></div><div class="content">A velvet touch in a rough world.</div></div>
             <div class="truffle" onclick="unwrapped(this)"><div class="wrapper"></div><div class="content">I'm "cocoa-nuts" about you.</div></div>
@@ -157,86 +97,38 @@
     </div>
 
     <script>
+        const UNLOCK_DATE = "2026-02-01T00:00:00"; // Feb 9th Sydney
+        const CORRECT_CODE = "1112"; 
         let opened = 0;
-
-        function initMelt() {
-            const drips = document.querySelectorAll('.drip');
-            drips.forEach((d, i) => {
-                setTimeout(() => {
-                    d.style.height = (40 + Math.random() * 40) + "vh";
-                }, i * 200);
-            });
-            // Retract melt after 3 seconds
-            setTimeout(() => {
-                drips.forEach(d => d.style.height = "0");
-            }, 2000);
-        }
-
-        function checkCode() {
-            const val = document.getElementById('d1').value + document.getElementById('d2').value + 
-                        document.getElementById('d3').value + document.getElementById('d4').value;
-
-            if (val === "1234") { // Match your code here
-                document.getElementById('gatekeeper').style.display = 'none';
-                document.getElementById('main-wrapper').style.display = 'block';
-                const audio = document.getElementById('bg-music');
-                audio.currentTime = 40;
-                audio.play();
-                initMelt();
-            } else {
-                alert("Try again, my sweet!");
-            }
-        }
-
-        function unwrapped(el) {
-            if(!el.classList.contains('flipped')) {
-                el.classList.add('flipped');
-                opened++;
-                console.log("Opened truffles:", opened); // To check in console
-                if(opened === 9) {
-                    setTimeout(() => {
-                        const ticket = document.getElementById('ticket-reveal');
-                        ticket.style.display = 'block';
-                        ticket.scrollIntoView({ behavior: 'smooth' });
-                    }, 800);
-                }
-            }
-        }
-            // --- CONFIGURATION ---
-        const UNLOCK_DATE = new Date("2024-07-13T00:00:00").getTime(); 
-        const CORRECT_CODE = "1112"; // Set your 4-digit code here
         const audio = document.getElementById('bg-music');
 
-        // --- 1. TIME LOCK LOGIC ---
+        // --- 1. TIME LOCK LOGIC (SYDNEY) ---
         const timer = setInterval(() => {
-            const now = new Date().getTime();
-            const diff = UNLOCK_DATE - now;
+            const now = new Date();
+            const sydTime = new Date(now.toLocaleString("en-US", {timeZone: "Australia/Sydney"}));
+            const diff = new Date(UNLOCK_DATE) - sydTime;
+
             if (diff <= 0) {
                 clearInterval(timer);
                 document.getElementById('timer-display').style.display = 'none';
                 document.getElementById('combination-area').style.display = 'block';
             } else {
-                const h = Math.floor(diff / (1000 * 60 * 60));
-                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const s = Math.floor((diff % (1000 * 60)) / 1000);
-                document.getElementById('timer-display').innerHTML = `LOCKED FOR: ${h}h ${m}m ${s}s`;
+                const h = Math.floor(diff / 3600000);
+                const m = Math.floor((diff % 3600000) / 60000);
+                const s = Math.floor((diff % 60000) / 1000);
+                document.getElementById('timer-display').innerHTML = `LOCKED UNTIL FEB 9<br>${h}h ${m}m ${s}s`;
             }
         }, 1000);
 
-        // --- 2. CODE CHECK & MUSIC START ---
+        // --- 2. CODE CHECK ---
         function checkCode() {
             const val = document.getElementById('d1').value + document.getElementById('d2').value + 
                         document.getElementById('d3').value + document.getElementById('d4').value;
-    
             if (val === CORRECT_CODE) {
-            document.getElementById('gatekeeper').style.display = 'none';
+                document.getElementById('gatekeeper').style.display = 'none';
                 document.getElementById('main-wrapper').style.display = 'block';
-        
-                // Music starts at 40 seconds
                 audio.currentTime = 40;
                 audio.play();
-        
-                // Start your original animations
                 initMelt();
                 draw(); 
             } else {
@@ -246,21 +138,7 @@
             }
         }
 
-        // --- 3. YOUR ORIGINAL TRUFFLE/PARTICLE FUNCTIONS ---
-        // let opened = 0;
-        function unwrapped(el) {
-            if(!el.classList.contains('flipped')) {
-                el.classList.add('flipped');
-                opened++;
-                if(opened === 9) {
-                    setTimeout(() => {
-                        document.getElementById('ticket-reveal').style.display = 'block';
-                        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-                    }, 800);
-                }
-            }
-        }
-
+        // --- 3. ANIMATIONS ---
         function initMelt() {
             const drips = document.querySelectorAll('.drip');
             drips.forEach((d, i) => {
@@ -269,7 +147,20 @@
             setTimeout(() => { drips.forEach(d => d.style.height = "0"); }, 2000);
         }
 
-// ... include your existing 'draw' and particle code here ...
+        function unwrapped(el) {
+            if(!el.classList.contains('flipped')) {
+                el.classList.add('flipped');
+                opened++;
+                if(opened === 9) {
+                    setTimeout(() => {
+                        const ticket = document.getElementById('ticket-reveal');
+                        ticket.style.display = 'block';
+                        ticket.scrollIntoView({ behavior: 'smooth' });
+                    }, 800);
+                }
+            }
+        }
+
         // Particle System
         const canvas = document.getElementById('dust');
         const ctx = canvas.getContext('2d');
@@ -286,7 +177,6 @@
             });
             requestAnimationFrame(draw);
         }
-        draw();
     </script>
 </body>
 </html>
