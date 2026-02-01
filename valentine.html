@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Will You Be My Valentine?</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,700&family=Montserrat:wght@200;400&display=swap" rel="stylesheet">
+
+<style>
+:root { --gold:#c5a059; }
+
+body{
+    margin:0;
+    min-height:100vh;
+    background: radial-gradient(circle at center, #1a0505 0%, #050505 100%);
+    font-family:'Montserrat',sans-serif;
+    color:white;
+    overflow-x:hidden;
+    display:flex;
+    justify-content:center;
+}
+
+/* floating hearts */
+.emoji{
+    position:fixed;
+    top:-40px;
+    font-size:22px;
+    pointer-events:none;
+    animation:fall linear forwards;
+    z-index:1;
+}
+@keyframes fall{
+    to{ transform:translateY(110vh) rotate(360deg); }
+}
+
+/* container */
+.wrapper{
+    width:95%;
+    max-width:950px;
+    padding:60px 15px 100px;
+    text-align:center;
+    z-index:5;
+}
+
+/* headings */
+h1{
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    font-size:3rem;
+    color:var(--gold);
+    margin:0;
+    text-shadow:0 0 18px rgba(197,160,89,.25);
+}
+
+.subtitle{
+    letter-spacing:5px;
+    font-size:.7rem;
+    opacity:.6;
+    margin:10px 0 35px;
+}
+
+/* card */
+.card{
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(197,160,89,.2);
+    border-radius:10px;
+    padding:22px;
+    backdrop-filter:blur(10px);
+}
+
+/* message */
+.message{
+    font-size:.95rem;
+    line-height:1.7;
+    opacity:.9;
+    margin-bottom:25px;
+}
+
+/* media grid */
+.grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:12px;
+}
+
+@media(min-width:700px){
+    .grid{
+        grid-template-columns:1fr 1fr;
+    }
+    .wide{
+        grid-column:1/-1;
+    }
+}
+
+.photo{
+    width:100%;
+    aspect-ratio:4/5;
+    object-fit:cover;
+    border-radius:8px;
+    border:1px solid rgba(197,160,89,.2);
+}
+
+video{
+    width:100%;
+    border-radius:8px;
+    border:1px solid rgba(197,160,89,.2);
+}
+
+/* question */
+.question{
+    margin-top:25px;
+    font-family:'Playfair Display',serif;
+    font-size:2rem;
+    color:var(--gold);
+}
+
+/* buttons */
+.buttons{
+    margin-top:18px;
+}
+
+button{
+    background:rgba(0,0,0,.6);
+    border:1px solid var(--gold);
+    color:var(--gold);
+    padding:10px 18px;
+    border-radius:25px;
+    margin:6px;
+    cursor:pointer;
+    transition:.3s;
+    font-size:.8rem;
+    letter-spacing:1px;
+}
+
+button:hover{
+    transform:translateY(-3px);
+    background:rgba(197,160,89,.12);
+}
+
+.result{
+    margin-top:18px;
+    font-size:.9rem;
+    min-height:30px;
+    opacity:.95;
+}
+
+/* back link */
+.back{
+    display:inline-block;
+    margin-top:25px;
+    color:white;
+    opacity:.7;
+    text-decoration:none;
+}
+.back:hover{ color:var(--gold); }
+</style>
+</head>
+
+
+<body>
+
+<div class="wrapper">
+
+    <h1>For You ❤️</h1>
+    <div class="subtitle">A LITTLE SURPRISE</div>
+
+    <div class="card">
+
+        <div class="message">
+            Every day with you feels warmer, softer, and happier.<br>
+            You make ordinary moments feel magical.<br><br>
+            So I just wanted to ask you something…
+        </div>
+
+        <div class="grid">
+
+            <!-- Replace these with your files -->
+            <img src="photo1.jpg" class="photo" alt="">
+            <img src="photo2.jpg" class="photo" alt="">
+            <img src="photo3.jpg" class="photo wide" alt="">
+
+            <video class="wide" controls>
+                <source src="video1.mp4" type="video/mp4">
+            </video>
+
+        </div>
+
+        <div class="question">Will you be my Valentine? 💖</div>
+
+        <div class="buttons">
+            <button onclick="yes()">YES 💌</button>
+            <button onclick="no()">No 🙈</button>
+        </div>
+
+        <div id="result" class="result"></div>
+
+    </div>
+
+    <a href="index.html" class="back">← Back to The Vault</a>
+
+</div>
+
+
+<script>
+/* floating hearts */
+const hearts=['❤️','💖','🌹','✨','💌','🌸'];
+
+function createHeart(){
+    const e=document.createElement('div');
+    e.className='emoji';
+    e.innerText=hearts[Math.floor(Math.random()*hearts.length)];
+    e.style.left=Math.random()*100+'vw';
+    const d=Math.random()*3+4;
+    e.style.animationDuration=d+'s';
+    document.body.appendChild(e);
+    setTimeout(()=>e.remove(),d*1000);
+}
+setInterval(createHeart,500);
+
+/* buttons */
+const result=document.getElementById('result');
+
+function yes(){
+    result.innerHTML="You just made me the happiest person alive 😭❤️<br>Best Valentine ever 🌹";
+    for(let i=0;i<25;i++) setTimeout(createHeart,i*40);
+}
+
+function no(){
+    const msgs=[
+        "hey that's illegal 😤",
+        "try the other button 😌",
+        "be niceeee 🥺",
+        "I only programmed YES 😂"
+    ];
+    result.innerText=msgs[Math.floor(Math.random()*msgs.length)];
+}
+</script>
+
+</body>
+</html>
