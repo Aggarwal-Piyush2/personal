@@ -1,385 +1,186 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-    <title>Day VII | Forever</title>
-
+    <title>Day VII | Kiss Day</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
-
-   
-
+    
     <style>
-
-        :root { --warmth: #ff004c; }
-
-       
-
-        body, html {
-
-            margin: 0; padding: 0; background: #000; color: white;
-
+        :root { --crimson: #8a0303; --lip-pink: #ff4d6d; }
+        
+        body, html { 
+            margin: 0; padding: 0; background: #000; color: white; 
             font-family: 'Montserrat', sans-serif; height: 100vh; overflow: hidden;
-
-            -webkit-tap-highlight-color: transparent;
-
+            transition: background 0.4s ease; -webkit-tap-highlight-color: transparent;
         }
 
-
-
-        /* 1. THE HOLD-TO-UNLOCK */
-
-        #thaw-layer {
-
+        /* SYDNEY TIME LOCK */
+        #lock-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-
-            background: #000; z-index: 100; display: flex; flex-direction: column;
-
-            justify-content: center; align-items: center; transition: opacity 1.5s;
-
-        }
-
-
-
-        #kiss-target {
-
-            width: 100px; height: 100px; border: 1px solid var(--warmth);
-
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative;
-
-        }
-
-
-
-        .pulse-ring {
-
-            position: absolute; width: 100%; height: 100%;
-
-            border: 1px solid var(--warmth); border-radius: 50%;
-
-            animation: ripple 2s infinite;
-
-        }
-
-
-
-        /* 2. CENTER CONTENT */
-
-        #content {
-
-            height: 100vh; display: flex; flex-direction: column;
-
+            background: #000; z-index: 1000; display: flex; flex-direction: column;
             justify-content: center; align-items: center; text-align: center;
-
-            opacity: 0; transition: 2s ease; z-index: 10;
-
         }
 
+        #entry-btn {
+            display: none; background: none; border: 1px solid var(--lip-pink); 
+            color: white; padding: 15px 45px; border-radius: 50px;
+            font-family: 'Montserrat'; letter-spacing: 4px; cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 77, 109, 0.4); transition: 0.3s;
+        }
+        #entry-btn:active { transform: scale(0.95); background: var(--lip-pink); }
 
-
-        h1 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin: 0; letter-spacing: -1px; }
-
-       
-
-        /* The Changing Message */
-
-        #dynamic-message {
-
-            font-family: 'Playfair Display', serif;
-
-            font-style: italic; font-size: 1.1rem; opacity: 1;
-
-            margin: 25px 0; max-width: 300px; min-height: 60px;
-
-            transition: opacity 0.3s ease, transform 0.3s ease;
-
-            color: #eee;
-
+        /* KISSING ARENA */
+        #arena {
+            display: none; height: 100vh; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
         }
 
-
-
-        #kiss-btn {
-
-            margin-top: 20px; background: white; border: none;
-
-            color: black; padding: 18px 45px; border-radius: 50px;
-
-            font-size: 0.7rem; letter-spacing: 4px; font-weight: 600;
-
-            z-index: 20; transition: transform 0.1s;
-
-        }
-
-        #kiss-btn:active { transform: scale(0.95); }
-
-
-
-        /* 3. GHOST GIF */
-
-        #ghost-gif {
-
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-
-            width: 280px; height: 280px; border-radius: 50%;
-
-            object-fit: cover; opacity: 0; pointer-events: none;
-
-            filter: grayscale(0.5) contrast(1.2) brightness(0.8); z-index: 5;
-
-        }
-
-
-
-        /* 4. KISS MARKS */
+        #kiss-zone { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; }
+        .stats { position: relative; z-index: 10; pointer-events: none; }
+        
+        h1 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 5px; }
+        #whisper-box { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.1rem; color: var(--lip-pink); min-height: 60px; margin-top: 20px; transition: 0.3s; padding: 0 20px; }
 
         .kiss-mark {
-
-            position: absolute; pointer-events: none; z-index: 50;
-
-            font-size: 2.2rem; animation: kissBurst 1.2s forwards ease-out;
-
+            position: absolute; pointer-events: none; z-index: 6;
+            transform: translate(-50%, -50%);
+            animation: kissAppear 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
-
-
-        @keyframes kissBurst {
-
-            0% { transform: scale(0) translate(0,0); opacity: 0; }
-
-            30% { opacity: 1; transform: scale(1.4) rotate(var(--r)); }
-
-            100% { transform: translate(var(--tx), var(--ty)) scale(0.2) rotate(var(--r2)); opacity: 0; }
-
+        @keyframes kissAppear {
+            0% { transform: translate(-50%, -50%) scale(0) rotate(-20deg); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1) rotate(var(--r)); opacity: 1; }
         }
 
-
-
-        @keyframes ripple { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
-
+        #sydney-label { font-size: 0.5rem; letter-spacing: 3px; opacity: 0.4; position: absolute; bottom: 30px; }
     </style>
-
 </head>
-
 <body>
 
+    <audio id="bg-music" loop><source src="music.mp3" type="audio/mpeg"></audio>
 
+    <div id="lock-screen">
+        <h1 style="font-family:'Playfair Display'; font-weight: 200; letter-spacing: 8px;">DAY VII</h1>
+        <p id="timer" style="letter-spacing: 2px; font-size: 0.7rem; opacity: 0.5; margin-bottom: 25px;">CHECKING SYDNEY TIME...</p>
+        <div id="lip-placeholder" style="font-size: 2.5rem; margin-bottom: 20px; animation: pulse 2s infinite;">💋</div>
+        <button id="entry-btn" onclick="startKissDay()">UNLOCK KISS DAY</button>
+        <div id="sydney-label">AEST | SYDNEY, AUSTRALIA</div>
+    </div>
 
-    <div id="thaw-layer">
-
-        <div id="kiss-target" onmousedown="startThaw()" ontouchstart="startThaw()" onmouseup="stopThaw()" ontouchend="stopThaw()">
-
-            <div class="pulse-ring"></div>
-
-            <span style="font-size: 0.7rem; letter-spacing: 2px;">HOLD</span>
-
+    <div id="arena">
+        <div id="kiss-zone" onclick="handleKiss(event)" ontouchstart="handleKiss(event)"></div>
+        <div class="stats">
+            <p style="font-size: 0.5rem; letter-spacing: 10px; opacity: 0.4; margin-bottom: 10px;">KISS DAY | FEBRUARY 13</p>
+            <h1>Every tap is a kiss.</h1>
+            <p id="counter" style="font-size: 3.5rem; font-weight: 200; margin: 10px 0; color: white; text-shadow: 0 0 15px rgba(255,255,255,0.3);">0</p>
+            <div id="whisper-box">"A week of waiting ends with this..."</div>
         </div>
-
-        <p style="margin-top: 30px; font-size: 0.6rem; letter-spacing: 5px; opacity: 0.4;">SEAL IT WITH A HOLD</p>
-
     </div>
-
-
-
-    <img id="ghost-gif" src="YOUR_GIF_URL_HERE" alt="Kiss">
-
-
-
-    <div id="content">
-
-        <p style="font-size: 0.5rem; letter-spacing: 8px; opacity: 0.5; margin-bottom: 10px;">DAY VII | THE CLAIM</p>
-
-        <h1>Forever Yours.</h1>
-
-       
-
-        <div id="dynamic-message">"I've been waiting all week to do this for real."</div>
-
-       
-
-        <button id="kiss-btn" onclick="triggerKiss(event)">COLLECT YOUR KISSES</button>
-
-        <p id="counter" style="margin-top: 20px; font-size: 1.8rem; color: var(--warmth); font-weight: 200;">0</p>
-
-    </div>
-
-
 
     <script>
+        // 1. SYDNEY TIME CONFIGURATION (FEB 13)
+        const UNLOCK_DATE = "2024-02-13T00:00:00"; 
 
-        let thawTimer;
+        const checkTime = setInterval(() => {
+            const now = new Date();
+            // Convert current time to Sydney time
+            const sydTime = new Date(now.toLocaleString("en-US", {timeZone: "Australia/Sydney"}));
+            const diff = new Date(UNLOCK_DATE) - sydTime;
 
-        let count = 0;
+            if(diff <= 0) {
+                document.getElementById('timer').style.display = 'none';
+                document.getElementById('entry-btn').style.display = 'block';
+                document.getElementById('lip-placeholder').style.display = 'none';
+                clearInterval(checkTime);
+            } else {
+                const h = Math.floor(diff/3600000); 
+                const m = Math.floor((diff%3600000)/60000); 
+                const s = Math.floor((diff%60000)/1000);
+                document.getElementById('timer').innerText = `KISS DAY OPENS IN: ${h}h ${m}m ${s}s`;
+            }
+        }, 1000);
 
-        const ghost = document.getElementById('ghost-gif');
+        // 2. START EXPERIENCE
+        function startKissDay() {
+            document.getElementById('lock-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('lock-screen').style.display = 'none';
+                document.getElementById('arena').style.display = 'flex';
+                // Start Music
+                const music = document.getElementById('bg-music');
+                music.volume = 0.6;
+                music.play();
+            }, 500);
+        }
 
-        const msgElement = document.getElementById('dynamic-message');
-
-
-
+        // 3. INTERACTIVE KISS LOGIC
+        let score = 0;
         const whispers = [
-
-            "I want to feel your soul surrender to mine.",
-
-            "You have no idea how much I've missed your lips.",
-
-            "Consider yourself officially claimed.",
-
-            "Every inch of you belongs right here.",
-
-            "I'm never letting go of this feeling.",
-
-            "You're the only person I want to hold like this.",
-
-            "Close your eyes and just feel me there.",
-
-            "I'm counting down the seconds until the real thing.",
-
-            "One more... just because you're mine.",
-
-            "I could kiss you like this for a lifetime."
-
+            "For your forehead.",
+            "For your beautiful eyes.",
+            "On your nose...",
+            "One for being so strong lately.",
+            "One for being mine.",
+            "That one was a bit longer.",
+            "I can feel you smiling.",
+            "Every tap is a promise.",
+            "I'm counting every single one.",
+            "Happy Kiss Day, my Queen."
         ];
 
+        function handleKiss(e) {
+            // Prevent double triggers on mobile
+            if (e.type === 'touchstart') e.preventDefault();
+            
+            score++;
+            document.getElementById('counter').innerText = score;
+            
+            // Haptic feedback (Android)
+            if ("vibrate" in navigator) navigator.vibrate(35);
 
+            // Music Ducking Effect (Atmospheric)
+            const music = document.getElementById('bg-music');
+            music.volume = 0.3;
+            setTimeout(() => { music.volume = 0.6; }, 200);
 
-        function startThaw() {
-
-            document.body.style.backgroundColor = "#200";
-
-            thawTimer = setTimeout(() => {
-
-                document.getElementById('thaw-layer').style.opacity = '0';
-
-                setTimeout(() => {
-
-                    document.getElementById('thaw-layer').style.display = 'none';
-
-                    document.getElementById('content').style.opacity = '1';
-
-                }, 1500);
-
-            }, 2500);
-
-        }
-
-
-
-        function stopThaw() {
-
-            clearTimeout(thawTimer);
-
-            if(document.getElementById('thaw-layer').style.opacity !== '0') {
-
-                document.body.style.backgroundColor = "#000";
-
-            }
-
-        }
-
-
-
-        function triggerKiss(e) {
-
-            count++;
-
-            document.getElementById('counter').innerText = count;
-
-           
-
-            if ("vibrate" in navigator) navigator.vibrate([40, 30, 40]);
-
-
-
-            // 1. Change Message with Fade
-
-            msgElement.style.opacity = 0;
-
-            msgElement.style.transform = "translateY(5px)";
-
-           
-
+            // Update Whisper
+            const whisper = document.getElementById('whisper-box');
+            whisper.style.opacity = '0';
             setTimeout(() => {
+                whisper.innerText = `"${whispers[score % whispers.length]}"`;
+                whisper.style.opacity = '1';
+            }, 150);
 
-                msgElement.innerText = `"${whispers[count % whispers.length]}"`;
+            // Create Visual Kiss
+            const kiss = document.createElement('div');
+            kiss.className = 'kiss-mark';
+            kiss.innerHTML = '💋';
+            
+            const x = e.clientX || (e.touches ? e.touches[0].clientX : window.innerWidth/2);
+            const y = e.clientY || (e.touches ? e.touches[0].clientY : window.innerHeight/2);
+            
+            kiss.style.left = x + 'px';
+            kiss.style.top = y + 'px';
+            kiss.style.fontSize = (Math.random() * 1.5 + 2) + 'rem';
+            
+            const randomRotation = (Math.random() - 0.5) * 60;
+            kiss.style.setProperty('--r', `${randomRotation}deg`);
+            
+            document.getElementById('kiss-zone').appendChild(kiss);
 
-                msgElement.style.opacity = 1;
+            // Background Glow Intensity
+            const intensity = Math.min(score * 4, 100);
+            document.body.style.backgroundColor = `rgb(${intensity/2}, 0, ${intensity/5})`;
 
-                msgElement.style.transform = "translateY(0)";
-
-            }, 200);
-
-
-
-            // 2. Flash Ghost GIF
-
-            ghost.style.opacity = "0.4";
-
-            setTimeout(() => ghost.style.opacity = "0", 400);
-
-
-
-            // 3. Screen Pulse
-
-            document.body.style.backgroundColor = "#300";
-
-            setTimeout(() => document.body.style.backgroundColor = "#000", 100);
-
-
-
-            // 4. Kiss Burst
-
-            for(let i=0; i<12; i++) {
-
-                createEmoji(e.clientX || window.innerWidth/2, e.clientY || window.innerHeight/2);
-
-            }
-
+            // Remove kiss mark after it floats for a bit
+            setTimeout(() => {
+                kiss.style.transition = "2s cubic-bezier(0.4, 0, 1, 1)";
+                kiss.style.transform = `translate(-50%, -150%) scale(0.5) rotate(${randomRotation * 2}deg)`;
+                kiss.style.opacity = "0";
+                setTimeout(() => kiss.remove(), 2000);
+            }, 1000);
         }
-
-
-
-        function createEmoji(x, y) {
-
-            const el = document.createElement('div');
-
-            el.className = 'kiss-mark';
-
-            el.innerHTML = '💋';
-
-            const tx = (Math.random() - 0.5) * window.innerWidth * 1.5;
-
-            const ty = (Math.random() - 0.7) * window.innerHeight * 1.2;
-
-            const r = (Math.random() - 0.5) * 60;
-
-            const r2 = (Math.random() - 0.5) * 200;
-
-            el.style.setProperty('--tx', `${tx}px`);
-
-            el.style.setProperty('--ty', `${ty}px`);
-
-            el.style.setProperty('--r', `${r}deg`);
-
-            el.style.setProperty('--r2', `${r2}deg`);
-
-            el.style.left = x + 'px';
-
-            el.style.top = y + 'px';
-
-            document.body.appendChild(el);
-
-            setTimeout(() => el.remove(), 1200);
-
-        }
-
     </script>
-
 </body>
-
 </html>
