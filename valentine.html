@@ -133,22 +133,6 @@
     }
 
   /* Video hidden until YES */
-#valVideo{
-  width:100%;
-  border-radius:10px;
-  border: 1px solid rgba(197,160,89,0.18);
-  background: rgba(0,0,0,0.35);
-
-  display:none;
-  opacity:0;
-  transform: translateY(10px);
-  transition: opacity 500ms ease, transform 500ms ease;
-}
-
-#valVideo.show{
-  opacity:1;
-  transform: translateY(0);
-}
 
 
     .question{
@@ -324,10 +308,7 @@
         <img class="photo" src="v2.jpeg" alt="Photo 2" loading="lazy">
         <img class="photo wide" src="v3.1.jpeg" alt="Photo 3" loading="lazy">
 
-        <video id="valVideo" class="wide" controls playsinline preload="metadata">
-          <source src="video1.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
+       
       </div>
 
       <div class="question" id="questionText">Will you be my Valentine? 💌</div>
@@ -405,7 +386,7 @@
     const btnRow = document.getElementById('btnRow');
     const questionText = document.getElementById('questionText');
     const introText = document.getElementById('introText');
-    const video = document.getElementById('valVideo');
+   
 
     // audio
     const audio = document.getElementById('bg-music');
@@ -489,14 +470,7 @@
   document.getElementById('yesBtn').disabled = true;
   document.getElementById('noBtn').disabled = true;
 
-  /* ⭐ SHOW + FADE + SCROLL + PLAY VIDEO */
-  setTimeout(() => {
-    video.style.display = "block";
-    requestAnimationFrame(() => video.classList.add("show"));
-    video.scrollIntoView({ behavior: "smooth", block: "center" });
-    video.play().catch(()=>{});
-  }, 1000);
-}
+
 
 
     // prank NO modal + runaway button
