@@ -28,7 +28,6 @@
             font-family: 'Montserrat'; letter-spacing: 4px; cursor: pointer;
             box-shadow: 0 0 20px rgba(255, 77, 109, 0.4); transition: 0.3s;
         }
-        #entry-btn:active { transform: scale(0.95); background: var(--lip-pink); }
 
         /* KISSING ARENA */
         #arena {
@@ -52,20 +51,17 @@
             0% { transform: translate(-50%, -50%) scale(0) rotate(-20deg); opacity: 0; }
             100% { transform: translate(-50%, -50%) scale(1) rotate(var(--r)); opacity: 1; }
         }
-
-        #sydney-label { font-size: 0.5rem; letter-spacing: 3px; opacity: 0.4; position: absolute; bottom: 30px; }
     </style>
 </head>
 <body>
 
-    <audio id="bg-music" loop><source src="music.mp3" type="audio/mpeg"></audio>
+    <audio id="bg-music" loop><source src="guzara.mp3" type="audio/mpeg"></audio>
 
     <div id="lock-screen">
         <h1 style="font-family:'Playfair Display'; font-weight: 200; letter-spacing: 8px;">DAY VII</h1>
-        <p id="timer" style="letter-spacing: 2px; font-size: 0.7rem; opacity: 0.5; margin-bottom: 25px;">CHECKING SYDNEY TIME...</p>
-        <div id="lip-placeholder" style="font-size: 2.5rem; margin-bottom: 20px; animation: pulse 2s infinite;">💋</div>
+        <p id="timer" style="letter-spacing: 2px; font-size: 0.7rem; opacity: 0.5; margin-bottom: 25px;">SYNCING WITH SYDNEY...</p>
+        <div id="lip-placeholder" style="font-size: 2.5rem; margin-bottom: 20px;">💋</div>
         <button id="entry-btn" onclick="startKissDay()">UNLOCK KISS DAY</button>
-        <div id="sydney-label">AEST | SYDNEY, AUSTRALIA</div>
     </div>
 
     <div id="arena">
@@ -73,18 +69,21 @@
         <div class="stats">
             <p style="font-size: 0.5rem; letter-spacing: 10px; opacity: 0.4; margin-bottom: 10px;">KISS DAY | FEBRUARY 13</p>
             <h1>Every tap is a kiss.</h1>
-            <p id="counter" style="font-size: 3.5rem; font-weight: 200; margin: 10px 0; color: white; text-shadow: 0 0 15px rgba(255,255,255,0.3);">0</p>
+            <p id="counter" style="font-size: 3.5rem; font-weight: 200; margin: 10px 0;">0</p>
             <div id="whisper-box">"A week of waiting ends with this..."</div>
         </div>
     </div>
 
     <script>
-        // 1. SYDNEY TIME CONFIGURATION (FEB 13)
+        // --- MUSIC CONFIGURATION ---
+        const MUSIC_START_TIME = 90; // <--- CHANGE THIS (in seconds) to start music anywhere you want!
+        const music = document.getElementById('bg-music');
+
+        // --- SYDNEY TIME CONFIG ---
         const UNLOCK_DATE = "2024-02-13T00:00:00"; 
 
         const checkTime = setInterval(() => {
             const now = new Date();
-            // Convert current time to Sydney time
             const sydTime = new Date(now.toLocaleString("en-US", {timeZone: "Australia/Sydney"}));
             const diff = new Date(UNLOCK_DATE) - sydTime;
 
@@ -97,24 +96,34 @@
                 const h = Math.floor(diff/3600000); 
                 const m = Math.floor((diff%3600000)/60000); 
                 const s = Math.floor((diff%60000)/1000);
-                document.getElementById('timer').innerText = `KISS DAY OPENS IN: ${h}h ${m}m ${s}s`;
+                document.getElementById('timer').innerText = `UNITS REMAINING: ${h}h ${m}m ${s}s`;
             }
         }, 1000);
 
-        // 2. START EXPERIENCE
         function startKissDay() {
             document.getElementById('lock-screen').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('lock-screen').style.display = 'none';
                 document.getElementById('arena').style.display = 'flex';
-                // Start Music
-                const music = document.getElementById('bg-music');
-                music.volume = 0.6;
+                
+                // MUSIC LOGIC
+                music.currentTime = MUSIC_START_TIME; // Sets the custom start point
+                music.volume = 0; // Start silent for fade-in
                 music.play();
+                
+                // Fade-in effect (0 to 0.7 over 2 seconds)
+                let vol = 0;
+                let fadeIn = setInterval(() => {
+                    if (vol < 0.7) {
+                        vol += 0.05;
+                        music.volume = vol;
+                    } else {
+                        clearInterval(fadeIn);
+                    }
+                }, 150);
             }, 500);
         }
 
-        // 3. INTERACTIVE KISS LOGIC
         let score = 0;
         const whispers = [
             "For your forehead.",
@@ -130,21 +139,12 @@
         ];
 
         function handleKiss(e) {
-            // Prevent double triggers on mobile
             if (e.type === 'touchstart') e.preventDefault();
-            
             score++;
             document.getElementById('counter').innerText = score;
-            
-            // Haptic feedback (Android)
             if ("vibrate" in navigator) navigator.vibrate(35);
 
-            // Music Ducking Effect (Atmospheric)
-            const music = document.getElementById('bg-music');
-            music.volume = 0.3;
-            setTimeout(() => { music.volume = 0.6; }, 200);
-
-            // Update Whisper
+            // Whisper update
             const whisper = document.getElementById('whisper-box');
             whisper.style.opacity = '0';
             setTimeout(() => {
@@ -156,27 +156,21 @@
             const kiss = document.createElement('div');
             kiss.className = 'kiss-mark';
             kiss.innerHTML = '💋';
-            
             const x = e.clientX || (e.touches ? e.touches[0].clientX : window.innerWidth/2);
             const y = e.clientY || (e.touches ? e.touches[0].clientY : window.innerHeight/2);
-            
             kiss.style.left = x + 'px';
             kiss.style.top = y + 'px';
-            kiss.style.fontSize = (Math.random() * 1.5 + 2) + 'rem';
-            
-            const randomRotation = (Math.random() - 0.5) * 60;
-            kiss.style.setProperty('--r', `${randomRotation}deg`);
-            
+            kiss.style.fontSize = (Math.random() * 1 + 2) + 'rem';
+            const rot = (Math.random() - 0.5) * 60;
+            kiss.style.setProperty('--r', `${rot}deg`);
             document.getElementById('kiss-zone').appendChild(kiss);
 
-            // Background Glow Intensity
+            // Background intensity
             const intensity = Math.min(score * 4, 100);
             document.body.style.backgroundColor = `rgb(${intensity/2}, 0, ${intensity/5})`;
 
-            // Remove kiss mark after it floats for a bit
             setTimeout(() => {
-                kiss.style.transition = "2s cubic-bezier(0.4, 0, 1, 1)";
-                kiss.style.transform = `translate(-50%, -150%) scale(0.5) rotate(${randomRotation * 2}deg)`;
+                kiss.style.transition = "2s";
                 kiss.style.opacity = "0";
                 setTimeout(() => kiss.remove(), 2000);
             }, 1000);
