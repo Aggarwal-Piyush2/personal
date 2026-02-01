@@ -83,12 +83,13 @@
 <body>
 
     <audio id="bg-music" loop>
-        <source src="palpal.mp3" type="audio/mpeg">
+        <source src="gallan.mp3" type="audio/mpeg">
     </audio>
 
     <div id="time-lock">
         <h2 style="font-family:'Playfair Display'; letter-spacing: 3px;">A MOMENT OF PATIENCE...</h2>
-        <p id="timer">SaBar ka Fal Teddy hota hai my Darling!</p>
+        <p id="timer" style="font-size: 0.8rem; letter-spacing: 2px; margin-top: 10px;"></p>
+        <p style="margin-top: 20px; color: #444; font-size: 0.7rem;">SaBar ka Fal Teddy hota hai my Darling!</p>
     </div>
 
     <div id="bg-overlay"></div>
@@ -101,7 +102,10 @@
     </div>
 
     <script>
-        const UNLOCK_DATE = "2024-02-10T00:00:00"; 
+        // --- CONFIGURATION ---
+        const UNLOCK_DATE = "2026-02-10T00:00:00"; // Feb 10th Sydney Time
+        const MUSIC_START_TIME = 16; // Set the start time in SECONDS here
+
         const music = document.getElementById('bg-music');
         const teddy = document.getElementById('teddy');
         const hint = document.getElementById('hint');
@@ -121,9 +125,9 @@
                 clearInterval(timerInterval);
             } else {
                 const h = Math.floor(diff / 3600000);
-                const m = Math.floor((diff % 3600000) / 60000);
+                const m = Math.floor((diff % 3600000) / 600000);
                 const s = Math.floor((diff % 60000) / 1000);
-                document.getElementById('timer').innerHTML = `Unlocks in Sydney: ${h}h ${m}m ${s}s`;
+                document.getElementById('timer').innerHTML = `Unlocks in Sydney:<br>${h}h ${m}m ${s}s`;
             }
         }, 1000);
 
@@ -132,10 +136,10 @@
         let isAwake = false;
 
         teddy.addEventListener('click', () => {
-            // Start music on first tap (to bypass browser blocks)
+            // Start music on first tap at your custom start time
             if (tapCount === 0) {
-                music.currentTime = 16; // Starts at 40 seconds
-                music.play().catch(e => console.log("Music play blocked by browser"));
+                music.currentTime = MUSIC_START_TIME; 
+                music.play().catch(e => console.log("Play blocked"));
             }
 
             if (isAwake) return;
