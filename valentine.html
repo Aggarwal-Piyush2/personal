@@ -132,9 +132,6 @@
       transform: translateY(-1px);
     }
 
-  /* Video hidden until YES */
-
-
     .question{
       margin-top: 22px;
       font-family:'Playfair Display', serif;
@@ -307,8 +304,6 @@
         <img class="photo" src="v1.jpeg" alt="Photo 1" loading="lazy">
         <img class="photo" src="v2.jpeg" alt="Photo 2" loading="lazy">
         <img class="photo wide" src="v3.1.jpeg" alt="Photo 3" loading="lazy">
-
-       
       </div>
 
       <div class="question" id="questionText">Will you be my Valentine? 💌</div>
@@ -324,8 +319,7 @@
         <strong>One thing I need you to know…</strong>
         <br><br>
         I don’t just like you, I genuinely crave you.
-        The way you look at me, the way you talk, the way you care for me, the way you treat me,the way you exist…
-        .
+        The way you look at me, the way you talk, the way you care for me, the way you treat me, the way you exist…
       </div>
 
       <div id="reveal2" class="reveal">
@@ -335,7 +329,6 @@
         All of your time is mine and mine only. 🌹
       </div>
 
-      <!-- Copy option removed, only keep Back to The Vault -->
       <div id="nextRow" class="next-row">
         <a href="index.html" style="text-decoration:none;">
           <button class="btn-secondary" type="button">Back to The Vault</button>
@@ -386,7 +379,10 @@
     const btnRow = document.getElementById('btnRow');
     const questionText = document.getElementById('questionText');
     const introText = document.getElementById('introText');
-   
+
+    // modal + prank button elements
+    const modalBg = document.getElementById('modalBg');
+    const noBtn = document.getElementById('noBtn');
 
     // audio
     const audio = document.getElementById('bg-music');
@@ -436,62 +432,55 @@
     }
 
     function sayYes() {
-  closeModal();
+      closeModal();
 
-  card.classList.add('yes-mode');
+      card.classList.add('yes-mode');
 
-  if (!musicEnabled) {
-    audio.currentTime = 10;
-    audio.play().catch(()=>{});
-    musicBtn.innerText = "🔊 MUSIC ON";
-    musicEnabled = true;
-  }
+      if (!musicEnabled) {
+        audio.currentTime = 10;
+        audio.play().catch(()=>{});
+        musicBtn.innerText = "🔊 MUSIC ON";
+        musicEnabled = true;
+      }
 
-  confettiBurst(140);
-  heartStorm();
+      confettiBurst(140);
+      heartStorm();
 
-  questionText.textContent = "She said YES 💖";
+      questionText.textContent = "She said YES 💖";
 
-  typeLine(
-    result,
-    "Come here 😘💖  You’re officially mine FOREVER and EVER. 🌹✨",
-    18
-  );
+      typeLine(
+        result,
+        "Come here 😘💖  You’re officially mine FOREVER and EVER. 🌹✨",
+        18
+      );
 
-  setTimeout(() => { reveal1.style.display = "block"; }, 700);
-  setTimeout(() => { reveal2.style.display = "block"; }, 1500);
-  setTimeout(() => { nextRow.style.display = "flex"; }, 2200);
+      setTimeout(() => { reveal1.style.display = "block"; }, 700);
+      setTimeout(() => { reveal2.style.display = "block"; }, 1500);
+      setTimeout(() => { nextRow.style.display = "flex"; }, 2200);
 
-  setTimeout(() => {
-    introText.innerHTML = "Okay… now it’s official. <br><br><b style='color:#c5a059;'>My Valentine.</b> 💌";
-  }, 900);
+      setTimeout(() => {
+        introText.innerHTML = "Okay… now it’s official. <br><br><b style='color:#c5a059;'>My Valentine.</b> 💌";
+      }, 900);
 
-  btnRow.style.opacity = "0.65";
-  document.getElementById('yesBtn').disabled = true;
-  document.getElementById('noBtn').disabled = true;
-
-
-
-
-
-
-    function sayNo() {
-      // If they manage to click it, still treat as prank
-      modalBg.style.display = "flex";
+      btnRow.style.opacity = "0.65";
+      document.getElementById('yesBtn').disabled = true;
+      document.getElementById('noBtn').disabled = true;
     }
+
+    // NO modal
+    function sayNo() { modalBg.style.display = "flex"; }
     function closeModal() { modalBg.style.display = "none"; }
     modalBg.addEventListener('click', (e) => { if (e.target === modalBg) closeModal(); });
 
     // Runaway behavior for the NO button
     function dodgeNoButton() {
-      // Only dodge before YES is chosen
       if (document.getElementById('yesBtn').disabled) return;
 
       const cardRect = card.getBoundingClientRect();
       const btnRect = noBtn.getBoundingClientRect();
 
       const maxX = Math.max(0, cardRect.width - btnRect.width - 24);
-      const maxY = Math.max(0, 90); // keep it near the button row
+      const maxY = Math.max(0, 90);
 
       const x = Math.random() * maxX;
       const y = (Math.random() * maxY) - (maxY / 3);
@@ -503,10 +492,11 @@
       result.innerHTML = "Not right now is not available 😌💖";
     }
 
-    // Dodge on hover and on touch
     noBtn.addEventListener('mouseenter', dodgeNoButton);
-    noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); dodgeNoButton(); }, { passive:false });
-    
+    noBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      dodgeNoButton();
+    }, { passive:false });
   </script>
 </body>
 </html>
