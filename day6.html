@@ -48,6 +48,42 @@
       pointer-events: none;
     }
 
+    /* Floating hearts created by JS */
+    .emoji{
+    position: fixed;
+    top: -50px;
+    font-size: 24px;
+    z-index: 10;
+    user-select: none;
+    pointer-events: none;
+    animation: fall linear forwards;
+    }
+
+    @keyframes fall{
+    to{
+        transform: translateY(110vh) rotate(360deg);
+    } 
+    }
+
+    /* Confetti created by JS */
+    .confetti{
+    position: fixed;
+    top: -20px;
+    z-index: 11;
+    user-select: none;
+    pointer-events: none;
+    border-radius: 2px;
+    animation: confettiFall linear forwards;
+    opacity: 0.95;
+    }
+
+    @keyframes confettiFall{
+    to{
+        transform: translateY(110vh) rotate(900deg);
+    }
+    }
+
+
     /* SYDNEY TIME LOCK */
     #lock-screen {
       position: fixed;
@@ -318,9 +354,9 @@
     <div class="section">
       <h2>Two little moments</h2>
       <div class="photo-duo">
-        <img class="duo-img" src="photoA.jpg" alt="Moment 1" loading="lazy">
-        <img class="duo-img" src="photoB.jpg" alt="Moment 2" loading="lazy">
-      </div>
+        <img class="duo-img" src="hug1.jpeg" alt="Moment 1" loading="lazy">
+        <img class="duo-img" src="hug2.jpeg" alt="Moment 2" loading="lazy">
+      </div>`
     </div>
 
     <div class="section">
