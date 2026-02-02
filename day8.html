@@ -9,6 +9,34 @@
     <style>
         :root { --gold: #eeba30; --crimson: #740001; --paper: #fdfaf2; --ink: #1a1a1a; --blush: #ffb7c5; }
         body, html { margin: 0; padding: 0; background: #000; color: white; font-family: 'Montserrat', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
+        /* ===== TIME LOCK ===== */
+        #time-lock{
+            position:fixed;
+            inset:0;
+            background:#000;
+            z-index:99999;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            text-align:center;
+        }
+
+        .lock-box{
+            color:white;
+            font-family:'Playfair Display', serif;
+        }
+
+        .lock-box h2{
+            letter-spacing:4px;
+            font-weight:200;
+            margin:10px 0;
+        }
+
+        #lock-timer{
+            opacity:0.6;
+            font-size:0.9rem;
+            letter-spacing:2px;
+        }
 
         /* MUSIC PLAYER */
         .music-player { position: fixed; bottom: 20px; right: 20px; z-index: 5000; background: rgba(0,0,0,0.8); padding: 10px; border-radius: 50px; border: 1px solid var(--gold); display: flex; align-items: center; gap: 10px; }
@@ -116,9 +144,9 @@
         <h2 style="text-align:center; font-family:'Great Vibes'; font-size:3.5rem;">The Archive of Us</h2>
 
         <div class="collage-container">
-            <div class="polaroid" style="--r: -3deg;"><img src="82.jpeg" alt=""><div class="polaroid-cap">The Beginning</div></div>
+            <div class="polaroid" style="--r: -3deg;"><img src="82.1.jpeg" alt=""><div class="polaroid-cap">The Beginning</div></div>
             <div class="polaroid" style="--r: 4deg;"><img src="83.jpeg" alt=""><div class="polaroid-cap">That Smile</div></div>
-            <div class="polaroid" style="--r: -2deg;"><img src="84.jpeg" alt=""><div class="polaroid-cap">Our World</div></div>
+            <div class="polaroid" style="--r: -2deg;"><img src="84.1.jpeg" alt=""><div class="polaroid-cap">Our World</div></div>
             <div class="polaroid" style="--r: 5deg;"><img src="85.jpeg" alt=""><div class="polaroid-cap">Forever</div></div>
         </div>
 
@@ -126,7 +154,7 @@
             <h3 style="font-family:'Playfair Display'; font-style:italic; text-align:center; color: #444;">Moments in Motion</h3>
             <div class="video-frame"><video src="86.mp4" controls playsinline></video></div>
             <div class="video-frame"><video src="87.mp4" controls playsinline></video></div>
-            <div class="video-frame"><video src="8883883.mp4" controls playsinline></video></div>
+            <div class="video-frame"><video src="88.mp4" controls playsinline></video></div>
         </div>
     </section>
 
@@ -181,6 +209,16 @@
             <div class="spicy-note" onclick="this.style.filter='none'"><p>"I’m obsessed with the way you react when I get close. That little breath you try to hide."</p></div>
             <div class="spicy-note" onclick="this.style.filter='none'"><p>"I want to kiss you until you stop thinking and start feeling."</p></div>
         </div>
+
+        <!-- SYDNEY TIME LOCK -->
+        <div id="time-lock">
+            <div class="lock-box">
+                <h1>💌</h1>
+                <h2>Unlocking on Feb 14</h2>
+                <p id="lock-timer">Checking Sydney time...</p>
+            </div>
+</div>
+
     </section>
 
     <script>
@@ -255,6 +293,43 @@
             }
             requestAnimationFrame(step);
         }
+            /****************************************************
+            SYDNEY TIME LOCK
+            Page unlocks only after Feb 14, 00:00 Sydney time
+            ****************************************************/
+
+            const SYDNEY_UNLOCK = "2025-02-14T00:00:00"; // ← change year if needed
+
+            const lockScreen = document.getElementById("time-lock");
+            const lockTimer  = document.getElementById("lock-timer");
+
+            function getSydneyNow(){
+                return new Date(new Date().toLocaleString("en-US", {
+                    timeZone: "Australia/Sydney"
+                }));
+            }
+
+            function updateLock(){
+                const now = getSydneyNow();
+                const unlockDate = new Date(SYDNEY_UNLOCK);
+                const diff = unlockDate - now;
+
+                if(diff <= 0){
+                    lockScreen.style.display = "none"; // UNLOCK PAGE
+                    clearInterval(lockInterval);
+                    return;
+                }
+
+                const d = Math.floor(diff / 86400000);
+                const h = Math.floor((diff % 86400000) / 3600000);
+                const m = Math.floor((diff % 3600000) / 60000);
+                const s = Math.floor((diff % 60000) / 1000);
+
+                lockTimer.innerText = `${d}d ${h}h ${m}m ${s}s remaining`;
+            }
+
+            updateLock();
+            const lockInterval = setInterval(updateLock, 1000);
 
         /************************************************************
          * REST OF YOUR ORIGINAL JS
