@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,700&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
     
     <style>
-        :root { --navy: #02050a; --silver: #b8bfc2; --glow: rgba(255, 255, 255, 0.15); --gold: #d4af37; }
+        :root { --navy: #02050a; --silver: #b8bfc2; --glow: rgba(255, 255, 255, 0.15); --gold: #d4af37; --deep-red: #630505; }
         
         body, html { 
             margin: 0; padding: 0; background: var(--navy); color: var(--silver); 
@@ -47,14 +47,14 @@
         #node-right { right: 0; box-shadow: 0 0 10px var(--glow); }
         .node.active { background: white; box-shadow: 0 0 30px white; color: black; transform: scale(1.1); }
 
-        /* 3. MAIN WRAPPER & HERO */
+        /* 3. HERO SECTION */
         .hero-section {
             height: 100vh; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; position: relative;
+            justify-content: center; align-items: center; text-align: center;
             background: radial-gradient(circle at center, #0a101f 0%, var(--navy) 100%);
         }
 
-        .pinky-graphic { width: 200px; height: 200px; position: relative; margin-bottom: 20px; }
+        .pinky-graphic { width: 200px; height: 100px; position: relative; margin-bottom: 30px; }
         .hand-line {
             position: absolute; width: 100px; height: 100px;
             border: 2px solid var(--silver); border-radius: 50%;
@@ -79,19 +79,19 @@
         canvas { position: absolute; top: 0; left: 0; z-index: 5; touch-action: none; }
         .promise-text { padding: 30px; text-align: center; z-index: 1; font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.1rem; color: #fff; line-height: 1.5; }
 
-        /* 5. THE SEAL & CONTRACT FOOTER */
+        /* 5. ROMANTIC SEAL */
         .seal-section { padding: 80px 20px; text-align: center; }
         #wax-seal {
-            width: 85px; height: 85px; background: #4a0404; border-radius: 50%; margin: 0 auto; 
+            width: 90px; height: 90px; background: #4a0404; border-radius: 50%; margin: 0 auto; 
             cursor: pointer; display: flex; align-items: center; justify-content: center;
-            border: 4px solid #2a0202; position: relative; transition: 0.3s;
+            border: 4px solid #2a0202; position: relative; transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
         }
+        #wax-seal:active { transform: scale(0.9); }
+        #wax-seal.sealed { background: var(--deep-red); border-color: var(--gold); box-shadow: 0 0 40px var(--deep-red); transform: scale(1.1); }
         
-        .footer { padding: 100px 20px; text-align: center; opacity: 0; transition: 1s; }
-        .sig { 
-            font-family: 'Playfair Display', serif; font-size: 2rem; 
-            margin-top: 20px; color: #fff; height: 50px; /* fixed height for typing */
-        }
+        .footer { padding: 100px 20px; text-align: center; opacity: 0; transition: 1.5s; }
+        .sig { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-top: 20px; color: #fff; min-height: 60px; }
         .cursor { display: inline-block; width: 2px; height: 30px; background: white; animation: blink 0.7s infinite; vertical-align: middle; }
         @keyframes blink { 50% { opacity: 0; } }
     </style>
@@ -102,7 +102,7 @@
 
     <div id="lock-screen">
         <h1 style="font-family:'Playfair Display'; font-weight: 200; letter-spacing: 5px;">DAY V</h1>
-        <p id="timer" style="font-size: 0.7rem; letter-spacing: 2px; opacity: 0.6;">Waiting for the stars to align...</p>
+        <p id="timer" style="font-size: 0.8rem; letter-spacing: 2px; opacity: 0.6;">THE VOWS ARE PROTECTED...</p>
         <button id="entry-btn" onclick="showHandshake()">INITIATE VOW</button>
     </div>
 
@@ -121,14 +121,14 @@
                 <div class="hand-line" id="line-right"></div>
             </div>
             <div class="hero-text">
-                <h1 style="color:white; font-size: 2.5rem; font-weight: 400;">Ethernal Oath</h1>
-                <p style="color: #ccc; font-size: 0.9rem; letter-spacing: 2px; margin-top: 10px;">My Word, My Bond</p>
+                <h1 style="color:white; font-size: 2.8rem; font-weight: 400; margin: 0;">Eternal Oath</h1>
+                <p style="color: var(--gold); font-size: 0.9rem; letter-spacing: 4px; margin-top: 15px; text-transform: uppercase;">My Word, My Bond</p>
             </div>
         </div>
 
         <div class="promise-container">
-            <div class="scratch-box"><div class="promise-text">I promise to be the man who protects your peace as fiercely as I protect you.</div><canvas class="scratch-canvas" data-color="#14161a"></canvas></div>
-            <div class="scratch-box"><div class="promise-text">I promise to never let the fire between us fade; I’ll keep you wanting more.</div><canvas class="scratch-canvas" data-color="#0a0b0d"></canvas></div>
+            <div class="scratch-box"><div class="promise-text">I promise to be the man who protects your peace as fiercely as I protect you.</div><canvas class="scratch-canvas" data-color="#1a1c20"></canvas></div>
+            <div class="scratch-box"><div class="promise-text">I promise to never let the fire between us fade; I’ll keep you wanting more.</div><canvas class="scratch-canvas" data-color="#14161a"></canvas></div>
             <div class="scratch-box"><div class="promise-text">I promise that no matter the distance, you will always be my only destination.</div><canvas class="scratch-canvas" data-color="#1c1f24"></canvas></div>
             <div class="scratch-box"><div class="promise-text">I promise to listen to the words you don't say, and love the parts you think are flaws.</div><canvas class="scratch-canvas" data-color="#0d0e12"></canvas></div>
             <div class="scratch-box"><div class="promise-text">I promise to crave you, honor you, and dominate your heart forever.</div><canvas class="scratch-canvas" data-color="#2a2e35"></canvas></div>
@@ -138,36 +138,39 @@
         </div>
 
         <div class="seal-section">
-            <p style="font-size: 0.65rem; letter-spacing: 5px; margin-bottom: 40px; opacity: 0.5;">HOLD THE SEAL TO FINALIZE</p>
+            <p id="seal-instruction" style="font-size: 0.65rem; letter-spacing: 5px; margin-bottom: 40px; opacity: 0.5;">PRESS & HOLD THE SEAL TO FINALIZE</p>
             <div id="wax-seal" onmousedown="startSeal()" ontouchstart="startSeal()" onmouseup="stopSeal()" ontouchend="stopSeal()">
-                <div style="font-size: 1.8rem; opacity: 0.3;">⚜️</div>
+                <div style="font-size: 2rem; color: var(--gold); filter: drop-shadow(0 0 5px black);">⚜️</div>
             </div>
         </div>
 
         <div class="footer" id="footer">
-            <p style="font-size: 0.6rem; letter-spacing: 8px; opacity: 0.4;">VOWS SEALED ETERNALLY</p>
+            <p style="font-size: 0.6rem; letter-spacing: 8px; opacity: 0.4; margin-bottom: 40px;">CONTRACT SIGNED IN TRUTH</p>
             <div class="sig" id="signature"></div><span class="cursor" id="cursor"></span>
         </div>
     </div>
 
     <script>
-        // SYDNEY TIME CONFIG
-        const UNLOCK_DATE = "2024-02-11T00:00:00"; 
+        // --- 1. SYDNEY TIME LOCK ---
+        const UNLOCK_DATE_STR = "2026/02/01 00:00:00"; // Feb 11th
         const timerTask = setInterval(() => {
             const now = new Date();
             const syd = new Date(now.toLocaleString("en-US", {timeZone: "Australia/Sydney"}));
-            const diff = new Date(UNLOCK_DATE) - syd;
+            const diff = new Date(UNLOCK_DATE_STR) - syd;
+            
             if(diff <= 0) {
                 document.getElementById('timer').style.display = 'none';
                 document.getElementById('entry-btn').style.display = 'block';
                 clearInterval(timerTask);
             } else {
-                const h = Math.floor(diff/3600000); const m = Math.floor((diff%3600000)/60000); const s = Math.floor((diff%60000)/1000);
-                document.getElementById('timer').innerText = `Available in Sydney: ${h}h ${m}m ${s}s`;
+                const h = Math.floor(diff/3600000); 
+                const m = Math.floor((diff%3600000)/60000); 
+                const s = Math.floor((diff%60000)/1000);
+                document.getElementById('timer').innerHTML = `AVAILABLE IN SYDNEY:<br>${h}H ${m}M ${s}S`;
             }
         }, 1000);
 
-        // GATE LOGIC
+        // --- 2. GATE LOGIC ---
         function showHandshake() {
             document.getElementById('lock-screen').style.display = 'none';
             document.getElementById('handshake-gate').style.display = 'flex';
@@ -178,7 +181,12 @@
             if(el.classList.contains('active')) return;
             el.classList.add('active');
             nodes++;
-            if(nodes === 2) setTimeout(launchRoom, 800);
+            if(nodes === 2) {
+                setTimeout(() => {
+                    document.getElementById('handshake-gate').style.fadeOut;
+                    launchRoom();
+                }, 600);
+            }
         }
 
         function launchRoom() {
@@ -192,7 +200,7 @@
             }, 400);
         }
 
-        // SCRATCH SETUP
+        // --- 3. SCRATCH SETUP ---
         function setupScratch() {
             document.querySelectorAll('.scratch-canvas').forEach(canvas => {
                 const ctx = canvas.getContext('2d');
@@ -224,28 +232,42 @@
             });
         }
 
-        // WAX SEAL & TYPING ANIMATION
+        // --- 4. ROMANTIC SEAL LOGIC ---
         let sealInt;
+        let sealComplete = false;
+
         function startSeal() {
+            if(sealComplete) return;
+            document.getElementById('wax-seal').style.transform = "scale(0.95)";
             sealInt = setTimeout(() => {
-                document.getElementById('wax-seal').style.boxShadow = "0 0 50px #630505";
+                sealComplete = true;
+                const seal = document.getElementById('wax-seal');
+                seal.classList.add('sealed');
+                document.getElementById('seal-instruction').innerText = "VOWS SEALED FOREVER";
                 document.getElementById('footer').style.opacity = '1';
                 typeSignature("DIYA ❤️ PIYUSH");
-                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-            }, 1500);
+                
+                // Haptic-like effect and scroll
+                setTimeout(() => {
+                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                }, 500);
+            }, 2000); // 2 seconds hold to seal
         }
-        function stopSeal() { clearTimeout(sealInt); }
+
+        function stopSeal() {
+            if(sealComplete) return;
+            clearTimeout(sealInt);
+            document.getElementById('wax-seal').style.transform = "scale(1)";
+        }
 
         function typeSignature(text) {
             const sig = document.getElementById('signature');
-            if(sig.innerHTML !== "") return; // Don't re-type
             let i = 0;
-            const speed = 150; 
             function type() {
                 if (i < text.length) {
                     sig.innerHTML += text.charAt(i);
                     i++;
-                    setTimeout(type, speed);
+                    setTimeout(type, 150);
                 } else {
                     document.getElementById('cursor').style.display = 'none';
                 }
