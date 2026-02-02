@@ -42,10 +42,11 @@
         .section { padding: 120px 20px; position: relative; }
 
         /* GHOST SCROLL */
-        .ghost-container { position: relative; height: 400vh; background: #000; }
+        .ghost-container { position: relative; height: 400vh; background: radial-gradient(circle, #1a0000 0%, #000000 100%)};
         .ghost-bg { position: sticky; top: 0; width: 100vw; height: 100vh; object-fit: cover; object-position: center; opacity: 0.5; z-index: 1; transition: 1s ease-in-out; }
         .ghost-text-overlay { position: sticky; top: 0; height: 100vh; z-index: 2; display: flex; align-items: center; justify-content: center; pointer-events: none; padding: 30px; }
         .ghost-letter { max-width: 90%; text-align: center; font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.3rem; line-height: 1.8; color: white; text-shadow: 2px 2px 15px #000; }
+        
 
         /* GALLERY SECTION */
         .theme-collage { background: var(--paper); color: var(--ink); }
@@ -113,7 +114,7 @@
     </div>
 
     <div class="ghost-container" id="ghost">
-        <img id="scrolling-bg" class="ghost-bg" src="84.jpeg">
+        <img id="scrolling-bg" class="ghost-bg" src="84.1.jpeg">
         <div class="ghost-text-overlay">
             <div class="ghost-letter">
                 "Since December 11th, 2025, at 2:30 PM, the world changed.<br>You are my masterpiece."
@@ -279,7 +280,17 @@
             document.body.appendChild(m);
             setTimeout(() => m.remove(), 1500);
         }
-
+        // Add a few random hearts to the ghost section
+        const ghostSection = document.getElementById('ghost');
+        for (let i = 0; i < 15; i++) {
+            let heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.style.position = 'absolute';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.top = Math.random() * 100 + '%';
+            heart.style.opacity = '0.2';
+            ghostSection.appendChild(heart);
+        }
         // REASONS (Populate with your list)
         const reasonsList = [
     "The way your eyes crinkle when you’re actually laughing.",
