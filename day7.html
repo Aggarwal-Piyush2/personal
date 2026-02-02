@@ -1,180 +1,458 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Day VII | Kiss Day</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
-    
-    <style>
-        :root { --crimson: #8a0303; --lip-pink: #ff4d6d; }
-        
-        body, html { 
-            margin: 0; padding: 0; background: #000; color: white; 
-            font-family: 'Montserrat', sans-serif; height: 100vh; overflow: hidden;
-            transition: background 0.4s ease; -webkit-tap-highlight-color: transparent;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Day VII | Kiss Day</title>
 
-        /* SYDNEY TIME LOCK */
-        #lock-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 1000; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; text-align: center;
-        }
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
 
-        #entry-btn {
-            display: none; background: none; border: 1px solid var(--lip-pink); 
-            color: white; padding: 15px 45px; border-radius: 50px;
-            font-family: 'Montserrat'; letter-spacing: 4px; cursor: pointer;
-            box-shadow: 0 0 20px rgba(255, 77, 109, 0.4); transition: 0.3s;
-        }
+  <style>
+    :root { --crimson: #8a0303; --lip-pink: #ff4d6d; }
 
-        /* KISSING ARENA */
-        #arena {
-            display: none; height: 100vh; flex-direction: column;
-            justify-content: center; align-items: center; text-align: center;
-        }
+    body, html {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: white;
+      font-family: 'Montserrat', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      transition: background 0.4s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-        #kiss-zone { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; }
-        .stats { position: relative; z-index: 10; pointer-events: none; }
-        
-        h1 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 5px; }
-        #whisper-box { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.1rem; color: var(--lip-pink); min-height: 60px; margin-top: 20px; transition: 0.3s; padding: 0 20px; }
+    /* SYDNEY TIME LOCK */
+    #lock-screen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #000;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
 
-        .kiss-mark {
-            position: absolute; pointer-events: none; z-index: 6;
-            transform: translate(-50%, -50%);
-            animation: kissAppear 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
+    #entry-btn {
+      display: none;
+      background: none;
+      border: 1px solid var(--lip-pink);
+      color: white;
+      padding: 15px 45px;
+      border-radius: 50px;
+      font-family: 'Montserrat';
+      letter-spacing: 4px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(255, 77, 109, 0.4);
+      transition: 0.3s;
+    }
+    #entry-btn:hover { transform: translateY(-1px); box-shadow: 0 0 30px rgba(255, 77, 109, 0.55); }
 
-        @keyframes kissAppear {
-            0% { transform: translate(-50%, -50%) scale(0) rotate(-20deg); opacity: 0; }
-            100% { transform: translate(-50%, -50%) scale(1) rotate(var(--r)); opacity: 1; }
-        }
-    </style>
+    /* KISSING ARENA */
+    #arena {
+      display: none;
+      height: 100vh;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+
+    #kiss-zone {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 5;
+    }
+
+    .stats {
+      position: relative;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      margin-bottom: 5px;
+    }
+
+    #whisper-box {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      color: var(--lip-pink);
+      min-height: 60px;
+      margin-top: 20px;
+      transition: 0.3s;
+      padding: 0 20px;
+    }
+
+    .kiss-mark {
+      position: absolute;
+      pointer-events: none;
+      z-index: 6;
+      transform: translate(-50%, -50%);
+      animation: kissAppear 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      filter: drop-shadow(0 0 10px rgba(255,77,109,0.22));
+    }
+
+    @keyframes kissAppear {
+      0% { transform: translate(-50%, -50%) scale(0) rotate(-20deg); opacity: 0; }
+      100% { transform: translate(-50%, -50%) scale(1) rotate(var(--r)); opacity: 1; }
+    }
+
+    /* floating hearts background */
+    .heart-float{
+      position:absolute;
+      font-size:18px;
+      pointer-events:none;
+      animation: floatUp linear forwards;
+      opacity:0.65;
+      z-index: 6;
+    }
+
+    @keyframes floatUp{
+      to{
+        transform:translateY(-120vh);
+        opacity:0;
+      }
+    }
+
+    /* kiss glow pulse */
+    body.kiss-pulse{
+      animation: pulseBg 0.35s ease;
+    }
+
+    @keyframes pulseBg{
+      0%{ filter:brightness(1); }
+      50%{ filter:brightness(1.25); }
+      100%{ filter:brightness(1); }
+    }
+
+    /* ================= VIDEO MEMORY SLOT ================= */
+    .video-section{
+      position: relative;
+      z-index: 11;
+      margin-top: 26px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      pointer-events: none;
+    }
+
+    .video-frame{
+      width: min(92vw, 420px);
+      border-radius: 14px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+      box-shadow: 0 0 34px rgba(255,77,109,0.16);
+      backdrop-filter: blur(8px);
+      transform: translateY(14px);
+      opacity: 0;
+      transition: 800ms ease;
+    }
+
+    .video-frame.show{
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .video-frame video{
+      width:100%;
+      height:auto;
+      display:block;
+      object-fit:cover;
+      animation: slowZoom 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes slowZoom{
+      from{ transform:scale(1); }
+      to{ transform:scale(1.06); }
+    }
+
+    .video-caption{
+      font-family:'Playfair Display', serif;
+      font-style:italic;
+      font-size:0.9rem;
+      opacity:0.6;
+      margin-top:10px;
+      text-align:center;
+    }
+
+    /* Overlay that teases the unlock */
+    .video-lock{
+      width: min(92vw, 420px);
+      border-radius: 14px;
+      border: 1px dashed rgba(255,255,255,0.14);
+      padding: 18px 16px;
+      background: rgba(255,255,255,0.02);
+      box-shadow: 0 0 22px rgba(255,77,109,0.10);
+      opacity: 0.75;
+    }
+    .video-lock .t1{
+      font-family:'Playfair Display', serif;
+      font-size: 1.2rem;
+      margin-bottom: 6px;
+      color: var(--lip-pink);
+    }
+    .video-lock .t2{
+      font-size: 0.7rem;
+      letter-spacing: 4px;
+      opacity: 0.65;
+      text-transform: uppercase;
+      line-height: 1.6;
+    }
+    .video-lock .bar{
+      height: 2px;
+      width: 100%;
+      background: rgba(255,255,255,0.08);
+      margin-top: 14px;
+      position: relative;
+      overflow:hidden;
+    }
+    .video-lock .bar::after{
+      content:"";
+      position:absolute;
+      top:0; left:0;
+      height:100%;
+      width: var(--pct, 0%);
+      background: rgba(255,77,109,0.75);
+      transition: 250ms ease;
+    }
+
+    @media (max-height: 720px){
+      .video-section{ margin-top: 14px; }
+      .video-frame, .video-lock { width: min(92vw, 380px); }
+    }
+  </style>
 </head>
+
 <body>
+  <audio id="bg-music" loop>
+    <source src="guzara.mp3" type="audio/mpeg">
+  </audio>
 
-    <audio id="bg-music" loop><source src="guzara.mp3" type="audio/mpeg"></audio>
+  <div id="lock-screen">
+    <h1 style="font-family:'Playfair Display'; font-weight: 200; letter-spacing: 8px;">DAY VII</h1>
+    <p id="timer" style="letter-spacing: 2px; font-size: 0.7rem; opacity: 0.5; margin-bottom: 25px;">SYNCING WITH SYDNEY...</p>
+    <div id="lip-placeholder" style="font-size: 2.5rem; margin-bottom: 20px;">💋</div>
+    <button id="entry-btn" onclick="startKissDay()">UNLOCK KISS DAY</button>
+  </div>
 
-    <div id="lock-screen">
-        <h1 style="font-family:'Playfair Display'; font-weight: 200; letter-spacing: 8px;">DAY VII</h1>
-        <p id="timer" style="letter-spacing: 2px; font-size: 0.7rem; opacity: 0.5; margin-bottom: 25px;">SYNCING WITH SYDNEY...</p>
-        <div id="lip-placeholder" style="font-size: 2.5rem; margin-bottom: 20px;">💋</div>
-        <button id="entry-btn" onclick="startKissDay()">UNLOCK KISS DAY</button>
+  <div id="arena">
+    <div id="kiss-zone" onclick="handleKiss(event)" ontouchstart="handleKiss(event)"></div>
+
+    <div class="stats">
+      <p style="font-size: 0.5rem; letter-spacing: 10px; opacity: 0.4; margin-bottom: 10px;">KISS DAY | FEBRUARY 13</p>
+      <h1>Every tap is a kiss.</h1>
+      <p id="counter" style="font-size: 3.5rem; font-weight: 200; margin: 10px 0;">0</p>
+      <div id="whisper-box">"A week of waiting ends with this..."</div>
     </div>
 
-    <div id="arena">
-        <div id="kiss-zone" onclick="handleKiss(event)" ontouchstart="handleKiss(event)"></div>
-        <div class="stats">
-            <p style="font-size: 0.5rem; letter-spacing: 10px; opacity: 0.4; margin-bottom: 10px;">KISS DAY | FEBRUARY 13</p>
-            <h1>Every tap is a kiss.</h1>
-            <p id="counter" style="font-size: 3.5rem; font-weight: 200; margin: 10px 0;">0</p>
-            <div id="whisper-box">"A week of waiting ends with this..."</div>
-        </div>
+    <!-- VIDEO SLOT (locked until 20 kisses) -->
+    <div class="video-section">
+      <div id="videoLocked" class="video-lock">
+        <div class="t1">Unlock our memory</div>
+        <div class="t2">Give me 20 kisses</div>
+        <div class="bar" id="unlockBar"></div>
+      </div>
+
+      <div id="videoFrame" class="video-frame" style="display:none;">
+        <video id="memoryVideo" src="kiss.mp4" autoplay muted loop playsinline></video>
+      </div>
     </div>
 
-    <script>
-        // --- MUSIC CONFIGURATION ---
-        const MUSIC_START_TIME = 110; // <--- CHANGE THIS (in seconds) to start music anywhere you want!
-        const music = document.getElementById('bg-music');
+    <div id="videoCaption" class="video-caption" style="display:none;">our favorite moment 🤍</div>
+  </div>
 
-        // --- SYDNEY TIME CONFIG ---
-        const UNLOCK_DATE = "2024-02-13T00:00:00"; 
+  <script>
+    // --- MUSIC CONFIGURATION ---
+    const MUSIC_START_TIME = 110; // seconds
+    const music = document.getElementById('bg-music');
 
-        const checkTime = setInterval(() => {
-            const now = new Date();
-            const sydTime = new Date(now.toLocaleString("en-US", {timeZone: "Australia/Sydney"}));
-            const diff = new Date(UNLOCK_DATE) - sydTime;
+    // --- SYDNEY TIME CONFIG ---
+    const UNLOCK_DATE = "2024-02-13T00:00:00";
 
-            if(diff <= 0) {
-                document.getElementById('timer').style.display = 'none';
-                document.getElementById('entry-btn').style.display = 'block';
-                document.getElementById('lip-placeholder').style.display = 'none';
-                clearInterval(checkTime);
-            } else {
-                const h = Math.floor(diff/3600000); 
-                const m = Math.floor((diff%3600000)/60000); 
-                const s = Math.floor((diff%60000)/1000);
-                document.getElementById('timer').innerText = `UNITS REMAINING: ${h}h ${m}m ${s}s`;
-            }
-        }, 1000);
+    const checkTime = setInterval(() => {
+      const now = new Date();
+      const sydTime = new Date(now.toLocaleString("en-US", { timeZone: "Australia/Sydney" }));
+      const diff = new Date(UNLOCK_DATE) - sydTime;
 
-        function startKissDay() {
-            document.getElementById('lock-screen').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('lock-screen').style.display = 'none';
-                document.getElementById('arena').style.display = 'flex';
-                
-                // MUSIC LOGIC
-                music.currentTime = MUSIC_START_TIME; // Sets the custom start point
-                music.volume = 0; // Start silent for fade-in
-                music.play();
-                
-                // Fade-in effect (0 to 0.7 over 2 seconds)
-                let vol = 0;
-                let fadeIn = setInterval(() => {
-                    if (vol < 0.7) {
-                        vol += 0.05;
-                        music.volume = vol;
-                    } else {
-                        clearInterval(fadeIn);
-                    }
-                }, 150);
-            }, 500);
+      if (diff <= 0) {
+        document.getElementById('timer').style.display = 'none';
+        document.getElementById('entry-btn').style.display = 'block';
+        document.getElementById('lip-placeholder').style.display = 'none';
+        clearInterval(checkTime);
+      } else {
+        const h = Math.floor(diff / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+        document.getElementById('timer').innerText = `UNITS REMAINING: ${h}h ${m}m ${s}s`;
+      }
+    }, 1000);
+
+    function startKissDay() {
+      document.getElementById('lock-screen').style.opacity = '0';
+
+      setTimeout(() => {
+        document.getElementById('lock-screen').style.display = 'none';
+        document.getElementById('arena').style.display = 'flex';
+
+        // MUSIC LOGIC
+        music.currentTime = MUSIC_START_TIME;
+        music.volume = 0;
+        music.play().catch(()=>{});
+
+        // Fade-in (0 to 0.7 over ~2s)
+        let vol = 0;
+        const fadeIn = setInterval(() => {
+          if (vol < 0.7) {
+            vol += 0.05;
+            music.volume = vol;
+          } else {
+            clearInterval(fadeIn);
+          }
+        }, 150);
+      }, 500);
+    }
+
+    let score = 0;
+
+    const whispers = [
+      "For your lips… softly.",
+      "Come closer… just a little more.",
+      "This one lingers longer.",
+      "I’d kiss you until you forget the world.",
+      "Soft… gentle… mine.",
+      "I can almost feel you here.",
+      "Don’t move… I’m not done yet.",
+      "Every kiss pulls me closer to you.",
+      "You’re my favorite temptation.",
+      "Happy Kiss Day, beautiful."
+    ];
+
+    // Video unlock config
+    const VIDEO_UNLOCK_AT = 20;
+    const videoLocked = document.getElementById('videoLocked');
+    const unlockBar = document.getElementById('unlockBar');
+    const videoFrame = document.getElementById('videoFrame');
+    const videoCaption = document.getElementById('videoCaption');
+    const memoryVideo = document.getElementById('memoryVideo');
+
+    function updateVideoUnlockUI(){
+      const pct = Math.min((score / VIDEO_UNLOCK_AT) * 100, 100);
+      unlockBar.style.setProperty('--pct', pct + '%');
+
+      if (score >= VIDEO_UNLOCK_AT) {
+        // Unlock moment
+        videoLocked.style.display = "none";
+        videoFrame.style.display = "block";
+        videoCaption.style.display = "block";
+
+        // Animate in
+        setTimeout(()=> videoFrame.classList.add('show'), 50);
+
+        // Make sure the video actually plays after a user gesture (tap counts)
+        memoryVideo.currentTime = 0;
+        memoryVideo.play().catch(()=>{});
+      }
+    }
+
+    function handleKiss(e) {
+      if (e.type === 'touchstart') e.preventDefault();
+
+      score++;
+      document.getElementById('counter').innerText = score;
+
+      // video unlock progress
+      updateVideoUnlockUI();
+
+      if ("vibrate" in navigator) navigator.vibrate(25);
+
+      // pulse screen
+      document.body.classList.add("kiss-pulse");
+      setTimeout(()=>document.body.classList.remove("kiss-pulse"), 300);
+
+      // Whisper update
+      const whisper = document.getElementById('whisper-box');
+      whisper.style.opacity = '0';
+
+      setTimeout(() => {
+        // Special message at unlock
+        if (score === VIDEO_UNLOCK_AT) {
+          whisper.innerText = `"Okay… you earned it. Press play with your eyes on me. 💋"`;
+        } else {
+          whisper.innerText = `"${whispers[score % whispers.length]}"`;
         }
+        whisper.style.opacity = '1';
+      }, 150);
 
-        let score = 0;
-        const whispers = [
-            "For your forehead.",
-            "For your beautiful eyes.",
-            "On your nose...",
-            "One for being so strong lately.",
-            "One for being mine.",
-            "That one was a bit longer.",
-            "I can feel you smiling.",
-            "Every tap is a promise.",
-            "I'm counting every single one.",
-            "Happy Kiss Day, my Queen."
-        ];
+      // Create Visual Kiss
+      const kiss = document.createElement('div');
+      kiss.className = 'kiss-mark';
+      kiss.innerHTML = '💋';
 
-        function handleKiss(e) {
-            if (e.type === 'touchstart') e.preventDefault();
-            score++;
-            document.getElementById('counter').innerText = score;
-            if ("vibrate" in navigator) navigator.vibrate(35);
+      const x = e.clientX || (e.touches ? e.touches[0].clientX : window.innerWidth/2);
+      const y = e.clientY || (e.touches ? e.touches[0].clientY : window.innerHeight/2);
 
-            // Whisper update
-            const whisper = document.getElementById('whisper-box');
-            whisper.style.opacity = '0';
-            setTimeout(() => {
-                whisper.innerText = `"${whispers[score % whispers.length]}"`;
-                whisper.style.opacity = '1';
-            }, 150);
+      kiss.style.left = x + 'px';
+      kiss.style.top = y + 'px';
 
-            // Create Visual Kiss
-            const kiss = document.createElement('div');
-            kiss.className = 'kiss-mark';
-            kiss.innerHTML = '💋';
-            const x = e.clientX || (e.touches ? e.touches[0].clientX : window.innerWidth/2);
-            const y = e.clientY || (e.touches ? e.touches[0].clientY : window.innerHeight/2);
-            kiss.style.left = x + 'px';
-            kiss.style.top = y + 'px';
-            kiss.style.fontSize = (Math.random() * 1 + 2) + 'rem';
-            const rot = (Math.random() - 0.5) * 60;
-            kiss.style.setProperty('--r', `${rot}deg`);
-            document.getElementById('kiss-zone').appendChild(kiss);
+      // bigger dramatic kiss every 10
+      if (score % 10 === 0) {
+        kiss.style.fontSize = '4.2rem';
+        kiss.style.filter = 'drop-shadow(0 0 18px #ff4d6d)';
+        confettiBurst();
+      } else {
+        kiss.style.fontSize = (Math.random() * 1 + 2) + 'rem';
+      }
 
-            // Background intensity
-            const intensity = Math.min(score * 4, 100);
-            document.body.style.backgroundColor = `rgb(${intensity/2}, 0, ${intensity/5})`;
+      const rot = (Math.random() - 0.5) * 60;
+      kiss.style.setProperty('--r', `${rot}deg`);
+      document.getElementById('kiss-zone').appendChild(kiss);
 
-            setTimeout(() => {
-                kiss.style.transition = "2s";
-                kiss.style.opacity = "0";
-                setTimeout(() => kiss.remove(), 2000);
-            }, 1000);
-        }
-    </script>
+      // floating hearts near kiss
+      for (let i = 0; i < 3; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'heart-float';
+        heart.innerHTML = '❤';
+        heart.style.left = (x + Math.random() * 40 - 20) + 'px';
+        heart.style.top = (y + Math.random() * 40 - 20) + 'px';
+        heart.style.color = '#ff6b81';
+        heart.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        document.getElementById('kiss-zone').appendChild(heart);
+        setTimeout(() => heart.remove(), 3000);
+      }
+
+      // Background intensity
+      const intensity = Math.min(score * 4, 120);
+      document.body.style.backgroundColor = `rgb(${intensity/2}, 0, ${intensity/6})`;
+
+      setTimeout(() => {
+        kiss.style.transition = "2s";
+        kiss.style.opacity = "0";
+        setTimeout(() => kiss.remove(), 2000);
+      }, 1000);
+    }
+
+    function confettiBurst(){
+      for (let i = 0; i < 25; i++) {
+        const c = document.createElement('div');
+        c.className = 'heart-float';
+        c.innerHTML = '💖';
+        c.style.left = (Math.random() * window.innerWidth) + 'px';
+        c.style.top = window.innerHeight + 'px';
+        c.style.animationDuration = '3s';
+        document.getElementById('kiss-zone').appendChild(c);
+        setTimeout(() => c.remove(), 3000);
+      }
+    }
+  </script>
 </body>
 </html>
