@@ -318,7 +318,7 @@
 
   <div id="lock-screen">
     <h1 style="font-family:'Playfair Display'; font-weight: 200;">DAY VI</h1>
-    <p id="timer" style="letter-spacing: 2px; font-size: 0.8rem; opacity: 0.6;">CALCULATING SYDNEY TIME...</p>
+    <p id="timer" style="letter-spacing: 2px; font-size: 0.8rem; opacity: 0.6;">CALCULATING TIME...</p>
     <button id="entry-btn" onclick="enterSanctuary()">ENTER THE SANCTUARY</button>
   </div>
 
@@ -414,7 +414,7 @@
         const h = Math.floor(diff / 3600000);
         const m = Math.floor((diff % 3600000) / 60000);
         const s = Math.floor((diff % 60000) / 1000);
-        document.getElementById('timer').innerText = `Opening in Sydney in: ${h}h ${m}m ${s}s`;
+        document.getElementById('timer').innerText = `Opening in: ${h}h ${m}m ${s}s`;
       }
     }, 1000);
 
