@@ -560,7 +560,7 @@
 
   <!-- (13) heartbeat sound, very subtle, only plays on "Always you" -->
   <audio id="heartbeat" preload="auto">
-    <source src="heartbeat.mp3" type="audio/mpeg">
+    <source src="iloveyouaudio.mp3" type="audio/mpeg">
   </audio>
 
   <div class="music" id="musicBtn" title="Tap to toggle music">
@@ -695,7 +695,7 @@
       </section>
 
       <aside class="card fadeIn" style="animation-delay:.1s">
-        <h2>Say it with actions</h2>
+        <h2>Please remember this:</h2>
         <div class="note">
           If something makes you feel unsure, I do not want you to sit with it alone.
           I want you to tell me, and I will meet you there.
@@ -752,7 +752,6 @@
     <footer>
       Built on March 5, 2026. You are loved. You are chosen. You are my person.
       <br>
-      Files needed: <strong>5march2026.mp4</strong>, <strong>photo1.jpg..photo6.jpg</strong>, <strong>teriKami.mp3</strong>, and optionally <strong>heartbeat.mp3</strong>.
     </footer>
   </div>
 
@@ -1012,7 +1011,7 @@
 
     $("foreverBtn").addEventListener("click", (e)=>{
       liveLine.textContent = pick(foreverLines);
-      status.textContent = "always you";
+      status.textContent = "ALWAYS YOU";
       burstHearts(); burstPetals();
       heartbeatOnce();
       ringAt($("header"), e.clientX, e.clientY);
