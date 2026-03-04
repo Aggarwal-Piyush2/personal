@@ -12,8 +12,6 @@
       --bgA:#05010e;
       --bgB:#16001b;
       --bgC:#0a1634;
-      --glass: rgba(255,255,255,.08);
-      --glass2: rgba(255,255,255,.12);
       --text: rgba(255,255,255,.92);
       --muted: rgba(255,255,255,.68);
       --hot:#ff3aa5;
@@ -22,6 +20,7 @@
       --ring: rgba(255,58,165,.25);
       --shadow: 0 30px 70px rgba(0,0,0,.45);
       --radius: 26px;
+      --petal: rgba(255,58,165,.18);
     }
 
     *{ box-sizing:border-box; }
@@ -154,9 +153,7 @@
       transform: translateY(2px);
       animation: blink .9s steps(1) infinite;
     }
-    @keyframes blink{
-      50%{ opacity:0; }
-    }
+    @keyframes blink{ 50%{ opacity:0; } }
 
     .grid{
       display:grid;
@@ -164,9 +161,7 @@
       gap:16px;
       margin-top:16px;
     }
-    @media (max-width: 940px){
-      .grid{ grid-template-columns:1fr; }
-    }
+    @media (max-width: 940px){ .grid{ grid-template-columns:1fr; } }
 
     .card{
       border-radius: var(--radius);
@@ -195,10 +190,7 @@
       line-height:1.75;
       color: rgba(255,255,255,.88);
     }
-
-    .note strong{
-      color: rgba(255,255,255,.96);
-    }
+    .note strong{ color: rgba(255,255,255,.96); }
 
     .hotline{
       margin-top:12px;
@@ -206,7 +198,6 @@
       padding:14px 14px;
       border: 1px solid rgba(255,58,165,.22);
       background: linear-gradient(180deg, rgba(255,58,165,.14), rgba(0,0,0,.18));
-      box-shadow: 0 0 0 0 rgba(255,58,165,.0);
       position:relative;
     }
 
@@ -267,9 +258,7 @@
       gap:10px;
       margin-top:10px;
     }
-    @media (max-width: 520px){
-      .gallery{ grid-template-columns: repeat(2, 1fr); }
-    }
+    @media (max-width: 520px){ .gallery{ grid-template-columns: repeat(2, 1fr); } }
     .tile{
       border-radius: 18px;
       overflow:hidden;
@@ -351,7 +340,7 @@
       font-weight: 700;
     }
 
-    /* Floating hearts */
+    /* Hearts (kept) */
     .hearts{
       position: fixed;
       inset:0;
@@ -370,6 +359,34 @@
       0%{ transform: translateY(0) scale(.85) rotate(0deg); opacity:0; }
       10%{ opacity:.9; }
       100%{ transform: translateY(-120vh) scale(1.35) rotate(18deg); opacity:0; }
+    }
+
+    /* Rose petals (12) */
+    .petals{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:1;
+      overflow:hidden;
+      mix-blend-mode: screen;
+    }
+    .petal{
+      position:absolute;
+      top:-60px;
+      width:18px;
+      height:28px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.22), transparent 55%),
+                  linear-gradient(180deg, rgba(255,58,165,.45), rgba(255,122,89,.25));
+      border-radius: 70% 30% 70% 30%;
+      opacity:.0;
+      filter: blur(.1px) drop-shadow(0 10px 14px rgba(255,58,165,.18));
+      transform: rotate(0deg);
+      animation: petalFall linear forwards;
+    }
+    @keyframes petalFall{
+      0%{ transform: translate3d(0,0,0) rotate(0deg); opacity:0; }
+      10%{ opacity:.85; }
+      100%{ transform: translate3d(var(--dx), 115vh, 0) rotate(380deg); opacity:0; }
     }
 
     /* Music button */
@@ -421,9 +438,7 @@
     }
 
     /* Soft entrance animation */
-    .fadeIn{
-      animation: enter .7s ease both;
-    }
+    .fadeIn{ animation: enter .7s ease both; }
     @keyframes enter{
       from{ opacity:0; transform: translateY(10px); }
       to{ opacity:1; transform: translateY(0); }
@@ -442,20 +457,110 @@
       animation: ring 700ms ease-out forwards;
     }
     @keyframes ring{
-      to{
-        opacity:0;
-        transform: translate(-50%, -50%) scale(10);
-      }
+      to{ opacity:0; transform: translate(-50%, -50%) scale(10); }
+    }
+
+    /* (2) Hold-to-feel overlay */
+    .holdOverlay{
+      position: fixed;
+      inset:0;
+      z-index: 90;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background: rgba(0,0,0,.60);
+      backdrop-filter: blur(10px);
+    }
+    .holdOverlay.show{ display:flex; }
+    .holdCard{
+      width:min(520px, 92vw);
+      border-radius: 28px;
+      padding:18px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: linear-gradient(180deg, rgba(255,58,165,.18), rgba(0,0,0,.18));
+      box-shadow: var(--shadow);
+      text-align:center;
+    }
+    .holdTitle{
+      font-family: "Playfair Display", serif;
+      font-size: 22px;
+      margin:0 0 8px;
+    }
+    .holdText{
+      margin:0;
+      color: rgba(255,255,255,.86);
+      line-height:1.65;
+      font-size: 14.5px;
+    }
+
+    /* (3) Kiss meter */
+    .meterWrap{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+    }
+    .meterLeft{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    .meterTitle{
+      font-size: 12px;
+      letter-spacing:.35px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.72);
+      margin:0;
+    }
+    .meterMsg{
+      font-family: "Playfair Display", serif;
+      font-size: 18px;
+      margin:0;
+    }
+    .meterCount{
+      font-size: 12px;
+      color: rgba(255,255,255,.62);
+      margin:0;
+    }
+
+    /* (5) Vows deck */
+    .vowBox{
+      border-radius: 18px;
+      padding:14px;
+      border: 1px solid rgba(255,58,165,.22);
+      background: linear-gradient(180deg, rgba(255,58,165,.12), rgba(0,0,0,.16));
+      line-height:1.65;
+    }
+    .vowText{
+      margin:0;
+      font-family: "Playfair Display", serif;
+      font-size: 18px;
+    }
+    .vowHint{
+      margin-top:8px;
+      color: rgba(255,255,255,.62);
+      font-size: 12px;
     }
   </style>
 </head>
 
 <body>
   <div class="aurora"></div>
+
   <div class="hearts" id="hearts"></div>
+  <div class="petals" id="petals"></div>
 
   <audio id="bgMusic" loop preload="auto">
-    <source src="khaab.mp3" type="audio/mpeg">
+    <source src="teriKami.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- (13) heartbeat sound, very subtle, only plays on "Always you" -->
+  <audio id="heartbeat" preload="auto">
+    <source src="heartbeat.mp3" type="audio/mpeg">
   </audio>
 
   <div class="music" id="musicBtn" title="Tap to toggle music">
@@ -484,7 +589,8 @@
 
     <div class="grid">
       <section class="card fadeIn" style="animation-delay:.05s">
-        <h2> I LOVE YOU ❤️ </h2>
+        <h2>I love you ❤️</h2>
+
         <div class="note">
           <strong>I have no problem coming to you.</strong> I want to see you, hold you, and be with you for real.
           The only reason I sounded hesitant is because people around me keep telling me to reconsider because of what is happening in the world, and it put noise in my head.
@@ -506,18 +612,56 @@
 
         <div class="row">
           <button class="btn hot" id="touchBtn">Touch here</button>
-          <button class="btn ice" id="morningBtn">Good morning</button>
+          <button class="btn ice" id="morningBtn">Good morning ritual</button>
           <button class="btn" id="foreverBtn">Always you</button>
+
+          <!-- (2) Hold-to-feel -->
+          <button class="btn hot" id="holdBtn">Hold my hand</button>
         </div>
 
         <p class="sub" id="liveLine" style="margin-top:12px"></p>
 
         <div class="divider"></div>
 
+        <!-- (1) Morning routine sequence -->
+        <h2>Her morning, in my words</h2>
+        <div class="vowBox">
+          <p class="vowText" id="routineLine">Tap “Good morning ritual”. I will walk you into your day.</p>
+          <div class="vowHint" id="routineHint">It changes every time, like I’m right there with you.</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- (3) Kiss meter -->
+        <h2>Kiss meter</h2>
+        <div class="meterWrap">
+          <div class="meterLeft">
+            <p class="meterTitle">Tap to add kisses</p>
+            <p class="meterMsg" id="kissMsg">One kiss on your forehead.</p>
+            <p class="meterCount" id="kissCount">Kisses: 0</p>
+          </div>
+          <button class="btn hot" id="kissBtn">💋 Kiss</button>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- (5) Vows deck -->
+        <h2>I choose you, over everything</h2>
+        <div class="vowBox">
+          <p class="vowText" id="vowText">Tap “Next vow”.</p>
+          <div class="row" style="margin-top:10px">
+            <button class="btn ice" id="vowBtn">Next vow</button>
+            <button class="btn" id="vowResetBtn">Start over</button>
+          </div>
+          <div class="vowHint">Short. Clear. No confusion. It’s always you.</div>
+        </div>
+
+        <div class="divider"></div>
+
         <h2>A video from me</h2>
         <p class="sub" style="margin:0 0 10px">
-            I recorded this video for you, so you can see and hear me whenever you want.
-            I want you to feel like I am <strong>right there</strong> with you, even if it is through a screen today.
+          I recorded this video for you, so you can see and hear me whenever you want.
+          I want you to feel like I am <strong>right there</strong> with you, even if it is through a screen today.
         </p>
         <div class="videoBox">
           <video controls playsinline>
@@ -528,10 +672,6 @@
         <div class="divider"></div>
 
         <h2>Our photos</h2>
-        <p class="sub" style="margin:0 0 10px">
-        
-        </p>
-
         <div class="gallery" id="gallery">
           <div class="tile" data-src="photo1.jpg" data-cap="This is my favorite view">
             <img src="photo1.jpg" alt="photo1"><span>photo 1</span>
@@ -575,6 +715,9 @@
           <button class="btn hot" id="sadBtn">When you feel sad</button>
           <button class="btn" id="overthinkBtn">When you overthink</button>
           <button class="btn ice" id="workBtn">Before work</button>
+
+          <!-- (6) When you feel replaced -->
+          <button class="btn hot" id="replacedBtn">When you feel replaced</button>
         </div>
 
         <div class="divider"></div>
@@ -608,7 +751,20 @@
 
     <footer>
       Built on March 5, 2026. You are loved. You are chosen. You are my person.
+      <br>
+      Files needed: <strong>5march2026.mp4</strong>, <strong>photo1.jpg..photo6.jpg</strong>, <strong>teriKami.mp3</strong>, and optionally <strong>heartbeat.mp3</strong>.
     </footer>
+  </div>
+
+  <!-- (2) Hold overlay -->
+  <div class="holdOverlay" id="holdOverlay" aria-hidden="true">
+    <div class="holdCard">
+      <p class="holdTitle">I’m holding you.</p>
+      <p class="holdText" id="holdText">
+        Breathe. I’m right here. You are not competing with anything.
+        You are the priority. Always you.
+      </p>
+    </div>
   </div>
 
   <div class="lightbox" id="lightbox">
@@ -633,7 +789,7 @@
       setTimeout(()=>toastEl.classList.remove("show"), 1700);
     }
 
-    /* Floating hearts */
+    /* Hearts */
     const heartsWrap = $("hearts");
     const heartChars = ["💗","💖","💘","💝","💞","💕","❤️"];
     function spawnHeart(burst=false){
@@ -651,10 +807,28 @@
     }
     setInterval(()=>spawnHeart(false), 520);
     for(let i=0;i<10;i++) setTimeout(()=>spawnHeart(false), i*140);
+    function burstHearts(){ for(let i=0;i<18;i++) setTimeout(()=>spawnHeart(true), i*35); }
 
-    function burstHearts(){
-      for(let i=0;i<18;i++) setTimeout(()=>spawnHeart(true), i*35);
+    /* (12) Rose petals */
+    const petalsWrap = $("petals");
+    function spawnPetal(burst=false){
+      const p = document.createElement("div");
+      p.className = "petal";
+      const left = Math.random() * 100;
+      const dx = (Math.random() * 140 - 70).toFixed(0) + "px";
+      const dur = burst ? (5 + Math.random()*4) : (7 + Math.random()*7);
+      const size = burst ? (14 + Math.random()*16) : (12 + Math.random()*14);
+      p.style.left = left + "vw";
+      p.style.setProperty("--dx", dx);
+      p.style.animationDuration = dur + "s";
+      p.style.width = (size * 0.65) + "px";
+      p.style.height = (size * 1.0) + "px";
+      petalsWrap.appendChild(p);
+      setTimeout(()=>p.remove(), (dur + 0.4) * 1000);
     }
+    setInterval(()=>spawnPetal(false), 650);
+    for(let i=0;i<8;i++) setTimeout(()=>spawnPetal(false), i*220);
+    function burstPetals(){ for(let i=0;i<16;i++) setTimeout(()=>spawnPetal(true), i*40); }
 
     /* Ripple ring on clicks */
     function ringAt(el, x, y){
@@ -674,10 +848,7 @@
       "It is always you over everything.",
       "You are my home, even from far away."
     ];
-    let pIndex = 0;
-    let charIndex = 0;
-    let deleting = false;
-
+    let pIndex = 0, charIndex = 0, deleting = false;
     function tick(){
       const current = phrases[pIndex];
       if(!deleting){
@@ -745,6 +916,7 @@
         lightCap.textContent = tile.getAttribute("data-cap");
         lightbox.classList.add("show");
         burstHearts();
+        burstPetals();
       });
     });
     $("closeLight").addEventListener("click", ()=>lightbox.classList.remove("show"));
@@ -761,40 +933,199 @@
       "I am not pulling away. I am pulling you closer, even if it is through a screen today."
     ];
 
-    const morningLines = [
-      "Good morning, beautiful. Before your day starts, I want you to feel chosen.",
-      "Good morning, love. I am proud of you. I am with you. I am still coming to you in my mind.",
-      "Good morning. If the world feels loud, come back to one truth: it is always you.",
-      "Good morning, baby. I would rather protect us than win an argument. I love you."
+    /* (1) Morning routine sequence, multiple steps */
+    const routines = [
+      [
+        "Good morning, beautiful.",
+        "Drink some water for me.",
+        "Fix your hair, I’ll kiss your forehead right here.",
+        "Take a breath. You are loved.",
+        "Text me when you get to work. I want to know you’re safe."
+      ],
+      [
+        "Good morning, my love.",
+        "Coffee first, then a deep breath.",
+        "Put on your outfit… I’m behind you, hands on your waist.",
+        "I’m proud of you. Go shine.",
+        "Later, tell me one small win. I’ll celebrate you."
+      ],
+      [
+        "Good morning, baby.",
+        "Stand up straight… yes, like that.",
+        "I’m fixing your collar. One slow kiss.",
+        "Today is yours. You’re not alone in it.",
+        "I’m with you all day. Always."
+      ]
     ];
+    let routineIdx = 0;
+    let stepIdx = 0;
+
+    function playRoutine(){
+      const seq = routines[routineIdx % routines.length];
+      stepIdx = 0;
+      $("routineHint").textContent = "Watch… one step at a time.";
+      function step(){
+        $("routineLine").textContent = seq[stepIdx];
+        burstPetals();
+        if(navigator.vibrate) navigator.vibrate(18);
+        stepIdx++;
+        if(stepIdx < seq.length){
+          setTimeout(step, 1100);
+        }else{
+          $("routineHint").textContent = "That’s me walking you into your day.";
+          routineIdx++;
+        }
+      }
+      step();
+    }
 
     const foreverLines = [
       "I will not let people talking around me change what we have. My heart is already yours.",
       "You do not have to compete with anything. You are my priority. Always.",
       "I am serious about us. Not a temporary feeling. A real future."
     ];
-
     function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
     $("touchBtn").addEventListener("click", (e)=>{
       liveLine.textContent = pick(touchLines);
       status.textContent = "I am here with you";
-      burstHearts();
+      burstHearts(); burstPetals();
       ringAt($("header"), e.clientX, e.clientY);
     });
 
     $("morningBtn").addEventListener("click", (e)=>{
-      liveLine.textContent = pick(morningLines);
+      liveLine.textContent = "Look below. I’m about to walk you into your morning.";
       status.textContent = "good morning, my love";
-      burstHearts();
+      playRoutine();
+      burstHearts(); burstPetals();
       ringAt($("header"), e.clientX, e.clientY);
     });
+
+    /* (13) heartbeat sound on "Always you" */
+    const hb = $("heartbeat");
+    function heartbeatOnce(){
+      if(!hb) return;
+      hb.currentTime = 0;
+      hb.volume = 0.25;
+      hb.play().catch(()=>{});
+    }
 
     $("foreverBtn").addEventListener("click", (e)=>{
       liveLine.textContent = pick(foreverLines);
       status.textContent = "always you";
-      burstHearts();
+      burstHearts(); burstPetals();
+      heartbeatOnce();
       ringAt($("header"), e.clientX, e.clientY);
+    });
+
+    /* (2) Hold to feel */
+    const holdBtn = $("holdBtn");
+    const holdOverlay = $("holdOverlay");
+    const holdText = $("holdText");
+    let holdTimer = null;
+    let holding = false;
+
+    const holdLines = [
+      "Breathe. I’m right here. You’re not competing with anything. You’re the priority.",
+      "I’m holding you. Let your shoulders drop. You’re safe with me.",
+      "It’s always you. Not my schedule. Not other people’s opinions. You."
+    ];
+
+    function showHold(){
+      holding = true;
+      holdText.textContent = pick(holdLines);
+      holdOverlay.classList.add("show");
+      burstPetals();
+      if(navigator.vibrate) navigator.vibrate([25,30,25]);
+    }
+
+    function clearHold(){
+      holding = false;
+      if(holdTimer) clearTimeout(holdTimer);
+      holdTimer = null;
+      holdOverlay.classList.remove("show");
+    }
+
+    ["mousedown","touchstart"].forEach(evt=>{
+      holdBtn.addEventListener(evt, (e)=>{
+        e.preventDefault();
+        if(holdTimer) clearTimeout(holdTimer);
+        holdTimer = setTimeout(showHold, 450); /* quick and intimate */
+      }, { passive:false });
+    });
+
+    ["mouseup","mouseleave","touchend","touchcancel"].forEach(evt=>{
+      holdBtn.addEventListener(evt, ()=>{
+        if(!holding){
+          if(holdTimer) clearTimeout(holdTimer);
+          holdTimer = null;
+        }else{
+          clearHold();
+        }
+      });
+    });
+
+    holdOverlay.addEventListener("click", clearHold);
+
+    /* (3) Kiss meter */
+    let kisses = 0;
+    const kissMsg = $("kissMsg");
+    const kissCount = $("kissCount");
+
+    function kissTextFor(n){
+      if(n <= 1) return "One kiss on your forehead.";
+      if(n <= 3) return "Two more on your cheek. Slow.";
+      if(n <= 6) return "A kiss on your neck. Just enough to make you smile.";
+      if(n <= 9) return "I pull you closer. No space between us.";
+      if(n <= 12) return "I’m not letting go. You’re mine.";
+      return "I’m kissing you until you forget the distance exists.";
+    }
+
+    $("kissBtn").addEventListener("click", ()=>{
+      kisses++;
+      kissMsg.textContent = kissTextFor(kisses);
+      kissCount.textContent = "Kisses: " + kisses;
+      burstHearts(); burstPetals();
+      if(navigator.vibrate) navigator.vibrate(12);
+      toast("💋");
+    });
+
+    /* (5) Vows deck */
+    const vows = [
+      "It’s always you over everything.",
+      "You are my priority, not my option.",
+      "I will not let fear speak louder than my love.",
+      "I won’t disappear. I will communicate.",
+      "I choose you on calm days and hard days.",
+      "You will never have to beg for my reassurance.",
+      "I will protect your heart like it’s my own.",
+      "I want a future that has your name in it.",
+      "I’m not scared of you. I’m careful with the world. My choice is still you.",
+      "If you need me, you get me.",
+      "I will keep proving it with actions.",
+      "You are not replaceable. Not to me.",
+      "I’m building us, not just talking about it.",
+      "Even when I’m busy, you matter.",
+      "I am yours, and I’m staying."
+    ];
+    let vowIndex = -1;
+
+    function nextVow(){
+      vowIndex = (vowIndex + 1) % vows.length;
+      $("vowText").textContent = vows[vowIndex];
+      burstPetals();
+      if(navigator.vibrate) navigator.vibrate(10);
+    }
+
+    $("vowBtn").addEventListener("click", ()=>{
+      nextVow();
+      toast("a vow");
+    });
+
+    $("vowResetBtn").addEventListener("click", ()=>{
+      vowIndex = -1;
+      $("vowText").textContent = "Tap “Next vow”.";
+      toast("reset");
     });
 
     /* Open when buttons */
@@ -818,22 +1149,35 @@
       "If you miss me at work, read this: you are loved. You are my person."
     ];
 
+    /* (6) When you feel replaced */
+    const whenReplaced = [
+      "You are not competing with my schedule. You are my priority.",
+      "You are not competing with other people’s opinions. My heart is yours.",
+      "If you ever feel second, tell me immediately. I will fix it. It is always you over anything."
+    ];
+
     $("sadBtn").addEventListener("click", ()=>{
       openWhenBox.textContent = pick(whenSad);
       toast("come here");
-      burstHearts();
+      burstHearts(); burstPetals();
     });
 
     $("overthinkBtn").addEventListener("click", ()=>{
       openWhenBox.textContent = pick(whenOverthink);
       toast("breathe");
-      burstHearts();
+      burstHearts(); burstPetals();
     });
 
     $("workBtn").addEventListener("click", ()=>{
       openWhenBox.textContent = pick(beforeWork);
       toast("you got this");
-      burstHearts();
+      burstHearts(); burstPetals();
+    });
+
+    $("replacedBtn").addEventListener("click", ()=>{
+      openWhenBox.textContent = pick(whenReplaced);
+      toast("always you");
+      burstHearts(); burstPetals();
     });
 
     /* Make the closer text feel alive sometimes */
