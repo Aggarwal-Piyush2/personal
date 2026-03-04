@@ -674,22 +674,22 @@
         <h2>Our photos</h2>
         <div class="gallery" id="gallery">
           <div class="tile" data-src="photo1.jpg" data-cap="This is my favorite view">
-            <img src="5march1.jpeg" alt="photo1"><span>photo 1</span>
+            <img src="5march1.jpeg" alt=""><span></span>
           </div>
           <div class="tile" data-src="photo2.jpg" data-cap="You feel like home">
-            <img src="5march2.jpeg" alt="photo2"><span>photo 2</span>
+            <img src="5march2.jpeg" alt="photo2"><span></span>
           </div>
           <div class="tile" data-src="photo3.jpg" data-cap="I am proud to love you">
-            <img src="5march4.jpeg" alt="photo3"><span>photo 3</span>
+            <img src="5march4.jpeg" alt="photo3"><span></span>
           </div>
           <div class="tile" data-src="photo4.jpg" data-cap="My peace is you">
-            <img src="5march3.jpeg" alt="photo4"><span>photo 4</span>
+            <img src="5march3.jpeg" alt="photo4"><span></span>
           </div>
           <div class="tile" data-src="photo5.jpg" data-cap="We are real, not temporary">
-            <img src="5march5.jpeg" alt="photo5"><span>photo 5</span>
+            <img src="5march5.jpeg" alt="photo5"><span></span>
           </div>
           <div class="tile" data-src="photo6.jpg" data-cap="Always you, always us">
-            <img src="5march6.jpeg" alt="photo6"><span>photo 6</span>
+            <img src="5march6.jpeg" alt="photo6"><span></span>
           </div>
         </div>
       </section>
@@ -701,7 +701,7 @@
           I want you to tell me, and I will meet you there.
           <br><br>
           I will keep showing you love in ways you can actually feel.
-          Not just words. <strong>Consistency.</strong>
+        I will keep choosing you, and showing you that you are the priority, even when it is hard.
         </div>
 
         <div class="divider"></div>
@@ -909,15 +909,43 @@
     const lightImg = $("lightImg");
     const lightCap = $("lightCap");
 
-    document.querySelectorAll(".tile").forEach(tile=>{
-      tile.addEventListener("click", ()=>{
-        lightImg.src = tile.getAttribute("data-src");
-        lightCap.textContent = tile.getAttribute("data-cap");
-        lightbox.classList.add("show");
-        burstHearts();
-        burstPetals();
-      });
-    });
+    document.querySelectorAll(".tile").forEach((tile) => {
+  tile.addEventListener("click", () => {
+    const imgEl = tile.querySelector("img");
+
+    const relSrc = imgEl ? imgEl.getAttribute("src") : "";
+    const dataSrc = tile.getAttribute("data-src") || "";
+    const cap = tile.getAttribute("data-cap") || "";
+
+    const cacheBust = "v=" + Date.now();
+
+    let chosen = relSrc || dataSrc;
+
+    if (!chosen) {
+      toast("Preview image source missing.");
+      return;
+    }
+
+    lightImg.onerror = () => {
+      if (chosen === relSrc && dataSrc) {
+        chosen = dataSrc;
+        lightImg.src = dataSrc + (dataSrc.includes("?") ? "&" : "?") + cacheBust;
+        return;
+      }
+      toast("Preview failed. Check filename and extension.");
+    };
+
+    lightImg.onload = () => {};
+
+    lightCap.textContent = cap;
+
+    lightImg.src = chosen + (chosen.includes("?") ? "&" : "?") + cacheBust;
+
+    lightbox.classList.add("show");
+    burstHearts();
+    burstPetals();
+  });
+});
     $("closeLight").addEventListener("click", ()=>lightbox.classList.remove("show"));
     lightbox.addEventListener("click", (e)=>{ if(e.target === lightbox) lightbox.classList.remove("show"); });
 
