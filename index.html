@@ -169,6 +169,38 @@
             cursor: pointer;
             font-size: 0.7rem;
         }
+
+
+        /* new 4march2026 */
+        /* --- LOVE MESSAGE BUTTON --- */
+        .love-page-link {
+            margin-bottom: 35px;
+            padding: 14px 34px;
+            border-radius: 40px;
+
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            text-decoration: none;
+
+            color: white;
+            border: 1px solid var(--gold);
+            background: rgba(197,160,89,0.12);
+
+            box-shadow:
+                0 0 15px rgba(197,160,89,0.6),
+                0 0 40px rgba(197,160,89,0.35);
+
+            transition: 0.35s ease;
+            z-index: 10;
+        }
+
+.love-page-link:hover {
+    transform: translateY(-4px) scale(1.07);
+    background: rgba(197,160,89,0.25);
+    box-shadow:
+        0 0 30px rgba(197,160,89,0.9),
+        0 0 70px rgba(197,160,89,0.6);
+}
     </style>
 </head>
 
@@ -187,6 +219,7 @@
 
 <!-- ❤️ NEW BUTTON ON TOP -->
 <a href="valentine.html" class="valentine-link">💌 OPEN THIS?</a>
+<a href="4march2026.html" class="love-page-link">❤️ A MESSAGE FOR YOU on 4th March 2026.</a>
 
 <div id="grid"></div>
 

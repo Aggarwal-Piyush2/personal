@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>For You</title>
+
+  <style>
+    :root{
+      --bg1:#0b1220;
+      --bg2:#101b2f;
+      --card: rgba(255,255,255,.10);
+      --card2: rgba(255,255,255,.14);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.72);
+      --accent:#ff6fb7;
+      --accent2:#9ae6ff;
+      --shadow: 0 20px 50px rgba(0,0,0,.35);
+      --radius: 22px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 15% 10%, rgba(154,230,255,.20), transparent 55%),
+        radial-gradient(900px 600px at 85% 15%, rgba(255,111,183,.18), transparent 60%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    .wrap{max-width:1100px; margin:0 auto; padding:28px 18px 70px}
+
+    header{
+      position:relative;
+      padding:22px 18px 18px;
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      overflow:hidden;
+    }
+
+    h1{
+      margin:0;
+      font-size: clamp(24px, 3.6vw, 38px);
+      letter-spacing:.2px;
+    }
+    .sub{
+      margin-top:8px;
+      color:var(--muted);
+      font-size: 15px;
+      line-height:1.6;
+      max-width: 70ch;
+    }
+
+    .badge{
+      display:inline-flex; gap:10px; align-items:center;
+      padding:10px 12px; border-radius:999px;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.14);
+      font-size:13px; color: var(--muted);
+      white-space:nowrap;
+      margin-top:14px;
+    }
+    .dot{
+      width:10px; height:10px; border-radius:50%;
+      background: var(--accent2);
+      box-shadow: 0 0 0 6px rgba(154,230,255,.14);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:16px;
+      margin-top:16px;
+    }
+    @media (max-width: 900px){ .grid{grid-template-columns:1fr} }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:16px;
+      backdrop-filter: blur(10px);
+    }
+    .card h2{ margin:0 0 10px; font-size: 16px; letter-spacing:.2px; }
+    .muted{ color: var(--muted); }
+
+    .note{
+      border-left: 4px solid rgba(255,111,183,.65);
+      padding:12px 12px;
+      background: rgba(255,111,183,.10);
+      border-radius: 16px;
+      color: var(--text);
+      line-height:1.6;
+    }
+
+    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .btn{
+      cursor:pointer;
+      padding:11px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: linear-gradient(180deg, rgba(255,111,183,.22), rgba(255,255,255,.06));
+      color: var(--text);
+      box-shadow: 0 10px 25px rgba(0,0,0,.25);
+      transition: transform .08s ease, filter .12s ease;
+      font-weight: 700;
+    }
+    .btn:hover{ transform: translateY(-1px); filter: brightness(1.06); }
+    .btn:active{ transform: translateY(0px); filter: brightness(.98); }
+    .btn.secondary{
+      background: linear-gradient(180deg, rgba(154,230,255,.22), rgba(255,255,255,.06));
+    }
+    .btn.ghost{
+      background: rgba(255,255,255,.06);
+    }
+
+    input, textarea{
+      width:100%;
+      padding:12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(10,16,30,.55);
+      color: var(--text);
+      outline:none;
+    }
+    textarea{ min-height: 86px; resize: vertical; }
+    label{ display:block; margin:10px 0 8px; color: var(--muted); font-size: 13px; }
+
+    .divider{ height:1px; background: rgba(255,255,255,.10); margin:14px 0; }
+
+    .video-box{
+      margin-top:12px;
+      border-radius: 18px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+    }
+    video{ width:100%; display:block; }
+
+    .gallery{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:10px;
+      margin-top:10px;
+    }
+    @media (max-width: 600px){ .gallery{grid-template-columns: repeat(2, 1fr)} }
+
+    .tile{
+      position:relative;
+      border-radius: 18px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      aspect-ratio: 1 / 1;
+      cursor:pointer;
+      transition: transform .1s ease;
+    }
+    .tile:hover{ transform: translateY(-2px); }
+    .tile img{
+      width:100%; height:100%;
+      object-fit: cover;
+      display:block;
+      filter: saturate(1.08);
+    }
+    .tile span{
+      position:absolute;
+      left:10px; bottom:10px;
+      font-size: 12px;
+      padding:6px 8px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.45);
+      border: 1px solid rgba(255,255,255,.18);
+      color: rgba(255,255,255,.88);
+    }
+
+    .lightbox{
+      position:fixed;
+      inset:0;
+      background: rgba(0,0,0,.72);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      z-index: 50;
+    }
+    .lightbox.show{ display:flex; }
+    .lightbox .frame{
+      width:min(920px, 96vw);
+      border-radius: 22px;
+      overflow:hidden;
+      background: rgba(15,20,35,.95);
+      border: 1px solid rgba(255,255,255,.16);
+      box-shadow: var(--shadow);
+      position:relative;
+    }
+    .lightbox img{
+      width:100%;
+      max-height: 78vh;
+      object-fit: contain;
+      display:block;
+      background: rgba(0,0,0,.2);
+    }
+    .lightbox .bar{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px;
+      align-items:center;
+    }
+    .lightbox .bar .cap{ color: var(--muted); font-size: 13px; }
+    .xbtn{
+      cursor:pointer;
+      border:none;
+      border-radius: 14px;
+      padding:10px 12px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.16);
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    footer{
+      margin-top:18px;
+      color: rgba(255,255,255,.55);
+      font-size: 12.5px;
+      line-height:1.6;
+      text-align:center;
+    }
+
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(0,0,0,.55);
+      border: 1px solid rgba(255,255,255,.16);
+      color: rgba(255,255,255,.88);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease;
+      max-width: 92vw;
+      text-align:center;
+      z-index: 100;
+    }
+    .toast.show{ opacity: 1; }
+
+    /* Animated hearts */
+    .hearts{
+      position: fixed;
+      inset: 0;
+      pointer-events:none;
+      overflow:hidden;
+      z-index: 1;
+    }
+    .heart{
+      position:absolute;
+      bottom:-40px;
+      font-size: 18px;
+      opacity:.85;
+      animation: floatUp linear forwards;
+      filter: drop-shadow(0 10px 18px rgba(255,111,183,.20));
+    }
+    @keyframes floatUp{
+      from{ transform: translateY(0) scale(.9) rotate(0deg); opacity:.0; }
+      10%{ opacity:.85; }
+      to{ transform: translateY(-120vh) scale(1.25) rotate(18deg); opacity:0; }
+    }
+
+    header, .grid{ position:relative; z-index: 2; }
+  </style>
+</head>
+
+<body>
+  <div class="hearts" id="hearts"></div>
+
+  <div class="wrap">
+    <header>
+      <h1>For you, always 💗</h1>
+      <div class="sub" id="headlineSub">
+        I made this page for you because I never want you to feel alone or unsure about us.
+        Even with distance and noise around us, I am still choosing you.
+      </div>
+      <div class="badge"><span class="dot"></span><span id="statusText">We are on the same team</span></div>
+    </header>
+
+    <div class="grid">
+      <section class="card">
+        <h2>My message to you</h2>
+        <div class="note" id="promiseBox">
+          I want you to hear this clearly: I have no problem coming to you.
+          I want to be with you, in real life, not just on a screen.
+          The only reason I sounded hesitant is because people around me keep telling me to reconsider because of what is happening in the world,
+          and I let that pressure get into my head for a moment.
+          <br><br>
+          But it does not change my heart at all.
+          You are my person.
+          You are not temporary, you are not a maybe.
+          I am serious about us, and I want us to feel safe and strong while we build our future together.
+          <br><br>
+          I am not going anywhere.
+          We are together for the long run, and I will keep proving it with actions, not just words.
+        </div>
+
+        <div class="divider"></div>
+
+        <h2>A video from me</h2>
+        <p class="muted" style="margin-top:0">
+          Add your video file in the same folder as this page and name it <b>message.mp4</b>.
+        </p>
+        <div class="video-box">
+          <video controls>
+            <source src="message.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+
+        <div class="divider"></div>
+
+        <h2>Our little gallery</h2>
+        <p class="muted" style="margin-top:0">
+          Replace the images with your photos. Put them in the same folder and name them:
+          <b>photo1.jpg</b>, <b>photo2.jpg</b>, <b>photo3.jpg</b>, <b>photo4.jpg</b>, <b>photo5.jpg</b>, <b>photo6.jpg</b>
+        </p>
+
+        <div class="gallery" id="gallery">
+          <div class="tile" data-src="photo1.jpg" data-cap="Us, always">
+            <img src="photo1.jpg" alt="photo1">
+            <span>photo 1</span>
+          </div>
+          <div class="tile" data-src="photo2.jpg" data-cap="My favorite person">
+            <img src="photo2.jpg" alt="photo2">
+            <span>photo 2</span>
+          </div>
+          <div class="tile" data-src="photo3.jpg" data-cap="Home is you">
+            <img src="photo3.jpg" alt="photo3">
+            <span>photo 3</span>
+          </div>
+          <div class="tile" data-src="photo4.jpg" data-cap="Same team">
+            <img src="photo4.jpg" alt="photo4">
+            <span>photo 4</span>
+          </div>
+          <div class="tile" data-src="photo5.jpg" data-cap="We keep choosing each other">
+            <img src="photo5.jpg" alt="photo5">
+            <span>photo 5</span>
+          </div>
+          <div class="tile" data-src="photo6.jpg" data-cap="Forever energy">
+            <img src="photo6.jpg" alt="photo6">
+            <span>photo 6</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row">
+          <button class="btn" id="copyMsgBtn">Copy a message to send</button>
+          <button class="btn secondary" id="reassureBtn">Tap for reassurance</button>
+          <button class="btn ghost" id="moreLoveBtn">Tap for more love</button>
+        </div>
+
+        <p class="muted" id="reassureLine" style="margin-top:12px; line-height:1.6"></p>
+      </section>
+
+      <aside class="card">
+        <h2>Make it personal</h2>
+        <p class="muted" style="margin-top:0">
+          Put her name and yours and press update.
+        </p>
+
+        <label for="herName">Her name</label>
+        <input id="herName" placeholder="Type her name">
+
+        <label for="yourName">Your name</label>
+        <input id="yourName" placeholder="Type your name">
+
+        <label for="customLine">One line only she would understand</label>
+        <input id="customLine" placeholder="Example: I still smile when I remember ...">
+
+        <label for="customPromise">Your promise in your words</label>
+        <textarea id="customPromise" placeholder="Example: I want you. I’m coming. I’m just being smart because people are pressuring me to reconsider."></textarea>
+
+        <div class="row" style="margin-top:10px">
+          <button class="btn" id="applyBtn">Update page text</button>
+          <button class="btn ghost" id="copyNoteBtn">Copy a short note</button>
+        </div>
+
+        <div class="divider"></div>
+
+        <h2>How to make her feel better today</h2>
+        <div class="note">
+          1) Send this page plus a short video message.
+          <br>
+          2) After she watches, send one voice note: “I’m here. I love you. We’re okay.”
+          <br>
+          3) Protect the routine: one consistent call time, even if shorter.
+          <br>
+          4) Small proof: a screenshot of your flight planning or itinerary search so she sees you are serious.
+        </div>
+
+        <div class="divider"></div>
+
+        <h2>Small promise list</h2>
+        <div class="note" id="promiseList">
+          I will not let outside noise weaken us.
+          <br>
+          I will communicate instead of disappearing.
+          <br>
+          I will make you feel chosen, every day.
+          <br>
+          I will keep building us, step by step, until distance is not a thing anymore.
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      Distance is real, but so is commitment. And I’m committed to you.
+    </footer>
+  </div>
+
+  <div class="lightbox" id="lightbox">
+    <div class="frame">
+      <img id="lightImg" src="" alt="preview">
+      <div class="bar">
+        <div class="cap" id="lightCap"></div>
+        <button class="xbtn" id="closeLight">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const toastEl = $("toast");
+
+    function toast(msg){
+      toastEl.textContent = msg;
+      toastEl.classList.add("show");
+      setTimeout(() => toastEl.classList.remove("show"), 1800);
+    }
+
+    // Animated hearts
+    const heartsWrap = $("hearts");
+    const heartChars = ["💗","💖","💘","💝","💞","💕"];
+
+    function spawnHeart(){
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
+
+      const left = Math.random() * 100;
+      const size = 14 + Math.random() * 20;
+      const dur = 6 + Math.random() * 6;
+
+      h.style.left = left + "vw";
+      h.style.fontSize = size + "px";
+      h.style.animationDuration = dur + "s";
+
+      heartsWrap.appendChild(h);
+      setTimeout(() => h.remove(), (dur + 0.5) * 1000);
+    }
+    setInterval(spawnHeart, 520);
+    for(let i=0;i<10;i++) setTimeout(spawnHeart, i*150);
+
+    // Gallery lightbox
+    const lightbox = $("lightbox");
+    const lightImg = $("lightImg");
+    const lightCap = $("lightCap");
+
+    document.querySelectorAll(".tile").forEach(tile => {
+      tile.addEventListener("click", () => {
+        lightImg.src = tile.getAttribute("data-src");
+        lightCap.textContent = tile.getAttribute("data-cap");
+        lightbox.classList.add("show");
+      });
+    });
+    $("closeLight").addEventListener("click", () => lightbox.classList.remove("show"));
+    lightbox.addEventListener("click", (e) => { if(e.target === lightbox) lightbox.classList.remove("show"); });
+
+    // Reassurance buttons
+    const reassureLine = $("reassureLine");
+    const lines = [
+      "I’m not going anywhere. I’m choosing you, loudly and clearly.",
+      "You’re my person. I want a future with you, not a maybe, a real future.",
+      "I want to come. The only thing I’m doing is thinking carefully because people around me are pressuring me to reconsider.",
+      "We will handle anything together. I won’t let fear or distance change what we have."
+    ];
+    const moreLines = [
+      "Even when we argue, I still want you. Even when it’s hard, I still choose you.",
+      "I’m building trust with actions. I’ll show you I’m serious every single day.",
+      "One day this distance is going to be a story we laugh about. Until then, I’ll keep showing up for you."
+    ];
+    let li = 0, mi = 0;
+
+    $("reassureBtn").addEventListener("click", () => {
+      reassureLine.textContent = lines[li % lines.length];
+      li++;
+      toast("For you 💗");
+    });
+
+    $("moreLoveBtn").addEventListener("click", () => {
+      reassureLine.textContent = moreLines[mi % moreLines.length];
+      mi++;
+      toast("Always 💞");
+    });
+
+    // Copy message
+    function buildMessage(){
+      const her = $("herName").value.trim() || "my love";
+      const you = $("yourName").value.trim() || "me";
+      const line = $("customLine").value.trim();
+
+      return `Hey ${her}, I love you.\n\nI want you to hear this clearly: I have no problem coming to you. I want to see you.\nThe only reason I sounded hesitant is because everyone around me keeps telling me to reconsider because of what’s happening, and I let that pressure get into my head.\nBut it doesn’t change how I feel about you at all.\n\n${line ? line + "\n\n" : ""}You are my person. I’m serious about us. We’re together for the long run, and I’m going to keep proving it with actions.\n\nAlways,\n${you}`;
+    }
+
+    $("copyMsgBtn").addEventListener("click", async () => {
+      try{
+        await navigator.clipboard.writeText(buildMessage());
+        toast("Message copied");
+      }catch(e){
+        toast("Copy not available");
+      }
+    });
+
+    $("copyNoteBtn").addEventListener("click", async () => {
+      const note = "I made you a small page with a video and our photos. Open it when you miss me. I’m here and I’m choosing you.";
+      try{
+        await navigator.clipboard.writeText(note);
+        toast("Note copied");
+      }catch(e){
+        toast("Copy not available");
+      }
+    });
+
+    // Apply personalization
+    $("applyBtn").addEventListener("click", () => {
+      const her = $("herName").value.trim();
+      const line = $("customLine").value.trim();
+      const promise = $("customPromise").value.trim();
+
+      const sub = [];
+      if(her) sub.push(`Hey ${her}.`);
+      sub.push("I made this page for you because I never want you to feel alone or unsure about us.");
+      if(line) sub.push(line);
+      sub.push("Even with distance and noise around us, I am still choosing you.");
+      $("headlineSub").textContent = sub.join(" ");
+
+      if(promise){
+        $("promiseBox").innerHTML = promise.replaceAll("\n","<br>");
+      }
+
+      toast("Updated 💗");
+    });
+  </script>
+</body>
+</html>
