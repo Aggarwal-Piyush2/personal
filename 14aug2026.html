@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A New Home, A New Chapter ❤️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,600;1,700&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --gold:#c5a059;
+      --cream:#f8edd8;
+      --red:#7b1218;
+      --deep:#080504;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:white;
+      font-family:'Montserrat',sans-serif;
+      background:
+        radial-gradient(circle at 50% 10%,rgba(123,18,24,.38),transparent 35%),
+        radial-gradient(circle at 85% 50%,rgba(197,160,89,.10),transparent 30%),
+        linear-gradient(180deg,#130405 0%,#070505 45%,#030303 100%);
+      overflow-x:hidden;
+    }
+    .stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+    .star{position:absolute;color:var(--gold);opacity:.55;animation:twinkle var(--d) ease-in-out infinite alternate}
+    @keyframes twinkle{from{transform:scale(.65);opacity:.18}to{transform:scale(1.25);opacity:.85}}
+    .confetti{position:fixed;top:-40px;pointer-events:none;z-index:99;animation:fall linear forwards}
+    @keyframes fall{to{transform:translateY(115vh) rotate(720deg);opacity:.85}}
+
+    .page{position:relative;z-index:2;width:min(900px,92%);margin:0 auto;padding:54px 0 80px}
+    .hero{text-align:center;padding:46px 20px 28px}
+    .eyebrow{letter-spacing:5px;font-size:.67rem;color:var(--gold);opacity:.82;margin-bottom:18px}
+    .flag{font-size:3.6rem;filter:drop-shadow(0 0 18px rgba(197,160,89,.18));animation:float 3s ease-in-out infinite}
+    @keyframes float{50%{transform:translateY(-7px)}}
+    h1{
+      font-family:'Playfair Display',serif;
+      font-style:italic;
+      font-size:clamp(2.55rem,8vw,5.4rem);
+      line-height:1.02;
+      color:var(--gold);
+      margin:15px 0 10px;
+      text-shadow:0 0 26px rgba(197,160,89,.20)
+    }
+    .hero-sub{font-family:'Playfair Display',serif;font-size:clamp(1.1rem,3vw,1.55rem);font-style:italic;color:var(--cream);opacity:.9}
+    .date{margin-top:22px;font-size:.7rem;letter-spacing:4px;opacity:.58}
+
+    .line{width:1px;height:70px;background:linear-gradient(transparent,var(--gold),transparent);margin:14px auto 24px}
+    .card{
+      background:rgba(255,255,255,.035);
+      border:1px solid rgba(197,160,89,.22);
+      border-radius:18px;
+      padding:clamp(24px,5vw,48px);
+      backdrop-filter:blur(12px);
+      box-shadow:0 25px 80px rgba(0,0,0,.35),0 0 40px rgba(197,160,89,.05);
+      margin:20px 0;
+    }
+    .card h2{font-family:'Playfair Display',serif;font-style:italic;font-weight:600;color:var(--gold);font-size:clamp(1.7rem,4vw,2.5rem);margin:0 0 22px;text-align:center}
+    .letter{max-width:720px;margin:auto;line-height:2;font-size:clamp(.94rem,2vw,1.04rem);font-weight:300;color:rgba(255,255,255,.9);text-align:center}
+    .letter p{margin:0 0 18px}
+    .big-line{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.35rem,4vw,2rem);color:var(--cream);margin:30px auto!important;line-height:1.5!important}
+    .gold{color:var(--gold);font-weight:500}
+
+    .milestone{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:26px}
+    .mini{border:1px solid rgba(197,160,89,.16);background:rgba(0,0,0,.2);border-radius:14px;padding:22px 12px;text-align:center}
+    .mini .icon{font-size:1.8rem;display:block;margin-bottom:10px}.mini strong{display:block;color:var(--gold);font-family:'Playfair Display';font-size:1.12rem;margin-bottom:6px}.mini small{opacity:.58;font-size:.66rem;letter-spacing:1px;line-height:1.6}
+    @media(max-width:650px){.milestone{grid-template-columns:1fr}.hero{padding-top:20px}}
+
+    .celebrate{text-align:center;margin:44px auto 12px}
+    .celebrate button{border:1px solid var(--gold);background:rgba(197,160,89,.12);color:var(--gold);padding:15px 30px;border-radius:999px;font-family:'Montserrat';letter-spacing:2px;font-size:.75rem;cursor:pointer;transition:.3s;box-shadow:0 0 24px rgba(197,160,89,.12)}
+    .celebrate button:hover{transform:translateY(-3px) scale(1.03);background:rgba(197,160,89,.2);box-shadow:0 0 34px rgba(197,160,89,.27)}
+    #secret{max-height:0;overflow:hidden;opacity:0;transition:all .8s ease;text-align:center}
+    #secret.show{max-height:300px;opacity:1;margin-top:25px}
+    #secret .secret-text{font-family:'Playfair Display';font-style:italic;color:var(--cream);font-size:clamp(1.35rem,4vw,2.1rem);line-height:1.55}
+    #secret .tiny{font-size:.72rem;letter-spacing:2px;color:var(--gold);margin-top:14px}
+
+    .back{display:block;width:max-content;margin:42px auto 0;color:rgba(255,255,255,.55);font-size:.7rem;letter-spacing:2px;text-decoration:none;border-bottom:1px solid rgba(197,160,89,.3);padding-bottom:5px}.back:hover{color:var(--gold)}
+    .footer{text-align:center;margin-top:48px;font-size:.61rem;letter-spacing:3px;opacity:.28}
+  </style>
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+
+  <main class="page">
+    <section class="hero">
+      <div class="eyebrow">A DAY YOU'LL REMEMBER FOREVER</div>
+      <div class="flag">🇦🇺</div>
+      <h1>Australia is home.</h1>
+      <div class="hero-sub">Not just in your heart anymore — officially, too.</div>
+      <div class="date">14 AUGUST 2026 • PERMANENT RESIDENT</div>
+    </section>
+
+    <div class="line"></div>
+
+    <section class="card">
+      <h2>For the girl who made it ❤️</h2>
+      <div class="letter">
+        <p>Today isn't just another good day.</p>
+        <p>It's one of those days that quietly changes the rest of your life.</p>
+        <p>You got your <span class="gold">Australian Permanent Residency</span> today, and I hope you know how incredibly proud I am of you.</p>
+
+        <p>You carried the waiting, the uncertainty, the paperwork, the patience, and all the little moments where you probably wondered when this day would finally come.</p>
+
+        <p class="big-line">And now it has. You did it. 🇦🇺✨</p>
+
+        <p>This isn't just a visa status or a document. It's security. It's freedom. It's a future you worked for becoming real.</p>
+        <p>A country that once felt far away is now a place you can truly call <span class="gold">home</span>.</p>
+
+        <p>And among all the things I want you to remember about today, remember this too:</p>
+        <p class="big-line">I believed in you before this approval arrived, and I'll be just as proud of you long after today.</p>
+
+        <p>Congratulations, my love. On the new chapter, the new certainty, and every beautiful thing waiting for you on the other side of this moment.</p>
+        <p>Today, Australia said <span class="gold">yes to you</span>. ❤️</p>
+      </div>
+
+      <div class="milestone">
+        <div class="mini"><span class="icon">📍</span><strong>Home</strong><small>NO LONGER TEMPORARY</small></div>
+        <div class="mini"><span class="icon">🇦🇺</span><strong>Permanent Resident</strong><small>14 • 08 • 2026</small></div>
+        <div class="mini"><span class="icon">❤️</span><strong>So Proud</strong><small>MORE THAN WORDS CAN SAY</small></div>
+      </div>
+    </section>
+
+    <section class="celebrate">
+      <button onclick="celebrate()">✨ ONE MORE THING</button>
+      <div id="secret">
+        <div class="secret-text">Wherever life takes you,<br>I hope I get to keep celebrating your wins with you. ❤️</div>
+        <div class="tiny">THIS ONE DESERVES A FOREVER MEMORY</div>
+      </div>
+    </section>
+
+    <a class="back" href="index.html">← BACK TO THE VAULT</a>
+    <div class="footer">A NEW CHAPTER • 14 AUGUST 2026</div>
+  </main>
+
+  <script>
+    const stars=document.getElementById('stars');
+    for(let i=0;i<48;i++){
+      const s=document.createElement('span');
+      s.className='star';
+      s.textContent=Math.random()>.72?'✦':'·';
+      s.style.left=Math.random()*100+'%';
+      s.style.top=Math.random()*100+'%';
+      s.style.fontSize=(Math.random()*12+7)+'px';
+      s.style.setProperty('--d',(Math.random()*3+2)+'s');
+      s.style.animationDelay=(Math.random()*3)+'s';
+      stars.appendChild(s);
+    }
+
+    function pop(){
+      const pieces=['🇦🇺','✨','❤️','⭐','💛'];
+      for(let i=0;i<42;i++){
+        const e=document.createElement('div');
+        e.className='confetti';
+        e.textContent=pieces[Math.floor(Math.random()*pieces.length)];
+        e.style.left=Math.random()*100+'vw';
+        e.style.fontSize=(Math.random()*13+14)+'px';
+        e.style.animationDuration=(Math.random()*2.5+3)+'s';
+        e.style.animationDelay=(Math.random()*.7)+'s';
+        document.body.appendChild(e);
+        setTimeout(()=>e.remove(),6500);
+      }
+    }
+
+    function celebrate(){
+      document.getElementById('secret').classList.add('show');
+      pop();
+    }
+    setTimeout(pop,650);
+  </script>
+</body>
+</html>
